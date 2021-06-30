@@ -1,0 +1,6 @@
+<!-- 发送素材 TODO -->
+ShopWxNewsCustMapper.xml
+ShopWxNewsCustMapperExt.xml
+
+
+对应的客户等级模块已经改造完毕，完全支持了oracle

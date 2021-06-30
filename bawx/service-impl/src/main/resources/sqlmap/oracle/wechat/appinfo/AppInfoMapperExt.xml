@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.basoft.service.dao.wechat.appinfo.AppInfoMapper">
+	<select id="selectAllAppInfoList" parameterType="com.basoft.service.entity.wechat.appinfo.AppInfo"
+		resultMap="ResultMapWithBLOBs">
+		select
+		<include refid="Base_Column_List" />
+		,
+		<include refid="Blob_Column_List" />
+		from wx_app_info order by shop_id
+	</select>
+
+	<select id="selectAppInfoByKey" parameterType="string"
+		resultType="com.basoft.service.entity.wechat.appinfo.AppInfoWithBLOBs">
+		select
+		<include refid="Base_Column_List" />
+		,
+		<include refid="Blob_Column_List" />
+		from wx_app_info
+		where sys_id = #{key}
+	</select>
+
+	<select id="selectAppInfoByShopId" parameterType="long"
+		resultType="com.basoft.service.entity.wechat.appinfo.AppInfoWithBLOBs">
+		select
+		<include refid="Base_Column_List" />
+		,
+		<include refid="Blob_Column_List" />
+		from wx_app_info
+		where shop_id = #{shopId}
+	</select>
+
+	<select id="selectAppInfoByOriginalAppId" parameterType="string"
+		resultType="com.basoft.service.entity.wechat.appinfo.AppInfoWithBLOBs">
+		select
+		<include refid="Base_Column_List" />
+		,
+		<include refid="Blob_Column_List" />
+		from wx_app_info
+		where original_app_id = #{originalAppId}
+	</select>
+
+	<select id="selectAppInfoByAppId" parameterType="string"
+		resultType="com.basoft.service.entity.wechat.appinfo.AppInfoWithBLOBs">
+		select
+		<include refid="Base_Column_List" />
+		,
+		<include refid="Blob_Column_List" />
+		from wx_app_info
+		where app_id = #{appId}
+	</select>
+	
+	<!-- 查询开启定时任务的AppInfo列表 -->
+	<select id="selectBatchAppInfoList" resultType="com.basoft.service.entity.wechat.appinfo.AppInfoWithBLOBs">
+		SELECT
+		<include refid="Base_Column_List" />
+		,
+		<include refid="Blob_Column_List" />
+		FROM WX_APP_INFO WHERE ACCOUNT_STATUS = 1 AND OPEN_BATCH_JOB = 1
+	</select>
+</mapper>

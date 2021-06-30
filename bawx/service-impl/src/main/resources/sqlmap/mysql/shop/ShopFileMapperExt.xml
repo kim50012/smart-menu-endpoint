@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.basoft.service.dao.shop.ShopFileMapper">
+	<select id="findAllByParam" resultType="com.basoft.service.dto.shop.ShopFileDto">
+		SELECT
+		<include refid="Base_Column_List" />
+		,getCode('shop_file_mst','FILE_TYPE',sfm.FILE_TYPE) fileTypeStr,
+		getCode('shop_file_mst','IS_USE',sfm.IS_USE) isUseStr
+		from shop_file_mst sfm
+		WHERE FILE_GROUP = 2
+		<if test="fileType != null and fileType!=''">
+			and FILE_TYPE =#{fileType}
+		</if>
+		<if test="isUse != null and isUse!=''">
+			AND IS_USE = #{isUse}
+		</if>
+		<if test="fileName != null and fileName!=''">
+			and FILE_NM like concat('%',#{fileName},'%')
+		</if>
+		<if test="shopId != null ">
+			AND SHOP_ID = #{shopId}
+		</if>
+		<if test="msgIdWould == 1">
+			and MEDIA_ID is not null
+		</if>
+		order by CREATED_DT desc
+	</select>
+</mapper>

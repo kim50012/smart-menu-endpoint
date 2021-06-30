@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.basoft.service.dao.wechat.shopMenu.OracleShopWxMenuMapper">
+	<resultMap id="OracleBaseResultMap" type="com.basoft.service.entity.wechat.shopMenu.ShopWxMenu">
+		<id column="SHOP_ID" property="shopId" jdbcType="BIGINT" />
+		<id column="MENU_ID" property="menuId" jdbcType="BIGINT" />
+		<result column="MENU_NM" property="menuNm" jdbcType="VARCHAR" />
+		<result column="MENU_PARENT_ID" property="menuParentId" jdbcType="BIGINT" />
+		<result column="MENU_OP_TYPE" property="menuOpType" jdbcType="VARCHAR" />
+		<result column="MENU_MSG_TYPE" property="menuMsgType" jdbcType="INTEGER" />
+		<result column="MENU_OP_ID" property="menuOpId" jdbcType="BIGINT" />
+		<result column="MENU_OP_TITLE" property="menuOpTitle" jdbcType="VARCHAR" />
+		<result column="MENU_STS" property="menuSts" jdbcType="TINYINT" />
+		<result column="SORT_NO" property="sortNo" jdbcType="TINYINT" />
+		<result column="CREATE_ID" property="createId" jdbcType="VARCHAR" />
+		<result column="CREATE_DT" property="createDt" jdbcType="TIMESTAMP" />
+		<result column="MODIFY_ID" property="modifyId" jdbcType="VARCHAR" />
+		<result column="MODIFY_DT" property="modifyDt" jdbcType="TIMESTAMP" />
+		<result column="MENU_OP_COM" property="menuOpCom" jdbcType="VARCHAR" />
+	</resultMap>
+	<resultMap id="OracleResultWxMenu" type="com.basoft.service.dto.wechat.shopMenu.ShopWxMenuDto" extends="OracleBaseResultMap">
+		<result column="MENU_OP_COM" property="menuOpCom" jdbcType="VARCHAR" />
+		<result column="MENU_OP_WX_ID" property="menuOpWxId" jdbcType="VARCHAR" />
+		<result column="IS_LEAF" property="isLeaf" jdbcType="VARCHAR" />
+	</resultMap>
+	
+	<!-- 微信自定义菜单-发布-检查 -->
+	<!--<select id="checkMenu" parameterType="java.lang.Long" statementType="CALLABLE">-->
+	<select id="checkMenu" parameterType="java.util.Map" statementType="CALLABLE">
+	    <![CDATA[
+		 	{CALL WX_MENU_PUBLISH_CHECK(#{shopId,mode=IN,jdbcType=BIGINT},
+		 	#{checkMenus,jdbcType=CURSOR,mode=OUT,javaType=ResultSet,resultMap=OracleResultWxMenu})}
+		]]>
+	</select>
+
+	<!-- 微信自定义菜单-发布-留档（返回留档数量） -->
+	<select id="insertPublisMenuWithCount" parameterType="java.util.Map" statementType="CALLABLE">
+	    <![CDATA[
+		 	{CALL WX_MENU_PUBLISH_INSERT_COUNT(#{shopId,jdbcType=BIGINT,mode=IN},#{insertCount,jdbcType=BIGINT,mode=OUT})}
+		]]>
+	</select>
+
+	<!-- 微信自定义菜单-发布-查询一级菜单 -->
+	<select id="selectMenuLevel1" parameterType="java.util.Map" statementType="CALLABLE" resultType="java.util.Map">
+		{CALL WX_MENU_PUBLISH_SELECT(#{shopId,jdbcType=BIGINT,mode=IN},NULL,
+		#{selectMenus,jdbcType=CURSOR,mode=OUT,javaType=ResultSet,resultMap=OracleResultWxMenu})}
+	</select>
+
+	<!-- 微信自定义菜单-发布-查询二级菜单 -->
+	<select id="selectMenuLevel2" parameterType="java.util.Map" statementType="CALLABLE" resultType="java.util.Map">
+		{CALL WX_MENU_PUBLISH_SELECT(#{shopId,jdbcType=BIGINT,mode=IN},#{menuId,jdbcType=BIGINT,mode=IN},
+		#{selectMenus,jdbcType=CURSOR,mode=OUT,javaType=ResultSet,resultMap=OracleResultWxMenu})}
+	</select>
+</mapper>

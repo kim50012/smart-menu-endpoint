@@ -1,0 +1,12 @@
+eclipse.preferences.version=1
+encoding//src/main/java=UTF-8
+encoding//src/main/java/com/basoft/service/batch/wechat/thread/AlliexTransExchangeThread.java=UTF-8
+encoding//src/main/java/com/basoft/service/batch/wechat/thread/AlliexTransPaymentQueryThread.java=UTF-8
+encoding//src/main/java/com/basoft/service/batch/wechat/thread/AlliexTransPaymentThread.java=UTF-8
+encoding//src/main/java/com/basoft/service/batch/wechat/thread/AlliexTransRefundThread.java=UTF-8
+encoding//src/main/java/com/basoft/service/batch/wechat/thread/BookingOrderSendMsgThread.java=UTF-8
+encoding//src/main/java/com/basoft/service/batch/wechat/thread/ServerOrderCheckThread.java=UTF-8
+encoding//src/main/resources=UTF-8
+encoding//src/test/java=UTF-8
+encoding//src/test/resources=UTF-8
+encoding/<project>=UTF-8

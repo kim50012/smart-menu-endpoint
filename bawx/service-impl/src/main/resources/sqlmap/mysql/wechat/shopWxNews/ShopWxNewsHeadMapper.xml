@@ -1,0 +1,360 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.basoft.service.dao.wechat.shopWxNews.ShopWxNewsHeadMapper">
+  <resultMap id="BaseResultMap" type="com.basoft.service.entity.wechat.shopWxNews.ShopWxNewsHead">
+    <id column="SHOP_ID" jdbcType="BIGINT" property="shopId" />
+    <id column="MSG_ID" jdbcType="BIGINT" property="msgId" />
+    <result column="MSG_NM" jdbcType="VARCHAR" property="msgNm" />
+    <result column="IS_DELETE" jdbcType="INTEGER" property="isDelete" />
+    <result column="CREATED_ID" jdbcType="VARCHAR" property="createdId" />
+    <result column="MODIFIED_ID" jdbcType="VARCHAR" property="modifiedId" />
+    <result column="CREATED_DT" jdbcType="TIMESTAMP" property="createdDt" />
+    <result column="MODIFIED_DT" jdbcType="TIMESTAMP" property="modifiedDt" />
+    <result column="WX_MSG_ID" jdbcType="BIGINT" property="wxMsgId" />
+    <result column="WX_MSG_DATA_ID" jdbcType="BIGINT" property="wxMsgDataId" />
+  </resultMap>
+  <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="com.basoft.service.entity.wechat.shopWxNews.ShopWxNewsHead">
+    <result column="WX_MSG_ERR" jdbcType="LONGVARCHAR" property="wxMsgErr" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    SHOP_ID, MSG_ID, MSG_NM, IS_DELETE, CREATED_ID, MODIFIED_ID, CREATED_DT, MODIFIED_DT,
+    WX_MSG_ID, WX_MSG_DATA_ID
+  </sql>
+  <sql id="Blob_Column_List">
+    WX_MSG_ERR
+  </sql>
+  <select id="selectByExampleWithBLOBs" parameterType="com.basoft.service.entity.wechat.shopWxNews.ShopWxNewsHeadExample" resultMap="ResultMapWithBLOBs">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    'true' as QUERYID,
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from shop_wx_news_head
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByExample" parameterType="com.basoft.service.entity.wechat.shopWxNews.ShopWxNewsHeadExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    'true' as QUERYID,
+    <include refid="Base_Column_List" />
+    from shop_wx_news_head
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="com.basoft.service.entity.wechat.shopWxNews.ShopWxNewsHeadKey" resultMap="ResultMapWithBLOBs">
+    select
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from shop_wx_news_head
+    where SHOP_ID = #{shopId,jdbcType=BIGINT}
+    and MSG_ID = #{msgId,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="com.basoft.service.entity.wechat.shopWxNews.ShopWxNewsHeadKey">
+    delete from shop_wx_news_head
+    where SHOP_ID = #{shopId,jdbcType=BIGINT}
+    and MSG_ID = #{msgId,jdbcType=BIGINT}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.basoft.service.entity.wechat.shopWxNews.ShopWxNewsHeadExample">
+    delete from shop_wx_news_head
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.basoft.service.entity.wechat.shopWxNews.ShopWxNewsHead">
+    insert into shop_wx_news_head (SHOP_ID, MSG_ID, MSG_NM,
+    IS_DELETE, CREATED_ID, MODIFIED_ID,
+    CREATED_DT, MODIFIED_DT, WX_MSG_ID,
+    WX_MSG_DATA_ID, WX_MSG_ERR)
+    values (#{shopId,jdbcType=BIGINT}, #{msgId,jdbcType=BIGINT}, #{msgNm,jdbcType=VARCHAR},
+    #{isDelete,jdbcType=INTEGER}, #{createdId,jdbcType=VARCHAR}, #{modifiedId,jdbcType=VARCHAR},
+    #{createdDt,jdbcType=TIMESTAMP}, #{modifiedDt,jdbcType=TIMESTAMP}, #{wxMsgId,jdbcType=BIGINT},
+    #{wxMsgDataId,jdbcType=BIGINT}, #{wxMsgErr,jdbcType=LONGVARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.basoft.service.entity.wechat.shopWxNews.ShopWxNewsHead">
+    insert into shop_wx_news_head
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="shopId != null">
+        SHOP_ID,
+      </if>
+      <if test="msgId != null">
+        MSG_ID,
+      </if>
+      <if test="msgNm != null">
+        MSG_NM,
+      </if>
+      <if test="isDelete != null">
+        IS_DELETE,
+      </if>
+      <if test="createdId != null">
+        CREATED_ID,
+      </if>
+      <if test="modifiedId != null">
+        MODIFIED_ID,
+      </if>
+      <if test="createdDt != null">
+        CREATED_DT,
+      </if>
+      <if test="modifiedDt != null">
+        MODIFIED_DT,
+      </if>
+      <if test="wxMsgId != null">
+        WX_MSG_ID,
+      </if>
+      <if test="wxMsgDataId != null">
+        WX_MSG_DATA_ID,
+      </if>
+      <if test="wxMsgErr != null">
+        WX_MSG_ERR,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="shopId != null">
+        #{shopId,jdbcType=BIGINT},
+      </if>
+      <if test="msgId != null">
+        #{msgId,jdbcType=BIGINT},
+      </if>
+      <if test="msgNm != null">
+        #{msgNm,jdbcType=VARCHAR},
+      </if>
+      <if test="isDelete != null">
+        #{isDelete,jdbcType=INTEGER},
+      </if>
+      <if test="createdId != null">
+        #{createdId,jdbcType=VARCHAR},
+      </if>
+      <if test="modifiedId != null">
+        #{modifiedId,jdbcType=VARCHAR},
+      </if>
+      <if test="createdDt != null">
+        #{createdDt,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifiedDt != null">
+        #{modifiedDt,jdbcType=TIMESTAMP},
+      </if>
+      <if test="wxMsgId != null">
+        #{wxMsgId,jdbcType=BIGINT},
+      </if>
+      <if test="wxMsgDataId != null">
+        #{wxMsgDataId,jdbcType=BIGINT},
+      </if>
+      <if test="wxMsgErr != null">
+        #{wxMsgErr,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.basoft.service.entity.wechat.shopWxNews.ShopWxNewsHeadExample" resultType="java.lang.Integer">
+    select count(*) from shop_wx_news_head
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update shop_wx_news_head
+    <set>
+      <if test="record.shopId != null">
+        SHOP_ID = #{record.shopId,jdbcType=BIGINT},
+      </if>
+      <if test="record.msgId != null">
+        MSG_ID = #{record.msgId,jdbcType=BIGINT},
+      </if>
+      <if test="record.msgNm != null">
+        MSG_NM = #{record.msgNm,jdbcType=VARCHAR},
+      </if>
+      <if test="record.isDelete != null">
+        IS_DELETE = #{record.isDelete,jdbcType=INTEGER},
+      </if>
+      <if test="record.createdId != null">
+        CREATED_ID = #{record.createdId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.modifiedId != null">
+        MODIFIED_ID = #{record.modifiedId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.createdDt != null">
+        CREATED_DT = #{record.createdDt,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.modifiedDt != null">
+        MODIFIED_DT = #{record.modifiedDt,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.wxMsgId != null">
+        WX_MSG_ID = #{record.wxMsgId,jdbcType=BIGINT},
+      </if>
+      <if test="record.wxMsgDataId != null">
+        WX_MSG_DATA_ID = #{record.wxMsgDataId,jdbcType=BIGINT},
+      </if>
+      <if test="record.wxMsgErr != null">
+        WX_MSG_ERR = #{record.wxMsgErr,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExampleWithBLOBs" parameterType="map">
+    update shop_wx_news_head
+    set SHOP_ID = #{record.shopId,jdbcType=BIGINT},
+    MSG_ID = #{record.msgId,jdbcType=BIGINT},
+    MSG_NM = #{record.msgNm,jdbcType=VARCHAR},
+    IS_DELETE = #{record.isDelete,jdbcType=INTEGER},
+    CREATED_ID = #{record.createdId,jdbcType=VARCHAR},
+    MODIFIED_ID = #{record.modifiedId,jdbcType=VARCHAR},
+    CREATED_DT = #{record.createdDt,jdbcType=TIMESTAMP},
+    MODIFIED_DT = #{record.modifiedDt,jdbcType=TIMESTAMP},
+    WX_MSG_ID = #{record.wxMsgId,jdbcType=BIGINT},
+    WX_MSG_DATA_ID = #{record.wxMsgDataId,jdbcType=BIGINT},
+    WX_MSG_ERR = #{record.wxMsgErr,jdbcType=LONGVARCHAR}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update shop_wx_news_head
+    set SHOP_ID = #{record.shopId,jdbcType=BIGINT},
+    MSG_ID = #{record.msgId,jdbcType=BIGINT},
+    MSG_NM = #{record.msgNm,jdbcType=VARCHAR},
+    IS_DELETE = #{record.isDelete,jdbcType=INTEGER},
+    CREATED_ID = #{record.createdId,jdbcType=VARCHAR},
+    MODIFIED_ID = #{record.modifiedId,jdbcType=VARCHAR},
+    CREATED_DT = #{record.createdDt,jdbcType=TIMESTAMP},
+    MODIFIED_DT = #{record.modifiedDt,jdbcType=TIMESTAMP},
+    WX_MSG_ID = #{record.wxMsgId,jdbcType=BIGINT},
+    WX_MSG_DATA_ID = #{record.wxMsgDataId,jdbcType=BIGINT}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.basoft.service.entity.wechat.shopWxNews.ShopWxNewsHead">
+    update shop_wx_news_head
+    <set>
+      <if test="msgNm != null">
+        MSG_NM = #{msgNm,jdbcType=VARCHAR},
+      </if>
+      <if test="isDelete != null">
+        IS_DELETE = #{isDelete,jdbcType=INTEGER},
+      </if>
+      <if test="createdId != null">
+        CREATED_ID = #{createdId,jdbcType=VARCHAR},
+      </if>
+      <if test="modifiedId != null">
+        MODIFIED_ID = #{modifiedId,jdbcType=VARCHAR},
+      </if>
+      <if test="createdDt != null">
+        CREATED_DT = #{createdDt,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifiedDt != null">
+        MODIFIED_DT = #{modifiedDt,jdbcType=TIMESTAMP},
+      </if>
+      <if test="wxMsgId != null">
+        WX_MSG_ID = #{wxMsgId,jdbcType=BIGINT},
+      </if>
+      <if test="wxMsgDataId != null">
+        WX_MSG_DATA_ID = #{wxMsgDataId,jdbcType=BIGINT},
+      </if>
+      <if test="wxMsgErr != null">
+        WX_MSG_ERR = #{wxMsgErr,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where SHOP_ID = #{shopId,jdbcType=BIGINT}
+    and MSG_ID = #{msgId,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.basoft.service.entity.wechat.shopWxNews.ShopWxNewsHead">
+    update shop_wx_news_head
+    set MSG_NM = #{msgNm,jdbcType=VARCHAR},
+    IS_DELETE = #{isDelete,jdbcType=INTEGER},
+    CREATED_ID = #{createdId,jdbcType=VARCHAR},
+    MODIFIED_ID = #{modifiedId,jdbcType=VARCHAR},
+    CREATED_DT = #{createdDt,jdbcType=TIMESTAMP},
+    MODIFIED_DT = #{modifiedDt,jdbcType=TIMESTAMP},
+    WX_MSG_ID = #{wxMsgId,jdbcType=BIGINT},
+    WX_MSG_DATA_ID = #{wxMsgDataId,jdbcType=BIGINT},
+    WX_MSG_ERR = #{wxMsgErr,jdbcType=LONGVARCHAR}
+    where SHOP_ID = #{shopId,jdbcType=BIGINT}
+    and MSG_ID = #{msgId,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.basoft.service.entity.wechat.shopWxNews.ShopWxNewsHead">
+    update shop_wx_news_head
+    set MSG_NM = #{msgNm,jdbcType=VARCHAR},
+    IS_DELETE = #{isDelete,jdbcType=INTEGER},
+    CREATED_ID = #{createdId,jdbcType=VARCHAR},
+    MODIFIED_ID = #{modifiedId,jdbcType=VARCHAR},
+    CREATED_DT = #{createdDt,jdbcType=TIMESTAMP},
+    MODIFIED_DT = #{modifiedDt,jdbcType=TIMESTAMP},
+    WX_MSG_ID = #{wxMsgId,jdbcType=BIGINT},
+    WX_MSG_DATA_ID = #{wxMsgDataId,jdbcType=BIGINT}
+    where SHOP_ID = #{shopId,jdbcType=BIGINT}
+    and MSG_ID = #{msgId,jdbcType=BIGINT}
+  </update>
+</mapper>

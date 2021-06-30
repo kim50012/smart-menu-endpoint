@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.basoft.service.dao.cmCode.CmCodeMapper" >
+
+    <select id="findAllByParam" resultMap="ResultMapWithBLOBs">
+        SELECT  <include refid="Base_Column_List"/>,
+        <include refid="Blob_Column_List"/>
+            FROM cm_code
+        WHERE 1=1
+        <if test="param != null and param!=''">
+            AND CD_DESC like concat('%',#{param},'%') or FD_NM like concat('%',#{param},'%')
+            or  CD_VAL like concat('%',#{param},'%')
+        </if>
+        <!--<if test="fdNm != null and fdNm!=''">
+            AND FD_NM like concat('%',#{fdNm},'%')
+
+        </if>
+        <if test="cdVal != null and cdVal!=''">
+            AND CD_VAL like concat('%',#{cdVal},'%')
+
+        </if>
+        <if test="isDelete != null and isDelete!=''">
+            AND IS_DELETE = #{isDelete}
+        </if>-->
+    </select>
+</mapper>

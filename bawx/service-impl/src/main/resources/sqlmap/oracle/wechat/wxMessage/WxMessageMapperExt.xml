@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.basoft.service.dao.wechat.wxMessage.WxMessageMapper" >
+  <select id="finCustChatContent" resultType="com.basoft.service.dto.wechat.WxMessageDto">
+    <!--select usr.nickname as custNickNm,usr.headimgurl as wxIfHeadimgurl,msg.receive_dt as custReceiveDt,
+    msg.content as custContent, '' as shopContent, '' as shopReceiveDt from wx_receive_message msg inner join wx_user usr on msg.FROM_USER = usr.OPENID
+
+    where msg.sys_id=(select sys_id from wx_app_info wai where wai.shop_Id=#{shopId})
+    <if test="startTime != null and startTime!='' and endTime != null and endTime!='' " >
+      AND		msg.RECEIVE_DT >= #{startTime}
+      AND		msg.RECEIVE_DT &lt;=#{endTime}
+    </if>
+    <if test="param != null and param!=''" >
+      and CUST_NICK_NM like  concat('%',#{param},'%')
+    </if>
+    ORDER BY msg.RECEIVE_DT DESC-->
+    
+		 SELECT U.NICKNAME AS CUSTNICKNM,
+		       U.HEADIMGURL AS WXIFHEADIMGURL,
+		       MSG.RECEIVE_DT AS CUSTRECEIVEDT,
+		       MSG.CONTENT AS CUSTCONTENT,
+		       '' AS SHOPCONTENT,
+		       '' AS SHOPRECEIVEDT
+		  FROM WX_RECEIVE_MESSAGE MSG INNER JOIN WX_USER U ON MSG.FROM_USER = U.OPENID
+		 WHERE MSG.SYS_ID = (SELECT SYS_ID FROM WX_APP_INFO WAI WHERE WAI.SHOP_ID = #{shopId})
+		 <if test="startTime != null and startTime != '' and endTime != null and endTime != ''">
+		 	<![CDATA[
+			AND MSG.RECEIVE_DT >= #{startTime}
+			AND MSG.RECEIVE_DT <=#{endTime}
+			]]>
+		</if>
+		<if test="param != null and param != ''">
+			AND (U.NICKNAME LIKE CONCAT(CONCAT('%',#{param}),'%')
+			OR MSG.CONTENT LIKE CONCAT(CONCAT('%',#{param}),'%'))
+		</if>
+		ORDER BY MSG.RECEIVE_DT DESC
+  </select>
+</mapper>

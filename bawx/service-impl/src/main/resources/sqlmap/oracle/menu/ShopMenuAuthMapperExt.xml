@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.basoft.service.dao.menu.ShopMenuAuthMapper">
+  <select id="findSelectMenu" resultType="java.lang.String">
+    SELECT  MENU_ID from WX_SYS_ACCOUNT_MENU_AUTH WHERE SHOP_ID = #{shopId}
+  </select>
+
+  <!--查询当前公众号权限-->
+  <select id="findMenuAuthByShop" resultType="com.basoft.service.dto.menu.MenuDto">
+     SELECT
+      mn.ID, mn.MENU_ID, mn.MENU_NM, MENU_PID, MENU_ICON,
+      MENU_LEVEL, MENU_URL, ORDER_BY, ACTIVE_STS,
+              getCode('shop_wx_menu','MENU_STS',mn.ACTIVE_STS)activeStStr
+      from WX_SYS_ACCOUNT_MENU_AUTH sma inner JOIN WX_SYS_MENU mn on sma.MENU_ID = mn.MENU_ID
+      WHERE sma.SHOP_ID=#{shopId}
+
+      <if test="pid != null">
+        and  mn.MENU_PID=#{pid}
+      </if>
+
+      <if test="menuLevel != null ">
+        and mn.MENU_LEVEL=#{menuLevel}
+      </if>
+    and mn.ACTIVE_STS = 1
+      order by ORDER_BY asc
+  </select>
+
+  <!--查询一级菜单-->
+  <select id="findLevelOne" resultMap="BaseResultMap">
+    SELECT mn.MENU_PID as MENU_ID from WX_SYS_ACCOUNT_MENU_AUTH sma inner JOIN WX_SYS_MENU mn on sma.MENU_ID = mn.MENU_ID
+    where sma.SHOP_ID=#{shopId} and mn.ACTIVE_STS = 1
+    GROUP BY mn.MENU_PID
+  </select>
+
+
+  <resultMap id="ResultMenuAuthDto" type="com.basoft.service.dto.menu.MenuAuthDto" >
+    <result column="MENU_ID" property="id" jdbcType="BIGINT" />
+    <result column="MENU_NM" property="label" jdbcType="VARCHAR" />
+<!--     <result column="DISABLED" property="isDisabled" jdbcType="INTEGER" /> -->
+    <result column="DISABLED" property="disabled" jdbcType="BOOLEAN" />
+  </resultMap>
+  <select id="findMenuByParam" resultMap="ResultMenuAuthDto">
+    SELECT  MENU_ID, MENU_NM, MENU_PID, MENU_LEVEL,DISABLED FROM WX_SYS_MENU
+    WHERE 1=1
+    <if test="menuLevel != null ">
+      and MENU_LEVEL = #{menuLevel}
+    </if>
+    <if test="menuId != null ">
+      and MENU_PID = #{menuId}
+    </if>
+    order by ORDER_BY asc
+  </select>
+
+  <!--批量新增权限菜单 oracle版本的批量新增-->
+  <insert id="saveMenuAuthList" parameterType="com.basoft.service.entity.menu.ShopMenuAuth" useGeneratedKeys="false">
+    insert into WX_SYS_ACCOUNT_MENU_AUTH (ID, MENU_ID, SHOP_ID,CREATE_DT)
+    SELECT A.* FROM (
+    <foreach collection="list" item="item" index="index" separator="UNION ALL" >
+    	SELECT
+    		#{item.id,jdbcType=BIGINT},
+    		#{item.menuId,jdbcType=BIGINT},
+    		#{item.shopId,jdbcType=BIGINT},
+    		#{item.createDt,jdbcType=TIMESTAMP}
+    	FROM DUAL
+    </foreach>
+    ) A
+  </insert>
+</mapper>

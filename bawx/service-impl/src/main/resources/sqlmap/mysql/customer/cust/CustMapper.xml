@@ -1,0 +1,545 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.basoft.service.dao.customer.cust.CustMapper" >
+  <resultMap id="BaseResultMap" type="com.basoft.service.entity.customer.cust.Cust" >
+    <id column="CUST_SYS_ID" property="custSysId" jdbcType="BIGINT" />
+    <result column="CUST_LOGIN_ID" property="custLoginId" jdbcType="VARCHAR" />
+    <result column="WX_IF_OPENID_P" property="wxIfOpenidP" jdbcType="VARCHAR" />
+    <result column="EMAIL" property="email" jdbcType="VARCHAR" />
+    <result column="MOBILE_NO" property="mobileNo" jdbcType="VARCHAR" />
+    <result column="WX_IF_IS_SUBSCRIBE" property="wxIfIsSubscribe" jdbcType="TINYINT" />
+    <result column="WX_IF_NICK_NM" property="wxIfNickNm" jdbcType="VARCHAR" />
+    <result column="WX_IF_SEX_ID" property="wxIfSexId" jdbcType="TINYINT" />
+    <result column="WX_IF_LANGUAGE" property="wxIfLanguage" jdbcType="VARCHAR" />
+    <result column="WX_IF_COUNTRY_NM" property="wxIfCountryNm" jdbcType="VARCHAR" />
+    <result column="WX_IF_PROVINCE_NM" property="wxIfProvinceNm" jdbcType="VARCHAR" />
+    <result column="WX_IF_CITY_NM" property="wxIfCityNm" jdbcType="VARCHAR" />
+    <result column="WX_IF_HEADIMGURL" property="wxIfHeadimgurl" jdbcType="VARCHAR" />
+    <result column="WX_IF_SUBSCRIBE_TIME" property="wxIfSubscribeTime" jdbcType="TIMESTAMP" />
+    <result column="WX_IF_UNIONID" property="wxIfUnionid" jdbcType="VARCHAR" />
+    <result column="WX_IF_GROUPID" property="wxIfGroupid" jdbcType="BIGINT" />
+    <result column="WX_IF_REMARK" property="wxIfRemark" jdbcType="VARCHAR" />
+    <result column="WX_SUBSCRIBE_DT" property="wxSubscribeDt" jdbcType="TIMESTAMP" />
+    <result column="WX_ID_P" property="wxIdP" jdbcType="VARCHAR" />
+    <result column="CUST_NICK_NM" property="custNickNm" jdbcType="VARCHAR" />
+    <result column="CUST_REAL_NM" property="custRealNm" jdbcType="VARCHAR" />
+    <result column="PWD" property="pwd" jdbcType="VARCHAR" />
+    <result column="ACTIVE_STS" property="activeSts" jdbcType="VARCHAR" />
+    <result column="MODIFIED_DT" property="modifiedDt" jdbcType="TIMESTAMP" />
+    <result column="CREATED_DT" property="createdDt" jdbcType="TIMESTAMP" />
+    <result column="WX_IF_IMG_URL" property="wxIfImgUrl" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    CUST_SYS_ID, CUST_LOGIN_ID, WX_IF_OPENID_P, EMAIL, MOBILE_NO, WX_IF_IS_SUBSCRIBE, 
+    WX_IF_NICK_NM, WX_IF_SEX_ID, WX_IF_LANGUAGE, WX_IF_COUNTRY_NM, WX_IF_PROVINCE_NM, 
+    WX_IF_CITY_NM, WX_IF_HEADIMGURL, WX_IF_SUBSCRIBE_TIME, WX_IF_UNIONID, WX_IF_GROUPID, 
+    WX_IF_REMARK, WX_SUBSCRIBE_DT, WX_ID_P, CUST_NICK_NM, CUST_REAL_NM, PWD, ACTIVE_STS, 
+    MODIFIED_DT, CREATED_DT, WX_IF_IMG_URL
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.basoft.service.entity.customer.cust.CustExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    'true' as QUERYID,
+    <include refid="Base_Column_List" />
+    from cust
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from cust
+    where CUST_SYS_ID = #{custSysId,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from cust
+    where CUST_SYS_ID = #{custSysId,jdbcType=BIGINT}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.basoft.service.entity.customer.cust.CustExample" >
+    delete from cust
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.basoft.service.entity.customer.cust.Cust" >
+    insert into cust (CUST_SYS_ID, CUST_LOGIN_ID, WX_IF_OPENID_P, 
+      EMAIL, MOBILE_NO, WX_IF_IS_SUBSCRIBE, 
+      WX_IF_NICK_NM, WX_IF_SEX_ID, WX_IF_LANGUAGE, 
+      WX_IF_COUNTRY_NM, WX_IF_PROVINCE_NM, WX_IF_CITY_NM, 
+      WX_IF_HEADIMGURL, WX_IF_SUBSCRIBE_TIME, WX_IF_UNIONID, 
+      WX_IF_GROUPID, WX_IF_REMARK, WX_SUBSCRIBE_DT, 
+      WX_ID_P, CUST_NICK_NM, CUST_REAL_NM, 
+      PWD, ACTIVE_STS, MODIFIED_DT, 
+      CREATED_DT, WX_IF_IMG_URL)
+    values (#{custSysId,jdbcType=BIGINT}, #{custLoginId,jdbcType=VARCHAR}, #{wxIfOpenidP,jdbcType=VARCHAR}, 
+      #{email,jdbcType=VARCHAR}, #{mobileNo,jdbcType=VARCHAR}, #{wxIfIsSubscribe,jdbcType=TINYINT}, 
+      #{wxIfNickNm,jdbcType=VARCHAR}, #{wxIfSexId,jdbcType=TINYINT}, #{wxIfLanguage,jdbcType=VARCHAR}, 
+      #{wxIfCountryNm,jdbcType=VARCHAR}, #{wxIfProvinceNm,jdbcType=VARCHAR}, #{wxIfCityNm,jdbcType=VARCHAR}, 
+      #{wxIfHeadimgurl,jdbcType=VARCHAR}, #{wxIfSubscribeTime,jdbcType=TIMESTAMP}, #{wxIfUnionid,jdbcType=VARCHAR}, 
+      #{wxIfGroupid,jdbcType=BIGINT}, #{wxIfRemark,jdbcType=VARCHAR}, #{wxSubscribeDt,jdbcType=TIMESTAMP}, 
+      #{wxIdP,jdbcType=VARCHAR}, #{custNickNm,jdbcType=VARCHAR}, #{custRealNm,jdbcType=VARCHAR}, 
+      #{pwd,jdbcType=VARCHAR}, #{activeSts,jdbcType=VARCHAR}, #{modifiedDt,jdbcType=TIMESTAMP}, 
+      #{createdDt,jdbcType=TIMESTAMP}, #{wxIfImgUrl,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.basoft.service.entity.customer.cust.Cust" >
+    insert into cust
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="custSysId != null" >
+        CUST_SYS_ID,
+      </if>
+      <if test="custLoginId != null" >
+        CUST_LOGIN_ID,
+      </if>
+      <if test="wxIfOpenidP != null" >
+        WX_IF_OPENID_P,
+      </if>
+      <if test="email != null" >
+        EMAIL,
+      </if>
+      <if test="mobileNo != null" >
+        MOBILE_NO,
+      </if>
+      <if test="wxIfIsSubscribe != null" >
+        WX_IF_IS_SUBSCRIBE,
+      </if>
+      <if test="wxIfNickNm != null" >
+        WX_IF_NICK_NM,
+      </if>
+      <if test="wxIfSexId != null" >
+        WX_IF_SEX_ID,
+      </if>
+      <if test="wxIfLanguage != null" >
+        WX_IF_LANGUAGE,
+      </if>
+      <if test="wxIfCountryNm != null" >
+        WX_IF_COUNTRY_NM,
+      </if>
+      <if test="wxIfProvinceNm != null" >
+        WX_IF_PROVINCE_NM,
+      </if>
+      <if test="wxIfCityNm != null" >
+        WX_IF_CITY_NM,
+      </if>
+      <if test="wxIfHeadimgurl != null" >
+        WX_IF_HEADIMGURL,
+      </if>
+      <if test="wxIfSubscribeTime != null" >
+        WX_IF_SUBSCRIBE_TIME,
+      </if>
+      <if test="wxIfUnionid != null" >
+        WX_IF_UNIONID,
+      </if>
+      <if test="wxIfGroupid != null" >
+        WX_IF_GROUPID,
+      </if>
+      <if test="wxIfRemark != null" >
+        WX_IF_REMARK,
+      </if>
+      <if test="wxSubscribeDt != null" >
+        WX_SUBSCRIBE_DT,
+      </if>
+      <if test="wxIdP != null" >
+        WX_ID_P,
+      </if>
+      <if test="custNickNm != null" >
+        CUST_NICK_NM,
+      </if>
+      <if test="custRealNm != null" >
+        CUST_REAL_NM,
+      </if>
+      <if test="pwd != null" >
+        PWD,
+      </if>
+      <if test="activeSts != null" >
+        ACTIVE_STS,
+      </if>
+      <if test="modifiedDt != null" >
+        MODIFIED_DT,
+      </if>
+      <if test="createdDt != null" >
+        CREATED_DT,
+      </if>
+      <if test="wxIfImgUrl != null" >
+        WX_IF_IMG_URL,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="custSysId != null" >
+        #{custSysId,jdbcType=BIGINT},
+      </if>
+      <if test="custLoginId != null" >
+        #{custLoginId,jdbcType=VARCHAR},
+      </if>
+      <if test="wxIfOpenidP != null" >
+        #{wxIfOpenidP,jdbcType=VARCHAR},
+      </if>
+      <if test="email != null" >
+        #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="mobileNo != null" >
+        #{mobileNo,jdbcType=VARCHAR},
+      </if>
+      <if test="wxIfIsSubscribe != null" >
+        #{wxIfIsSubscribe,jdbcType=TINYINT},
+      </if>
+      <if test="wxIfNickNm != null" >
+        #{wxIfNickNm,jdbcType=VARCHAR},
+      </if>
+      <if test="wxIfSexId != null" >
+        #{wxIfSexId,jdbcType=TINYINT},
+      </if>
+      <if test="wxIfLanguage != null" >
+        #{wxIfLanguage,jdbcType=VARCHAR},
+      </if>
+      <if test="wxIfCountryNm != null" >
+        #{wxIfCountryNm,jdbcType=VARCHAR},
+      </if>
+      <if test="wxIfProvinceNm != null" >
+        #{wxIfProvinceNm,jdbcType=VARCHAR},
+      </if>
+      <if test="wxIfCityNm != null" >
+        #{wxIfCityNm,jdbcType=VARCHAR},
+      </if>
+      <if test="wxIfHeadimgurl != null" >
+        #{wxIfHeadimgurl,jdbcType=VARCHAR},
+      </if>
+      <if test="wxIfSubscribeTime != null" >
+        #{wxIfSubscribeTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="wxIfUnionid != null" >
+        #{wxIfUnionid,jdbcType=VARCHAR},
+      </if>
+      <if test="wxIfGroupid != null" >
+        #{wxIfGroupid,jdbcType=BIGINT},
+      </if>
+      <if test="wxIfRemark != null" >
+        #{wxIfRemark,jdbcType=VARCHAR},
+      </if>
+      <if test="wxSubscribeDt != null" >
+        #{wxSubscribeDt,jdbcType=TIMESTAMP},
+      </if>
+      <if test="wxIdP != null" >
+        #{wxIdP,jdbcType=VARCHAR},
+      </if>
+      <if test="custNickNm != null" >
+        #{custNickNm,jdbcType=VARCHAR},
+      </if>
+      <if test="custRealNm != null" >
+        #{custRealNm,jdbcType=VARCHAR},
+      </if>
+      <if test="pwd != null" >
+        #{pwd,jdbcType=VARCHAR},
+      </if>
+      <if test="activeSts != null" >
+        #{activeSts,jdbcType=VARCHAR},
+      </if>
+      <if test="modifiedDt != null" >
+        #{modifiedDt,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createdDt != null" >
+        #{createdDt,jdbcType=TIMESTAMP},
+      </if>
+      <if test="wxIfImgUrl != null" >
+        #{wxIfImgUrl,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.basoft.service.entity.customer.cust.CustExample" resultType="java.lang.Integer" >
+    select count(*) from cust
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update cust
+    <set >
+      <if test="record.custSysId != null" >
+        CUST_SYS_ID = #{record.custSysId,jdbcType=BIGINT},
+      </if>
+      <if test="record.custLoginId != null" >
+        CUST_LOGIN_ID = #{record.custLoginId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.wxIfOpenidP != null" >
+        WX_IF_OPENID_P = #{record.wxIfOpenidP,jdbcType=VARCHAR},
+      </if>
+      <if test="record.email != null" >
+        EMAIL = #{record.email,jdbcType=VARCHAR},
+      </if>
+      <if test="record.mobileNo != null" >
+        MOBILE_NO = #{record.mobileNo,jdbcType=VARCHAR},
+      </if>
+      <if test="record.wxIfIsSubscribe != null" >
+        WX_IF_IS_SUBSCRIBE = #{record.wxIfIsSubscribe,jdbcType=TINYINT},
+      </if>
+      <if test="record.wxIfNickNm != null" >
+        WX_IF_NICK_NM = #{record.wxIfNickNm,jdbcType=VARCHAR},
+      </if>
+      <if test="record.wxIfSexId != null" >
+        WX_IF_SEX_ID = #{record.wxIfSexId,jdbcType=TINYINT},
+      </if>
+      <if test="record.wxIfLanguage != null" >
+        WX_IF_LANGUAGE = #{record.wxIfLanguage,jdbcType=VARCHAR},
+      </if>
+      <if test="record.wxIfCountryNm != null" >
+        WX_IF_COUNTRY_NM = #{record.wxIfCountryNm,jdbcType=VARCHAR},
+      </if>
+      <if test="record.wxIfProvinceNm != null" >
+        WX_IF_PROVINCE_NM = #{record.wxIfProvinceNm,jdbcType=VARCHAR},
+      </if>
+      <if test="record.wxIfCityNm != null" >
+        WX_IF_CITY_NM = #{record.wxIfCityNm,jdbcType=VARCHAR},
+      </if>
+      <if test="record.wxIfHeadimgurl != null" >
+        WX_IF_HEADIMGURL = #{record.wxIfHeadimgurl,jdbcType=VARCHAR},
+      </if>
+      <if test="record.wxIfSubscribeTime != null" >
+        WX_IF_SUBSCRIBE_TIME = #{record.wxIfSubscribeTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.wxIfUnionid != null" >
+        WX_IF_UNIONID = #{record.wxIfUnionid,jdbcType=VARCHAR},
+      </if>
+      <if test="record.wxIfGroupid != null" >
+        WX_IF_GROUPID = #{record.wxIfGroupid,jdbcType=BIGINT},
+      </if>
+      <if test="record.wxIfRemark != null" >
+        WX_IF_REMARK = #{record.wxIfRemark,jdbcType=VARCHAR},
+      </if>
+      <if test="record.wxSubscribeDt != null" >
+        WX_SUBSCRIBE_DT = #{record.wxSubscribeDt,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.wxIdP != null" >
+        WX_ID_P = #{record.wxIdP,jdbcType=VARCHAR},
+      </if>
+      <if test="record.custNickNm != null" >
+        CUST_NICK_NM = #{record.custNickNm,jdbcType=VARCHAR},
+      </if>
+      <if test="record.custRealNm != null" >
+        CUST_REAL_NM = #{record.custRealNm,jdbcType=VARCHAR},
+      </if>
+      <if test="record.pwd != null" >
+        PWD = #{record.pwd,jdbcType=VARCHAR},
+      </if>
+      <if test="record.activeSts != null" >
+        ACTIVE_STS = #{record.activeSts,jdbcType=VARCHAR},
+      </if>
+      <if test="record.modifiedDt != null" >
+        MODIFIED_DT = #{record.modifiedDt,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.createdDt != null" >
+        CREATED_DT = #{record.createdDt,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.wxIfImgUrl != null" >
+        WX_IF_IMG_URL = #{record.wxIfImgUrl,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update cust
+    set CUST_SYS_ID = #{record.custSysId,jdbcType=BIGINT},
+      CUST_LOGIN_ID = #{record.custLoginId,jdbcType=VARCHAR},
+      WX_IF_OPENID_P = #{record.wxIfOpenidP,jdbcType=VARCHAR},
+      EMAIL = #{record.email,jdbcType=VARCHAR},
+      MOBILE_NO = #{record.mobileNo,jdbcType=VARCHAR},
+      WX_IF_IS_SUBSCRIBE = #{record.wxIfIsSubscribe,jdbcType=TINYINT},
+      WX_IF_NICK_NM = #{record.wxIfNickNm,jdbcType=VARCHAR},
+      WX_IF_SEX_ID = #{record.wxIfSexId,jdbcType=TINYINT},
+      WX_IF_LANGUAGE = #{record.wxIfLanguage,jdbcType=VARCHAR},
+      WX_IF_COUNTRY_NM = #{record.wxIfCountryNm,jdbcType=VARCHAR},
+      WX_IF_PROVINCE_NM = #{record.wxIfProvinceNm,jdbcType=VARCHAR},
+      WX_IF_CITY_NM = #{record.wxIfCityNm,jdbcType=VARCHAR},
+      WX_IF_HEADIMGURL = #{record.wxIfHeadimgurl,jdbcType=VARCHAR},
+      WX_IF_SUBSCRIBE_TIME = #{record.wxIfSubscribeTime,jdbcType=TIMESTAMP},
+      WX_IF_UNIONID = #{record.wxIfUnionid,jdbcType=VARCHAR},
+      WX_IF_GROUPID = #{record.wxIfGroupid,jdbcType=BIGINT},
+      WX_IF_REMARK = #{record.wxIfRemark,jdbcType=VARCHAR},
+      WX_SUBSCRIBE_DT = #{record.wxSubscribeDt,jdbcType=TIMESTAMP},
+      WX_ID_P = #{record.wxIdP,jdbcType=VARCHAR},
+      CUST_NICK_NM = #{record.custNickNm,jdbcType=VARCHAR},
+      CUST_REAL_NM = #{record.custRealNm,jdbcType=VARCHAR},
+      PWD = #{record.pwd,jdbcType=VARCHAR},
+      ACTIVE_STS = #{record.activeSts,jdbcType=VARCHAR},
+      MODIFIED_DT = #{record.modifiedDt,jdbcType=TIMESTAMP},
+      CREATED_DT = #{record.createdDt,jdbcType=TIMESTAMP},
+      WX_IF_IMG_URL = #{record.wxIfImgUrl,jdbcType=VARCHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.basoft.service.entity.customer.cust.Cust" >
+    update cust
+    <set >
+      <if test="custLoginId != null" >
+        CUST_LOGIN_ID = #{custLoginId,jdbcType=VARCHAR},
+      </if>
+      <if test="wxIfOpenidP != null" >
+        WX_IF_OPENID_P = #{wxIfOpenidP,jdbcType=VARCHAR},
+      </if>
+      <if test="email != null" >
+        EMAIL = #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="mobileNo != null" >
+        MOBILE_NO = #{mobileNo,jdbcType=VARCHAR},
+      </if>
+      <if test="wxIfIsSubscribe != null" >
+        WX_IF_IS_SUBSCRIBE = #{wxIfIsSubscribe,jdbcType=TINYINT},
+      </if>
+      <if test="wxIfNickNm != null" >
+        WX_IF_NICK_NM = #{wxIfNickNm,jdbcType=VARCHAR},
+      </if>
+      <if test="wxIfSexId != null" >
+        WX_IF_SEX_ID = #{wxIfSexId,jdbcType=TINYINT},
+      </if>
+      <if test="wxIfLanguage != null" >
+        WX_IF_LANGUAGE = #{wxIfLanguage,jdbcType=VARCHAR},
+      </if>
+      <if test="wxIfCountryNm != null" >
+        WX_IF_COUNTRY_NM = #{wxIfCountryNm,jdbcType=VARCHAR},
+      </if>
+      <if test="wxIfProvinceNm != null" >
+        WX_IF_PROVINCE_NM = #{wxIfProvinceNm,jdbcType=VARCHAR},
+      </if>
+      <if test="wxIfCityNm != null" >
+        WX_IF_CITY_NM = #{wxIfCityNm,jdbcType=VARCHAR},
+      </if>
+      <if test="wxIfHeadimgurl != null" >
+        WX_IF_HEADIMGURL = #{wxIfHeadimgurl,jdbcType=VARCHAR},
+      </if>
+      <if test="wxIfSubscribeTime != null" >
+        WX_IF_SUBSCRIBE_TIME = #{wxIfSubscribeTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="wxIfUnionid != null" >
+        WX_IF_UNIONID = #{wxIfUnionid,jdbcType=VARCHAR},
+      </if>
+      <if test="wxIfGroupid != null" >
+        WX_IF_GROUPID = #{wxIfGroupid,jdbcType=BIGINT},
+      </if>
+      <if test="wxIfRemark != null" >
+        WX_IF_REMARK = #{wxIfRemark,jdbcType=VARCHAR},
+      </if>
+      <if test="wxSubscribeDt != null" >
+        WX_SUBSCRIBE_DT = #{wxSubscribeDt,jdbcType=TIMESTAMP},
+      </if>
+      <if test="wxIdP != null" >
+        WX_ID_P = #{wxIdP,jdbcType=VARCHAR},
+      </if>
+      <if test="custNickNm != null" >
+        CUST_NICK_NM = #{custNickNm,jdbcType=VARCHAR},
+      </if>
+      <if test="custRealNm != null" >
+        CUST_REAL_NM = #{custRealNm,jdbcType=VARCHAR},
+      </if>
+      <if test="pwd != null" >
+        PWD = #{pwd,jdbcType=VARCHAR},
+      </if>
+      <if test="activeSts != null" >
+        ACTIVE_STS = #{activeSts,jdbcType=VARCHAR},
+      </if>
+      <if test="modifiedDt != null" >
+        MODIFIED_DT = #{modifiedDt,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createdDt != null" >
+        CREATED_DT = #{createdDt,jdbcType=TIMESTAMP},
+      </if>
+      <if test="wxIfImgUrl != null" >
+        WX_IF_IMG_URL = #{wxIfImgUrl,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where CUST_SYS_ID = #{custSysId,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.basoft.service.entity.customer.cust.Cust" >
+    update cust
+    set CUST_LOGIN_ID = #{custLoginId,jdbcType=VARCHAR},
+      WX_IF_OPENID_P = #{wxIfOpenidP,jdbcType=VARCHAR},
+      EMAIL = #{email,jdbcType=VARCHAR},
+      MOBILE_NO = #{mobileNo,jdbcType=VARCHAR},
+      WX_IF_IS_SUBSCRIBE = #{wxIfIsSubscribe,jdbcType=TINYINT},
+      WX_IF_NICK_NM = #{wxIfNickNm,jdbcType=VARCHAR},
+      WX_IF_SEX_ID = #{wxIfSexId,jdbcType=TINYINT},
+      WX_IF_LANGUAGE = #{wxIfLanguage,jdbcType=VARCHAR},
+      WX_IF_COUNTRY_NM = #{wxIfCountryNm,jdbcType=VARCHAR},
+      WX_IF_PROVINCE_NM = #{wxIfProvinceNm,jdbcType=VARCHAR},
+      WX_IF_CITY_NM = #{wxIfCityNm,jdbcType=VARCHAR},
+      WX_IF_HEADIMGURL = #{wxIfHeadimgurl,jdbcType=VARCHAR},
+      WX_IF_SUBSCRIBE_TIME = #{wxIfSubscribeTime,jdbcType=TIMESTAMP},
+      WX_IF_UNIONID = #{wxIfUnionid,jdbcType=VARCHAR},
+      WX_IF_GROUPID = #{wxIfGroupid,jdbcType=BIGINT},
+      WX_IF_REMARK = #{wxIfRemark,jdbcType=VARCHAR},
+      WX_SUBSCRIBE_DT = #{wxSubscribeDt,jdbcType=TIMESTAMP},
+      WX_ID_P = #{wxIdP,jdbcType=VARCHAR},
+      CUST_NICK_NM = #{custNickNm,jdbcType=VARCHAR},
+      CUST_REAL_NM = #{custRealNm,jdbcType=VARCHAR},
+      PWD = #{pwd,jdbcType=VARCHAR},
+      ACTIVE_STS = #{activeSts,jdbcType=VARCHAR},
+      MODIFIED_DT = #{modifiedDt,jdbcType=TIMESTAMP},
+      CREATED_DT = #{createdDt,jdbcType=TIMESTAMP},
+      WX_IF_IMG_URL = #{wxIfImgUrl,jdbcType=VARCHAR}
+    where CUST_SYS_ID = #{custSysId,jdbcType=BIGINT}
+  </update>
+</mapper>

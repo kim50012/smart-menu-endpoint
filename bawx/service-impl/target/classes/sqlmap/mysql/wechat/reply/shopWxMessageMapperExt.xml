@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.basoft.service.dao.wechat.reply.ShopWxMessageMapper">
+	<resultMap id="shopMessagedto" type="com.basoft.service.dto.wechat.reply.AutomaticReplyDto">
+	  <id column="MESSAGE_ID" jdbcType="INTEGER" property="messageId" />
+	  <result column="SHOP_ID" jdbcType="INTEGER" property="shopId" />
+	  <result column="KEYWORD" jdbcType="VARCHAR" property="keyword" />
+	  <result column="SEND_FILE_TYPE" jdbcType="INTEGER" property="sendFileType" />
+	  <result column="MATERIAL_FILE_ID" property="materialFileId" jdbcType="BIGINT" />
+	  <result column="MODIFIED_ID" jdbcType="VARCHAR" property="modifiedId" />
+	  <result column="MSG_TITLE" jdbcType="LONGVARCHAR" property="msgTitle" />
+	  <result column="CREATED_DT" jdbcType="TIMESTAMP" property="createdDt" />
+	  <result column="SEND_MSG_BODY" property="sendMsgBody" jdbcType="LONGVARCHAR" />
+	  <result column="MATERIAL_FILE_WX_ID" property="materialFileWxId" jdbcType="LONGVARCHAR" />
+	  <result column="CALLCENTER_ID" jdbcType="VARCHAR" property="callcenterId"  />
+	  <result column="KF_NICK" jdbcType="VARCHAR" property="kfNick"  />
+	</resultMap>
+
+	<!-- 获取关键字回复列表 -->
+	<select id="keyReplyFindAll" resultMap="shopMessagedto">
+		SELECT wm.MESSAGE_ID,
+			GROUP_CONCAT(mk.KEYWORD) KEYWORD,
+			wm.MSG_TITLE,
+			wm.SEND_FILE_TYPE,
+			wm.SEND_MSG_BODY,
+			getCode('shop_wx_news_item','NEWS_TYPE',wm.SEND_FILE_TYPE) sendFileTypeStr,
+			wm.MATERIAL_FILE_ID,
+			wm.CREATED_DT,
+			wm.SHOP_ID,
+			wm.CALLCENTER_ID,wm.KF_NICK
+		FROM shop_wx_message wm LEFT JOIN shop_message_keyword mk ON wm.MESSAGE_ID = mk.MESSAGE_ID
+      	<where>
+	        <if test="keyWord != null and keyWord != ''">
+	            mk.KEYWORD like concat('%',#{keyWord},'%')
+	        </if>
+	        <if test="sendFileType != null and sendFileType != '' and sendFileType != '-1'">
+	            and wm.SEND_FILE_TYPE = #{sendFileType}
+	        </if>
+	        <if test="shopId != null ">
+	           and wm.SHOP_ID = #{shopId}
+	        </if>
+	        and wm.MSG_GROUP='KEYWORD'
+      	</where>
+      	group by wm.MESSAGE_ID
+  	</select>
+
+	<!-- 新增关键字回复/新增自动回复/新增关注回复-->
+    <insert id="insertReply" parameterType="com.basoft.service.param.reply.AutomaticReplyForm">
+	    insert into shop_wx_message (MESSAGE_ID, SHOP_ID, MSG_GROUP,
+	    SEND_FILE_TYPE,MATERIAL_FILE_ID,MODIFIED_ID,MATERIAL_FILE_WX_ID,SEND_TYPE, SEND_TIME,CREATED_ID,CREATED_DT,IS_DELETE,SEND_TYPE_ID,MSG_TITLE,SEND_MSG_BODY,CALLCENTER_ID,KF_NICK)
+	    values
+	    (#{messageId,jdbcType=INTEGER}, #{shopId,jdbcType=INTEGER}, #{msgGroup,jdbcType=VARCHAR},
+	    #{sendFileType,jdbcType=INTEGER}, #{materialFileId},#{modifiedId},#{materialFileWxId},
+	    #{sendType,jdbcType=INTEGER}, #{sendTime,jdbcType=TIMESTAMP}, #{createdId,jdbcType=VARCHAR},
+	    #{createdDt,jdbcType=TIMESTAMP},
+	    #{isDelete,jdbcType=INTEGER}, #{sendTypeId,jdbcType=INTEGER}, #{msgTitle,jdbcType=LONGVARCHAR},
+	    #{sendMsgBody,jdbcType=LONGVARCHAR}, #{callcenterId,jdbcType=VARCHAR},#{kfNick,jdbcType=VARCHAR})
+	</insert>
+
+	<!-- 获取单条关键字回复详情 -->
+    <select id="getKeyReplyDetail" resultMap="shopMessagedto">
+        SELECT swm.MESSAGE_ID,
+        swm.SHOP_ID,
+        group_concat(smk.KEYWORD) KEYWORD,
+        swm.SEND_FILE_TYPE,
+        swm.MATERIAL_FILE_ID,
+        swm.MSG_TITLE,
+        swm.SEND_MSG_BODY,
+        swm.CREATED_DT,
+        swm.MODIFIED_ID,
+        swm.MATERIAL_FILE_WX_ID,
+        swm.CALLCENTER_ID
+        FROM shop_wx_message swm LEFT join shop_message_keyword smk on swm.MESSAGE_ID=smk.MESSAGE_ID
+        <where>
+            <if test="shopId != null ">
+                and swm.SHOP_ID = #{shopId}
+            </if>
+            <if test="messageId != null ">
+                and swm.MESSAGE_ID = #{messageId}
+            </if>
+        </where>
+        group by swm.MESSAGE_ID
+    </select>
+
+    <select id="getShopWxMessageByMsgGroup" resultMap="shopMessagedto">
+        SELECT
+	        MESSAGE_ID,
+	        SHOP_ID,
+        	SEND_FILE_TYPE,
+        	MATERIAL_FILE_ID,
+        	MATERIAL_FILE_WX_ID,
+        	MSG_TITLE,
+        	SEND_MSG_BODY,
+        	CREATED_DT,
+        	MODIFIED_ID,
+        	CALLCENTER_ID
+        FROM SHOP_WX_MESSAGE
+        <where>
+            <if test="shopId != null and shopId != ''">
+                and SHOP_ID = #{shopId}
+            </if>
+            <if test="msgGroup != null and msgGroup != ''">
+                and MSG_GROUP = #{msgGroup,jdbcType=VARCHAR}
+            </if>
+            and IS_DELETE = 0
+        </where>
+    </select>
+
+    <select id="msgListFragment" resultType="com.basoft.service.dto.customer.CustMsgDto">
+            SELECT
+			 T1.MESSAGE_ID
+			,T1.SHOP_ID
+			,T1.MSG_GROUP
+			,T1.MSG_TITLE
+			,T1.SEND_TYPE_ID
+			,(SELECT A.IMG_URL FROM USER A WHERE A.USER_ID=#{userId}) AS IMG_URL
+			,(SELECT A.SHOP_NM FROM SHOP A WHERE SHOP_ID =#{shopId}) AS SHOP_NM
+			,CASE
+				WHEN T1.SEND_FILE_TYPE = 1 THEN '文本'
+				WHEN T1.SEND_FILE_TYPE = 2 THEN '图片'
+				WHEN T1.SEND_FILE_TYPE = 3 THEN '音频'
+				WHEN T1.SEND_FILE_TYPE = 4 THEN '视频'
+				WHEN T1.SEND_FILE_TYPE = 5 THEN '素材'
+			 END	AS sendFileTypeStr
+			,T1.MATERIAL_FILE_ID
+			,CASE
+				WHEN T1.MATERIAL_FILE_ID IS NOT NULL THEN (SELECT A.FULL_URL FROM SHOP_FILE_MST A WHERE A.FILE_ID=T1.MATERIAL_FILE_ID)
+				WHEN T1.MATERIAL_FILE_ID IS NULL THEN NULL
+			 END AS FILE_URL
+			 ,CASE
+				WHEN T1.MATERIAL_FILE_ID IS NOT NULL THEN (SELECT A.FILE_NM FROM SHOP_FILE_MST A WHERE A.FILE_ID=T1.MATERIAL_FILE_ID)
+				WHEN T1.MATERIAL_FILE_ID IS NULL THEN NULL
+			 END AS FILE_NM
+			,T1.COVER_PAGE_ID
+			,CASE
+				WHEN T1.COVER_PAGE_ID IS NOT NULL THEN (SELECT A.FULL_URL FROM SHOP_FILE_MST A WHERE A.FILE_ID=T1.COVER_PAGE_ID)
+				WHEN T1.COVER_PAGE_ID IS NULL THEN NULL
+			 END AS COVER_PAGE_URL
+			,CASE
+				WHEN T1.COVER_PAGE_ID IS NOT NULL THEN (SELECT A.FILE_NM FROM SHOP_FILE_MST A WHERE A.FILE_ID=T1.COVER_PAGE_ID)
+				WHEN T1.COVER_PAGE_ID IS NULL THEN NULL
+			END AS COVER_PAGE_NM
+			,T1.SHOP_GOODS_URL
+			,T1.SEND_MSG_BODY
+			,T1.SEND_TYPE
+			,T1.SEND_TIME
+			,T1.CREATED_ID
+			,T1.MODIFIED_ID
+			,T1.CREATED_DT AS CREATED_DT
+			,T1.MODIFIED_DT
+			,CASE
+				WHEN T1.SEND_TYPE_ID = 3 THEN (SELECT A.WX_IF_NICK_NM FROM CUST A WHERE A.CUST_SYS_ID=T2.CUST_SYS_ID )
+				 WHEN T1.SEND_TYPE_ID = 2 THEN (SELECT A.GRADE_ID FROM   CUST_SHOP  A WHERE A.CUST_SYS_ID=T2.CUST_SYS_ID )
+				ELSE NULL
+			 END AS CUST_NAME
+			,CASE
+				 WHEN T1.SEND_TYPE_ID = 3 THEN (SELECT A.WX_IF_NICK_NM FROM CUST A WHERE A.CUST_SYS_ID=T2.CUST_SYS_ID )
+				WHEN T1.SEND_TYPE_ID = 2 THEN (SELECT A.GRADE_ID FROM   CUST_SHOP  A WHERE A.CUST_SYS_ID=T2.CUST_SYS_ID )
+				ELSE NULL
+			 END AS CUST_GRADE
+			 ,T2.CUST_SYS_ID
+            FROM	SHOP_WX_MESSAGE T1
+                    INNER JOIN SHOP_MESSAGE_CUST T2
+                            ON T2.SHOP_ID=T1.SHOP_ID
+                            AND T2.MESSAGE_ID=T1.MESSAGE_ID
+            WHERE	T1.SHOP_ID = #{shopId}
+            -- AND		T1.MESSAGE_ID=ISNULL(@MESSAGE_ID,T1.MESSAGE_ID)
+            -- AND		T1.MSG_GROUP=@MSG_GROUP
+             AND		T1.IS_DELETE=0
+             ORDER BY T1.MESSAGE_ID DESC
+    </select>
+</mapper>

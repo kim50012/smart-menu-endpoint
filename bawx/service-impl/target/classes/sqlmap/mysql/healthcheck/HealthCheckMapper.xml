@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.basoft.service.dao.healthcheck.HealthCheckMapper">
+	<select id="getData" resultType="java.lang.String">
+		select check_data from base_health_check limit 1
+	</select>
+</mapper>

@@ -1,0 +1,273 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.basoft.service.dao.menu.MenuMstMapper" >
+  <resultMap id="BaseResultMap" type="com.basoft.service.entity.menu.MenuMst" >
+    <id column="ID" property="id" jdbcType="BIGINT" />
+    <result column="MENU_ID" property="menuId" jdbcType="BIGINT" />
+    <result column="MENU_NM" property="menuNm" jdbcType="VARCHAR" />
+    <result column="MENU_PID" property="menuPid" jdbcType="BIGINT" />
+    <result column="MENU_ICON" property="menuIcon" jdbcType="VARCHAR" />
+    <result column="MENU_LEVEL" property="menuLevel" jdbcType="TINYINT" />
+    <result column="MENU_URL" property="menuUrl" jdbcType="VARCHAR" />
+    <result column="ORDER_BY" property="orderBy" jdbcType="INTEGER" />
+    <result column="ACTIVE_STS" property="activeSts" jdbcType="TINYINT" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    ID, MENU_ID, MENU_NM, MENU_PID, MENU_ICON, MENU_LEVEL, MENU_URL, ORDER_BY, ACTIVE_STS
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.basoft.service.entity.menu.MenuMstExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    'true' as QUERYID,
+    <include refid="Base_Column_List" />
+    from WX_SYS_MENU
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from WX_SYS_MENU
+    where ID = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from WX_SYS_MENU
+    where ID = #{id,jdbcType=BIGINT}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.basoft.service.entity.menu.MenuMstExample" >
+    delete from WX_SYS_MENU
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.basoft.service.entity.menu.MenuMst" >
+    insert into WX_SYS_MENU (ID, MENU_ID, MENU_NM, 
+      MENU_PID, MENU_ICON, MENU_LEVEL, 
+      MENU_URL, ORDER_BY, ACTIVE_STS
+      )
+    values (#{id,jdbcType=BIGINT}, #{menuId,jdbcType=BIGINT}, #{menuNm,jdbcType=VARCHAR}, 
+      #{menuPid,jdbcType=BIGINT}, #{menuIcon,jdbcType=VARCHAR}, #{menuLevel,jdbcType=TINYINT}, 
+      #{menuUrl,jdbcType=VARCHAR}, #{orderBy,jdbcType=INTEGER}, #{activeSts,jdbcType=TINYINT}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.basoft.service.entity.menu.MenuMst" >
+    insert into WX_SYS_MENU
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        ID,
+      </if>
+      <if test="menuId != null" >
+        MENU_ID,
+      </if>
+      <if test="menuNm != null" >
+        MENU_NM,
+      </if>
+      <if test="menuPid != null" >
+        MENU_PID,
+      </if>
+      <if test="menuIcon != null" >
+        MENU_ICON,
+      </if>
+      <if test="menuLevel != null" >
+        MENU_LEVEL,
+      </if>
+      <if test="menuUrl != null" >
+        MENU_URL,
+      </if>
+      <if test="orderBy != null" >
+        ORDER_BY,
+      </if>
+      <if test="activeSts != null" >
+        ACTIVE_STS,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="menuId != null" >
+        #{menuId,jdbcType=BIGINT},
+      </if>
+      <if test="menuNm != null" >
+        #{menuNm,jdbcType=VARCHAR},
+      </if>
+      <if test="menuPid != null" >
+        #{menuPid,jdbcType=BIGINT},
+      </if>
+      <if test="menuIcon != null" >
+        #{menuIcon,jdbcType=VARCHAR},
+      </if>
+      <if test="menuLevel != null" >
+        #{menuLevel,jdbcType=TINYINT},
+      </if>
+      <if test="menuUrl != null" >
+        #{menuUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="orderBy != null" >
+        #{orderBy,jdbcType=INTEGER},
+      </if>
+      <if test="activeSts != null" >
+        #{activeSts,jdbcType=TINYINT},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.basoft.service.entity.menu.MenuMstExample" resultType="java.lang.Integer" >
+    select count(*) from WX_SYS_MENU
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update WX_SYS_MENU
+    <set >
+      <if test="record.id != null" >
+        ID = #{record.id,jdbcType=BIGINT},
+      </if>
+      <if test="record.menuId != null" >
+        MENU_ID = #{record.menuId,jdbcType=BIGINT},
+      </if>
+      <if test="record.menuNm != null" >
+        MENU_NM = #{record.menuNm,jdbcType=VARCHAR},
+      </if>
+      <if test="record.menuPid != null" >
+        MENU_PID = #{record.menuPid,jdbcType=BIGINT},
+      </if>
+      <if test="record.menuIcon != null" >
+        MENU_ICON = #{record.menuIcon,jdbcType=VARCHAR},
+      </if>
+      <if test="record.menuLevel != null" >
+        MENU_LEVEL = #{record.menuLevel,jdbcType=TINYINT},
+      </if>
+      <if test="record.menuUrl != null" >
+        MENU_URL = #{record.menuUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="record.orderBy != null" >
+        ORDER_BY = #{record.orderBy,jdbcType=INTEGER},
+      </if>
+      <if test="record.activeSts != null" >
+        ACTIVE_STS = #{record.activeSts,jdbcType=TINYINT},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update WX_SYS_MENU
+    set ID = #{record.id,jdbcType=BIGINT},
+      MENU_ID = #{record.menuId,jdbcType=BIGINT},
+      MENU_NM = #{record.menuNm,jdbcType=VARCHAR},
+      MENU_PID = #{record.menuPid,jdbcType=BIGINT},
+      MENU_ICON = #{record.menuIcon,jdbcType=VARCHAR},
+      MENU_LEVEL = #{record.menuLevel,jdbcType=TINYINT},
+      MENU_URL = #{record.menuUrl,jdbcType=VARCHAR},
+      ORDER_BY = #{record.orderBy,jdbcType=INTEGER},
+      ACTIVE_STS = #{record.activeSts,jdbcType=TINYINT}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.basoft.service.entity.menu.MenuMst" >
+    update WX_SYS_MENU
+    <set >
+      <if test="menuId != null" >
+        MENU_ID = #{menuId,jdbcType=BIGINT},
+      </if>
+      <if test="menuNm != null" >
+        MENU_NM = #{menuNm,jdbcType=VARCHAR},
+      </if>
+      <if test="menuPid != null" >
+        MENU_PID = #{menuPid,jdbcType=BIGINT},
+      </if>
+      <if test="menuIcon != null" >
+        MENU_ICON = #{menuIcon,jdbcType=VARCHAR},
+      </if>
+      <if test="menuLevel != null" >
+        MENU_LEVEL = #{menuLevel,jdbcType=TINYINT},
+      </if>
+      <if test="menuUrl != null" >
+        MENU_URL = #{menuUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="activeSts != null" >
+        ACTIVE_STS = #{activeSts,jdbcType=TINYINT},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.basoft.service.entity.menu.MenuMst" >
+    update WX_SYS_MENU
+    set MENU_ID = #{menuId,jdbcType=BIGINT},
+      MENU_NM = #{menuNm,jdbcType=VARCHAR},
+      MENU_PID = #{menuPid,jdbcType=BIGINT},
+      MENU_ICON = #{menuIcon,jdbcType=VARCHAR},
+      MENU_LEVEL = #{menuLevel,jdbcType=TINYINT},
+      MENU_URL = #{menuUrl,jdbcType=VARCHAR},
+      ORDER_BY = #{orderBy,jdbcType=INTEGER},
+      ACTIVE_STS = #{activeSts,jdbcType=TINYINT}
+    where ID = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

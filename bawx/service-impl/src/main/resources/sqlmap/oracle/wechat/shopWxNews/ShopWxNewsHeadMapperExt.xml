@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.basoft.service.dao.wechat.shopWxNews.ShopWxNewsHeadMapper">
+	<resultMap id="BaseResultShopNews"
+		type="com.basoft.service.dto.wechat.shopWxNew.ShopWxNewDto">
+		<id column="MSG_ID" property="msgId" jdbcType="INTEGER" />
+		<id column="NEWS_ID" property="newsId" jdbcType="INTEGER" />
+		<result column="MSG_NM" property="msgNm" jdbcType="VARCHAR" />
+		<result column="MSHOW_COVER_PIC" property="mshowCoverPic" jdbcType="TINYINT" />
+		<result column="CREATED_DT" property="createdDt" jdbcType="TIMESTAMP" />
+		<result column="MTITLE" property="mtitle" jdbcType="VARCHAR" />
+		<result column="MAUTHOR" property="mauthor" jdbcType="VARCHAR" />
+		<result column="FULL_URL" property="fullUrl" jdbcType="VARCHAR" />
+		<result column="MCONTENT" property="mcontent" jdbcType="CLOB" />
+		<result column="MSOURCE_URL" property="msourceUrl" jdbcType="VARCHAR" />
+		<result column="READ_CNT" property="readCnt" jdbcType="INTEGER" />
+		<result column="MDIGEST" property="mdigest" jdbcType="VARCHAR" />
+
+		<result column="WX_MSG_ID" jdbcType="VARCHAR" property="wxMsgId" />
+		<result column="WX_MSG_ERR" jdbcType="VARCHAR" property="wxMsgErr" />
+		<result column="WX_MSG_DATA_ID" jdbcType="BIGINT" property="wxMsgDataId" />
+	</resultMap>
+
+	<!--查询素材头部列表 msgIdWould为1则只查询已同步到微信公众平台的图文消息，否则查询所有图文消息 -->
+	<select id="matterFindAll" resultMap="BaseResultShopNews">
+		SELECT nd.MSG_ID,
+		       nd.WX_MSG_ID,
+		       nd.WX_MSG_ERR,
+		       nd.WX_MSG_DATA_ID,
+		       nd.CREATED_DT,
+		       ni.mtitle
+		  from WX_NEWS_HEAD nd
+		 inner join WX_NEWS_ITEM ni on nd.MSG_ID = ni.MSG_ID and nd.SHOP_ID = ni.SHOP_ID
+		 WHERE ni.MSHOW_COVER_PIC = 1
+		   and nd.SHOP_ID = #{shopId}
+		<if test="param != null and param!=''">
+			AND ni.MTITLE like concat(concat('%',#{param}),'%')
+		</if>
+		<if test="msgIdWould == 1">
+			and nd.WX_MSG_ID is not null and nd.WX_MSG_ID != '0'
+		</if>
+		order by nd.CREATED_DT desc
+	</select>
+
+	<!--素材头部 -->
+	<select id="getShopWxNewsHead" resultMap="BaseResultShopNews">
+		SELECT
+		nd.MSG_ID,ni.NEWS_ID,nd.MSG_NM,nd.CREATED_DT,ni.MSHOW_COVER_PIC,ni.NEWS_TYPE,
+		getCode('shop_wx_news_item','NEWS_TYPE',NEWS_TYPE)newsTypeStr,
+		ni.MTITLE,ni.MAUTHOR,ni.MCONTENT,fm.FULL_URL,ni.MSOURCE_URL,ni.MDIGEST,ni.READ_CNT
+		from WX_NEWS_HEAD nd ,WX_NEWS_ITEM ni
+		left JOIN WX_SYS_FILE fm ON fm.FILE_ID=ni.MFILE_ID
+		WHERE nd.MSG_ID=ni.MSG_ID AND ni.MSHOW_COVER_PIC=1
+		and nd.MSG_ID=#{msgId} and nd.SHOP_ID=#{shopId}
+	</select>
+
+	<!--素材内容 -->
+	<select id="getShopWxNewsItemList" resultMap="BaseResultShopNews">
+		SELECT nd.MSG_ID,ni.NEWS_ID,nd.MSG_NM,nd.CREATED_DT,ni.NEWS_TYPE,
+		getCode('shop_wx_news_item','NEWS_TYPE',NEWS_TYPE)newsTypeStr,
+		ni.MTITLE,ni.MAUTHOR,ni.MCONTENT,fm.FULL_URL,ni.MSOURCE_URL,ni.MDIGEST,ni.READ_CNT
+		from WX_NEWS_HEAD nd ,WX_NEWS_ITEM ni left join
+		WX_SYS_FILE fm on fm.FILE_ID=ni.MFILE_ID
+		WHERE nd.MSG_ID=ni.MSG_ID and ni.MSHOW_COVER_PIC=0
+		and nd.MSG_ID=#{msgId} and nd.SHOP_ID=#{shopId}
+	</select>
+
+	<update id="saveSendResultHead">
+		UPDATE WX_NEWS_HEAD SET
+		WX_MSG_ERR = #{WX_MSG_ERR},
+		<if test="WX_MSG_ID != null and WX_MSG_ID != ''">
+			WX_MSG_ID = #{WX_MSG_ID},
+		</if>
+		<if test="WX_MSG_DATA_ID != null and WX_MSG_DATA_ID != '' and WX_MSG_DATA_ID != 0">
+			WX_MSG_DATA_ID = #{WX_MSG_DATA_ID},
+		</if>
+		MODIFIED_DT = SYSDATE
+		WHERE SHOP_ID = #{SHOP_ID}
+		AND MSG_ID = #{MSG_ID}
+	</update>
+	
+	<update id="modifyNewsMaterial" parameterType="java.util.Map">
+		UPDATE WX_NEWS_HEAD
+		SET MODIFIED_ID = #{USER_ID}, MODIFIED_DT = sysdate
+		WHERE SHOP_ID = #{SHOP_ID}
+		AND MSG_ID = #{MSG_ID}
+	</update>
+</mapper>

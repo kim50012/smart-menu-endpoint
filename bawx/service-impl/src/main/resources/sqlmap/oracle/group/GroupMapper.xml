@@ -1,0 +1,334 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.basoft.service.dao.group.GroupMapper">
+	<resultMap id="BaseResultMap" type="com.basoft.service.entity.group.Group">
+		<id column="G_CORP_ID" jdbcType="INTEGER" property="gCorpId" />
+		<result column="G_CORP_NM" jdbcType="VARCHAR" property="gCorpNm" />
+		<result column="CONTACT_NM" jdbcType="VARCHAR" property="contactNm" />
+		<result column="CONTACT_MOBILE_NO" jdbcType="VARCHAR" property="contactMobileNo" />
+		<result column="CONTACT_EMAIL" jdbcType="VARCHAR" property="contactEmail" />
+		<result column="CONTACT_QQ" jdbcType="VARCHAR" property="contactQq" />
+		<result column="ADMIN_USER_ID" jdbcType="VARCHAR" property="adminUserId" />
+		<result column="CREATED_USER_ID" jdbcType="VARCHAR" property="createdUserId" />
+		<result column="SORT_NO" jdbcType="TINYINT" property="sortNo" />
+		<result column="MODIFIED_DT" jdbcType="TIMESTAMP" property="modifiedDt" />
+		<result column="CREATED_DT" jdbcType="TIMESTAMP" property="createdDt" />
+		<result column="IS_DELETE" jdbcType="INTEGER" property="isDelete" />
+	</resultMap>
+	<sql id="Example_Where_Clause">
+		<where>
+			<foreach collection="oredCriteria" item="criteria" separator="or">
+				<if test="criteria.valid">
+					<trim prefix="(" prefixOverrides="and" suffix=")">
+						<foreach collection="criteria.criteria" item="criterion">
+							<choose>
+								<when test="criterion.noValue">
+									and ${criterion.condition}
+								</when>
+								<when test="criterion.singleValue">
+									and ${criterion.condition} #{criterion.value}
+								</when>
+								<when test="criterion.betweenValue">
+									and ${criterion.condition} #{criterion.value} and
+									#{criterion.secondValue}
+								</when>
+								<when test="criterion.listValue">
+									and ${criterion.condition}
+									<foreach close=")" collection="criterion.value" item="listItem"
+										open="(" separator=",">
+										#{listItem}
+									</foreach>
+								</when>
+							</choose>
+						</foreach>
+					</trim>
+				</if>
+			</foreach>
+		</where>
+	</sql>
+	<sql id="Update_By_Example_Where_Clause">
+		<where>
+			<foreach collection="example.oredCriteria" item="criteria"
+				separator="or">
+				<if test="criteria.valid">
+					<trim prefix="(" prefixOverrides="and" suffix=")">
+						<foreach collection="criteria.criteria" item="criterion">
+							<choose>
+								<when test="criterion.noValue">
+									and ${criterion.condition}
+								</when>
+								<when test="criterion.singleValue">
+									and ${criterion.condition} #{criterion.value}
+								</when>
+								<when test="criterion.betweenValue">
+									and ${criterion.condition} #{criterion.value} and
+									#{criterion.secondValue}
+								</when>
+								<when test="criterion.listValue">
+									and ${criterion.condition}
+									<foreach close=")" collection="criterion.value" item="listItem"
+										open="(" separator=",">
+										#{listItem}
+									</foreach>
+								</when>
+							</choose>
+						</foreach>
+					</trim>
+				</if>
+			</foreach>
+		</where>
+	</sql>
+	<sql id="Base_Column_List">
+		G_CORP_ID, G_CORP_NM, CONTACT_NM, CONTACT_MOBILE_NO, CONTACT_EMAIL, CONTACT_QQ,
+		ADMIN_USER_ID,
+		CREATED_USER_ID, SORT_NO, MODIFIED_DT, CREATED_DT, IS_DELETE
+	</sql>
+	<select id="selectByExample" parameterType="com.basoft.service.entity.group.GroupExample"
+		resultMap="BaseResultMap">
+		select
+		<if test="distinct">
+			distinct
+		</if>
+		<include refid="Base_Column_List" />
+		from WX_SYS_GROUP
+		<if test="_parameter != null">
+			<include refid="Example_Where_Clause" />
+		</if>
+		<if test="orderByClause != null">
+			order by ${orderByClause}
+		</if>
+	</select>
+	<select id="selectByPrimaryKey" parameterType="java.lang.Integer"
+		resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from WX_SYS_GROUP
+		where G_CORP_ID = #{gCorpId,jdbcType=INTEGER}
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+		delete from WX_SYS_GROUP
+		where G_CORP_ID = #{gCorpId,jdbcType=INTEGER}
+	</delete>
+	<delete id="deleteByExample" parameterType="com.basoft.service.entity.group.GroupExample">
+		delete from WX_SYS_GROUP
+		<if test="_parameter != null">
+			<include refid="Example_Where_Clause" />
+		</if>
+	</delete>
+	<insert id="insert" parameterType="com.basoft.service.entity.group.Group">
+		insert into WX_SYS_GROUP (G_CORP_ID, G_CORP_NM, CONTACT_NM,
+		CONTACT_MOBILE_NO, CONTACT_EMAIL, CONTACT_QQ,
+		ADMIN_USER_ID, CREATED_USER_ID, SORT_NO,
+		MODIFIED_DT, CREATED_DT, IS_DELETE
+		)
+		values (#{gCorpId,jdbcType=INTEGER}, #{gCorpNm,jdbcType=VARCHAR},
+		#{contactNm,jdbcType=VARCHAR},
+		#{contactMobileNo,jdbcType=VARCHAR}, #{contactEmail,jdbcType=VARCHAR}, #{contactQq,jdbcType=VARCHAR},
+		#{adminUserId,jdbcType=VARCHAR}, #{createdUserId,jdbcType=VARCHAR},
+		#{sortNo,jdbcType=TINYINT},
+		#{modifiedDt,jdbcType=TIMESTAMP}, #{createdDt,jdbcType=TIMESTAMP}, #{isDelete,jdbcType=INTEGER}
+		)
+	</insert>
+	<insert id="insertSelective" parameterType="com.basoft.service.entity.group.Group">
+		insert into WX_SYS_GROUP
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="gCorpId != null">
+				G_CORP_ID,
+			</if>
+			<if test="gCorpNm != null">
+				G_CORP_NM,
+			</if>
+			<if test="contactNm != null">
+				CONTACT_NM,
+			</if>
+			<if test="contactMobileNo != null">
+				CONTACT_MOBILE_NO,
+			</if>
+			<if test="contactEmail != null">
+				CONTACT_EMAIL,
+			</if>
+			<if test="contactQq != null">
+				CONTACT_QQ,
+			</if>
+			<if test="adminUserId != null">
+				ADMIN_USER_ID,
+			</if>
+			<if test="createdUserId != null">
+				CREATED_USER_ID,
+			</if>
+			<if test="sortNo != null">
+				SORT_NO,
+			</if>
+			<if test="modifiedDt != null">
+				MODIFIED_DT,
+			</if>
+			<if test="createdDt != null">
+				CREATED_DT,
+			</if>
+			<if test="isDelete != null">
+				IS_DELETE,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="gCorpId != null">
+				#{gCorpId,jdbcType=INTEGER},
+			</if>
+			<if test="gCorpNm != null">
+				#{gCorpNm,jdbcType=VARCHAR},
+			</if>
+			<if test="contactNm != null">
+				#{contactNm,jdbcType=VARCHAR},
+			</if>
+			<if test="contactMobileNo != null">
+				#{contactMobileNo,jdbcType=VARCHAR},
+			</if>
+			<if test="contactEmail != null">
+				#{contactEmail,jdbcType=VARCHAR},
+			</if>
+			<if test="contactQq != null">
+				#{contactQq,jdbcType=VARCHAR},
+			</if>
+			<if test="adminUserId != null">
+				#{adminUserId,jdbcType=VARCHAR},
+			</if>
+			<if test="createdUserId != null">
+				#{createdUserId,jdbcType=VARCHAR},
+			</if>
+			<if test="sortNo != null">
+				#{sortNo,jdbcType=TINYINT},
+			</if>
+			<if test="modifiedDt != null">
+				#{modifiedDt,jdbcType=TIMESTAMP},
+			</if>
+			<if test="createdDt != null">
+				#{createdDt,jdbcType=TIMESTAMP},
+			</if>
+			<if test="isDelete != null">
+				#{isDelete,jdbcType=INTEGER},
+			</if>
+		</trim>
+	</insert>
+	<select id="countByExample" parameterType="com.basoft.service.entity.group.GroupExample"
+		resultType="java.lang.Long">
+		select count(*) from WX_SYS_GROUP
+		<if test="_parameter != null">
+			<include refid="Example_Where_Clause" />
+		</if>
+	</select>
+	<update id="updateByExampleSelective" parameterType="map">
+		update WX_SYS_GROUP
+		<set>
+			<if test="record.gCorpId != null">
+				G_CORP_ID = #{record.gCorpId,jdbcType=INTEGER},
+			</if>
+			<if test="record.gCorpNm != null">
+				G_CORP_NM = #{record.gCorpNm,jdbcType=VARCHAR},
+			</if>
+			<if test="record.contactNm != null">
+				CONTACT_NM = #{record.contactNm,jdbcType=VARCHAR},
+			</if>
+			<if test="record.contactMobileNo != null">
+				CONTACT_MOBILE_NO = #{record.contactMobileNo,jdbcType=VARCHAR},
+			</if>
+			<if test="record.contactEmail != null">
+				CONTACT_EMAIL = #{record.contactEmail,jdbcType=VARCHAR},
+			</if>
+			<if test="record.contactQq != null">
+				CONTACT_QQ = #{record.contactQq,jdbcType=VARCHAR},
+			</if>
+			<if test="record.adminUserId != null">
+				ADMIN_USER_ID = #{record.adminUserId,jdbcType=VARCHAR},
+			</if>
+			<if test="record.createdUserId != null">
+				CREATED_USER_ID = #{record.createdUserId,jdbcType=VARCHAR},
+			</if>
+			<if test="record.sortNo != null">
+				SORT_NO = #{record.sortNo,jdbcType=TINYINT},
+			</if>
+			<if test="record.modifiedDt != null">
+				MODIFIED_DT = #{record.modifiedDt,jdbcType=TIMESTAMP},
+			</if>
+			<if test="record.createdDt != null">
+				CREATED_DT = #{record.createdDt,jdbcType=TIMESTAMP},
+			</if>
+			<if test="record.isDelete != null">
+				IS_DELETE = #{record.isDelete,jdbcType=INTEGER},
+			</if>
+		</set>
+		<if test="_parameter != null">
+			<include refid="Update_By_Example_Where_Clause" />
+		</if>
+	</update>
+	<update id="updateByExample" parameterType="map">
+		update WX_SYS_GROUP
+		set G_CORP_ID = #{record.gCorpId,jdbcType=INTEGER},
+		G_CORP_NM = #{record.gCorpNm,jdbcType=VARCHAR},
+		CONTACT_NM = #{record.contactNm,jdbcType=VARCHAR},
+		CONTACT_MOBILE_NO = #{record.contactMobileNo,jdbcType=VARCHAR},
+		CONTACT_EMAIL = #{record.contactEmail,jdbcType=VARCHAR},
+		CONTACT_QQ = #{record.contactQq,jdbcType=VARCHAR},
+		ADMIN_USER_ID = #{record.adminUserId,jdbcType=VARCHAR},
+		CREATED_USER_ID = #{record.createdUserId,jdbcType=VARCHAR},
+		SORT_NO = #{record.sortNo,jdbcType=TINYINT},
+		MODIFIED_DT = #{record.modifiedDt,jdbcType=TIMESTAMP},
+		CREATED_DT = #{record.createdDt,jdbcType=TIMESTAMP},
+		IS_DELETE = #{record.isDelete,jdbcType=INTEGER}
+		<if test="_parameter != null">
+			<include refid="Update_By_Example_Where_Clause" />
+		</if>
+	</update>
+	<update id="updateByPrimaryKeySelective" parameterType="com.basoft.service.entity.group.Group">
+		update WX_SYS_GROUP
+		<set>
+			<if test="gCorpNm != null">
+				G_CORP_NM = #{gCorpNm,jdbcType=VARCHAR},
+			</if>
+			<if test="contactNm != null">
+				CONTACT_NM = #{contactNm,jdbcType=VARCHAR},
+			</if>
+			<if test="contactMobileNo != null">
+				CONTACT_MOBILE_NO = #{contactMobileNo,jdbcType=VARCHAR},
+			</if>
+			<if test="contactEmail != null">
+				CONTACT_EMAIL = #{contactEmail,jdbcType=VARCHAR},
+			</if>
+			<if test="contactQq != null">
+				CONTACT_QQ = #{contactQq,jdbcType=VARCHAR},
+			</if>
+			<if test="adminUserId != null">
+				ADMIN_USER_ID = #{adminUserId,jdbcType=VARCHAR},
+			</if>
+			<if test="createdUserId != null">
+				CREATED_USER_ID = #{createdUserId,jdbcType=VARCHAR},
+			</if>
+			<if test="sortNo != null">
+				SORT_NO = #{sortNo,jdbcType=TINYINT},
+			</if>
+			<if test="modifiedDt != null">
+				MODIFIED_DT = #{modifiedDt,jdbcType=TIMESTAMP},
+			</if>
+			<if test="createdDt != null">
+				CREATED_DT = #{createdDt,jdbcType=TIMESTAMP},
+			</if>
+			<if test="isDelete != null">
+				IS_DELETE = #{isDelete,jdbcType=INTEGER},
+			</if>
+		</set>
+		where G_CORP_ID = #{gCorpId,jdbcType=INTEGER}
+	</update>
+	<update id="updateByPrimaryKey" parameterType="com.basoft.service.entity.group.Group">
+		update WX_SYS_GROUP
+		set G_CORP_NM = #{gCorpNm,jdbcType=VARCHAR},
+		CONTACT_NM = #{contactNm,jdbcType=VARCHAR},
+		CONTACT_MOBILE_NO = #{contactMobileNo,jdbcType=VARCHAR},
+		CONTACT_EMAIL = #{contactEmail,jdbcType=VARCHAR},
+		CONTACT_QQ = #{contactQq,jdbcType=VARCHAR},
+		ADMIN_USER_ID = #{adminUserId,jdbcType=VARCHAR},
+		CREATED_USER_ID = #{createdUserId,jdbcType=VARCHAR},
+		SORT_NO = #{sortNo,jdbcType=TINYINT},
+		MODIFIED_DT = #{modifiedDt,jdbcType=TIMESTAMP},
+		CREATED_DT = #{createdDt,jdbcType=TIMESTAMP},
+		IS_DELETE = #{isDelete,jdbcType=INTEGER}
+		where G_CORP_ID = #{gCorpId,jdbcType=INTEGER}
+	</update>
+</mapper>

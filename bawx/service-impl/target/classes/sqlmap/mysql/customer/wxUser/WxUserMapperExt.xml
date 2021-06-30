@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.basoft.service.dao.customer.wxUser.WxUserMapper" >
+  <resultMap id="BaseResultMapDto" type="com.basoft.service.dto.customer.WxUserSituationDto" >
+
+  </resultMap>
+
+  <!--查询粉丝关注现况(弃用)-->
+  <select id="selectSituation" resultType="java.lang.Integer">
+    SELECT
+    <if  test="followType==1">
+       sum(t1.new_fans)newFans,
+    </if>
+    <if  test="followType==2">
+      sum(t1.out_fans)outFans,
+    </if>
+    <if  test="followType==3">
+      (sum(t1.new_fans) - sum(t1.out_fans))growFans,
+    </if>
+    follow_Dt as followDt from (
+    select sum(1)new_fans,0 as out_fans,
+    date_format(SUBSCRIBE_TIME,'%Y-%m-%d') as follow_Dt from wx_user wu
+    where 1=1
+    <if test="startTime != null and endTime != null" >
+      and date_format(SUBSCRIBE_TIME,'%Y-%m-%d')>= #{startTime}
+      and date_format(SUBSCRIBE_TIME,'%Y-%m-%d')&lt; #{endTime}
+    </if>
+    GROUP BY  date_format(wu.SUBSCRIBE_TIME, '%Y-%m-%d')
+    UNION ALL
+    select  0 as new_fans,
+    SUM(CASE WHEN SUBSCRIBE = 0 THEN 1 ELSE 0 END) out_fans,
+    date_format(UNSUBSCRIBE_TIME,'%Y-%m-%d')  as follow_Dt
+    from wx_user wu
+    where 1=1
+    <if test="startTime != null and endTime != null" >
+      and date_format(SUBSCRIBE_TIME,'%Y-%m-%d')>= #{startTime}
+      and date_format(SUBSCRIBE_TIME,'%Y-%m-%d')&lt; #{endTime}
+    </if>
+    GROUP BY  date_format(wu.UNSUBSCRIBE_TIME, '%Y-%m-%d'))t1
+    where t1.new_fans>0 or t1.out_fans>0
+    GROUP BY t1.follow_Dt
+    ORDER BY t1.follow_Dt asc
+  </select>
+
+  <!--查询粉丝关注现况-->
+  <select id="selectSituationDto" resultMap="BaseResultMapDto">
+    SELECT
+    sum(t1.new_fans)newFans,
+    sum(t1.out_fans)outFans,
+    (sum(t1.new_fans) - sum(t1.out_fans))growFans,
+    (select (ifnull(sum(1) ,0)- (select ifnull(sum(CASE WHEN SUBSCRIBE = 0 THEN 1 ELSE 0 END),0)
+    from wx_user where 1=1 and SYS_ID = (select sys_id from wx_app_info wai where wai.shop_Id=#{shopId})
+    and date_format(UNSUBSCRIBE_TIME ,'%Y-%m-%d')&lt;=follow_Dt)) total_fans from wx_user wu where 1=1 and
+    wu.SYS_ID = (select sys_id from wx_app_info wai where wai.shop_Id=#{shopId}) and date_format(SUBSCRIBE_TIME ,'%Y-%m-%d')&lt;= follow_Dt)
+     as total_fans,
+    follow_Dt as followDt from (
+    select
+    0 as num,
+    sum(1)new_fans,0 as out_fans,
+    date_format(SUBSCRIBE_TIME,'%Y-%m-%d') as follow_Dt from wx_user wu
+    where 1=1 and wu.SYS_ID = (select sys_id from wx_app_info wai where wai.shop_Id=#{shopId})
+    <if test="startTime != null and endTime != null" >
+      and date_format(SUBSCRIBE_TIME,'%Y-%m-%d')>= #{startTime}
+      and date_format(SUBSCRIBE_TIME,'%Y-%m-%d')&lt; #{endTime}
+    </if>
+    GROUP BY  date_format(wu.SUBSCRIBE_TIME, '%Y-%m-%d')
+    UNION ALL
+    select
+    0 as num ,
+    0 as new_fans,
+    SUM(CASE WHEN SUBSCRIBE = 0 THEN 1 ELSE 0 END) out_fans,
+    date_format(UNSUBSCRIBE_TIME,'%Y-%m-%d')  as follow_Dt
+    from wx_user wu
+    where 1=1 and wu.SYS_ID=(select sys_id from wx_app_info wai where wai.shop_Id=#{shopId})
+    <if test="startTime != null and endTime != null" >
+      and date_format(UNSUBSCRIBE_TIME,'%Y-%m-%d')>= #{startTime}
+      and date_format(UNSUBSCRIBE_TIME,'%Y-%m-%d')&lt; #{endTime}
+    </if>
+    GROUP BY  date_format(wu.UNSUBSCRIBE_TIME, '%Y-%m-%d')
+    UNION ALL
+    select @num:=@num+1 as num, 0 as new_fans,0 as out_fans,
+    date_format(adddate(#{startTime}, INTERVAL @num DAY),'%Y-%m-%d') as follow_Dt
+    from wx_user,(select @num:=0) t where date_format(SUBSCRIBE_TIME,'%Y-%m-%d')&lt;#{endTime}
+    GROUP BY follow_Dt
+    )t1
+    where follow_Dt >=#{startTime} and follow_Dt&lt;#{endTime}
+    GROUP BY t1.follow_Dt
+    ORDER BY t1.follow_Dt desc
+  </select>
+
+  <!--查询关注日期 废弃-->
+  <select id="userSituatDate" resultType="java.lang.String">
+    SELECT follow_Dt as followDt from (
+    select sum(1)new_fans,0 as out_fans,
+    date_format(SUBSCRIBE_TIME,'%Y-%m-%d') as follow_Dt from wx_user wu
+    where 1=1
+    <if test="startTime != null and endTime != null" >
+      and date_format(SUBSCRIBE_TIME,'%Y-%m-%d')>= #{startTime}
+      and date_format(SUBSCRIBE_TIME,'%Y-%m-%d')&lt;= #{endTime}
+    </if>
+    GROUP BY  date_format(wu.SUBSCRIBE_TIME, '%Y-%m-%d')
+    UNION ALL
+    select  0 as new_fans,
+    SUM(CASE WHEN SUBSCRIBE = 0 THEN 1 ELSE 0 END) out_fans,
+    date_format(UNSUBSCRIBE_TIME,'%Y-%m-%d')  as follow_Dt
+    from wx_user wu
+    where 1=1
+    <if test="startTime != null and endTime != null" >
+      and date_format(SUBSCRIBE_TIME,'%Y-%m-%d')>= #{startTime}
+      and date_format(SUBSCRIBE_TIME,'%Y-%m-%d')&lt;=#{endTime}
+    </if>
+    GROUP BY  date_format(wu.UNSUBSCRIBE_TIME, '%Y-%m-%d'))t1
+    where t1.new_fans>0 or t1.out_fans>0
+    GROUP BY t1.follow_Dt
+  </select>
+
+
+
+  <!--查询新增粉丝-->
+  <select id="sumNewFans" resultType="java.lang.Integer" parameterType="com.basoft.service.param.customer.WxUserQueryParam">
+    select ifnull(sum(1),0)sumNewFans from wx_user wu
+    where  wu.SYS_ID = (select sys_id from wx_app_info wai where wai.shop_Id=#{shopId})
+    <if test="startTime != null" >
+      and date_format(SUBSCRIBE_TIME ,'%Y-%m-%d')= #{startTime}
+    </if>
+  </select>
+
+  <!--查询取关粉丝-->
+  <select id="sumOutFans" resultType="java.lang.Integer">
+    select ifnull(sum(CASE WHEN SUBSCRIBE = 0 THEN 1 ELSE 0 END),0)sumOutFans from wx_user wu
+    where 1=1 and wu.SYS_ID = (select sys_id from wx_app_info wai where wai.shop_Id=#{shopId})
+
+    <if test="startTime != null" >
+      and date_format(UNSUBSCRIBE_TIME ,'%Y-%m-%d')= #{startTime}
+    </if>
+  </select>
+
+  <!--查询总粉丝-->
+  <select id="totalFans" resultType="java.lang.Integer">
+    select (ifnull(sum(1) ,0)-
+    (select ifnull(sum(CASE WHEN SUBSCRIBE = 0 THEN 1 ELSE 0 END),0)
+    from wx_user where 1=1 and SYS_ID = (select sys_id from wx_app_info wai where wai.shop_Id=#{shopId})
+      and date_format(UNSUBSCRIBE_TIME ,'%Y-%m-%d')&lt;=DATE_FORMAT(CURDATE()-1,'%Y-%m-%d')
+    ))
+    total_fans
+    from wx_user wu where 1=1 and wu.SYS_ID = (select sys_id from wx_app_info wai where wai.shop_Id=#{shopId})
+      and date_format(SUBSCRIBE_TIME ,'%Y-%m-%d')&lt;=DATE_FORMAT(CURDATE()-1,'%Y-%m-%d')
+  </select>
+
+  <!--语言统计扇形图-->
+  <select id="totalLanguigeType" resultType="com.basoft.service.dto.customer.WxUserTotalLangDto">
+    select ifnull(sum(CASE `LANGUAGE` when 'zh_CN' then 1 else 0 end),0) as zhCnSum,
+		ifnull(sum(CASE `LANGUAGE` when 'EN' then 1 else 0 end),0) as zhENSum,
+	    ifnull(sum(CASE `LANGUAGE` when 'KO' then 1 else 0 end),0) as zhKoSum,
+    CAST(ifnull(sum(CASE `LANGUAGE` when 'zh_CN' then 1 else 0 end),0)*100.00/(SELECT sum(1) from wx_user) AS decimal(10,2))AS zhCnSumAVG,
+    CAST(ifnull(sum(CASE `LANGUAGE` when 'EN' then 1 else 0 end),0)*100.00/(SELECT sum(1) from wx_user) AS decimal(10,2))AS zhENSumAVG,
+    CAST(ifnull(sum(CASE `LANGUAGE` when 'KO' then 1 else 0 end),0)*100.00/(SELECT sum(1) from wx_user) AS decimal(10,2))AS zhKoSumAVG
+    from wx_user wu where wu.SYS_ID = (select  wai.SYS_ID from wx_app_info wai where wai.shop_id=#{shopId})
+  </select>
+
+  <!--语言统计list-->
+  <select id="selectLanguigeTypeList" resultType="com.basoft.service.dto.customer.WxUserTotalProvinDto">
+    select name,sum(value) as value, sum(proportion)as proportion  from (
+      select case LANGUAGE when 'zh_CN' then '汉语' when 'en' then '英语' when 'ko' then '韩语' end name,sum(1) as value,
+          CAST(ifnull(sum(1)*100.00/(SELECT sum(1) from wx_user),0) as decimal(10,2)) as proportion
+          from wx_user wu where wu.SYS_ID = (select  wai.SYS_ID from wx_app_info wai
+          where wai.shop_id=#{shopId}) GROUP BY LANGUAGE
+      union all
+      select  '汉语' as name, 0 as value,0 as proportion from dual
+      union all
+      select  '英语' as name, 0 as value,0 as proportion  from dual
+      union all
+      select '韩语' as name, 0 as value,0 as proportion  from dual) T1
+      group by T1.name
+  </select>
+
+  <!--省份统计-->
+  <select id="totalProvince" resultType="com.basoft.service.dto.customer.WxUserTotalProvinDto">
+    select ifnull(sum(1),0)value,case PROVINCE when '' then '未知地域'else PROVINCE end name,
+    CAST(ifnull(SUM(1),0) * 100.00 / (SELECT sum(1) from wx_user) AS decimal(10,2))	AS proportion
+    from wx_user wu where wu.SYS_ID =
+    (select  wai.SYS_ID from wx_app_info wai where wai.shop_id=#{shopId}) GROUP BY PROVINCE
+  </select>
+
+  <!--城市统计-->
+  <select id="totalCity" resultType="com.basoft.service.dto.customer.WxUserTotalCityDto">
+    select ifnull(sum(1),0)value,case city when '' then '未知地域'else city end name,
+    CAST(ifnull(SUM(1),0) * 100.00 / (SELECT sum(1) from wx_user) AS decimal(10,2))	AS proportion
+    from wx_user wu where wu.SYS_ID =
+    (select  wai.SYS_ID from wx_app_info wai where wai.shop_id=#{shopId}) GROUP BY city
+  </select>
+
+</mapper>

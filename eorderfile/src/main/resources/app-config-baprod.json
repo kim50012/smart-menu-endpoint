@@ -1,0 +1,45 @@
+{
+  "threadPool":{
+    "multipleOfCore":2,
+    "maxPoolOfCore":4,
+    "keepAliveSeconds":10,
+    "queueCapacity":100
+  },
+
+  "fileTransferFactory":{
+    "clazz":"com.basoft.file.application.impl.AwsS3FileSerivce$AwsS3FileServiceFactory",
+    "props":{
+      "awsFullPath":"https://basoft-test-images.s3.ap-northeast-2.amazonaws.com",
+      "visitAwsFullPath":"https://d2or24sz8bxkt1.cloudfront.net",
+      "bucket":"basoft-test-images",
+      "client_region":"ap-northeast-2",
+      "appKey":"AKIAIC3O6DK3OOMTAVOQ",
+      "secretAccessKey":"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",
+      "rootKey":"jeju-images"
+    }
+  },
+
+  "tencentCloudStorageService":{
+    "props":{
+      "accessKey":"AKID2urZ2F9wPcrrgGun58vXx97qLjtoQAUZ",
+      "secretKey":"zjKgqnVzFGGDwTm38yawABxTlpfVEwVs",
+      "region":"ap-seoul",
+      "bucketName":"wechatplace-1259663537",
+      "rootKey":"jeju-images",
+      "visitFullURL":"https://{bucketName}.cos.{region}.myqcloud.com"
+    }
+  },
+
+  "mysqlDataSource-config":{
+    "url":"jdbc:mysql://127.0.0.1:3306/eorder?useUnicode=true&characterEncoding=utf-8&allowMultiQueries=true&useSSL=false",
+    "user":"root",
+    "password":"kdi5006",
+    "useSsl":"true"
+  }
+/*   "mysqlDataSource-config":{ */
+/*     "url":"jdbc:mysql://172.29.0.2:3306/eorder?useUnicode=true&characterEncoding=utf-8&allowMultiQueries=true&useSSL=false", */
+/*     "user":"root", */
+/*     "password":"basoftWP1q2w3e4r!", */
+/*     "useSsl":"true" */
+/*   } */
+}

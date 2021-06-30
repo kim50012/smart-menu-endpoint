@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.basoft.service.dao.wechat.shopMenu.ShopWxMenuMapper" >
+  <resultMap id="ResultWxMenu" type="com.basoft.service.dto.wechat.shopMenu.ShopWxMenuDto" extends="BaseResultMap">
+    <result column="MENU_OP_COM" property="menuOpCom" jdbcType="VARCHAR" />
+    <result column="MENU_OP_WX_ID" property="menuOpWxId" jdbcType="VARCHAR" />
+  </resultMap>
+
+  <select id="findAllShopWxMenu" resultMap="ResultWxMenu" >
+    select
+    <include refid="Base_Column_List" />,
+    <include refid="Blob_Column_List" />,MENU_OP_WX_ID,
+    getCode('shop_wx_menu','MENU_STS',MENU_STS)menuStsStr,
+    /*getCode('shop_wx_menu','MENU_OP_TYPE',MENU_OP_TYPE) menuOpTypeStr,*/
+    getCode('shop_wx_news_item','NEWS_TYPE',MENU_MSG_TYPE) menuMsgTypeStr
+    from WX_MENU
+    WHERE 1=1 and SHOP_ID = #{shopId}
+    <if test="menuParentId != null">
+      and MENU_PARENT_ID =#{menuParentId}
+    </if>
+    order BY SORT_NO asc
+  </select>
+
+  <insert id="insertShopWxMenu" keyProperty="id" parameterType="java.util.List" useGeneratedKeys="false">
+    insert into WX_MENU (SHOP_ID, MENU_ID, MENU_NM,
+    MENU_PARENT_ID, MENU_OP_TYPE,MENU_MSG_TYPE, MENU_OP_ID,MENU_OP_WX_ID,
+    MENU_OP_TITLE, MENU_STS, SORT_NO,
+    CREATE_ID, CREATE_DT,
+    MENU_OP_COM)
+    <if test="list.size() > 0">
+      <foreach collection="list" item="item" index="index" separator="union all" >
+      	select
+          	#{item.shopId,jdbcType=BIGINT},#{item.menuId,jdbcType=BIGINT},#{item.menuNm,jdbcType=VARCHAR},#{item.menuParentId,jdbcType=BIGINT},
+          	#{item.menuOpType,jdbcType=VARCHAR},#{item.menuMsgType,jdbcType=INTEGER},#{item.menuOpId,jdbcType=BIGINT},#{item.menuOpWxId,jdbcType=VARCHAR},
+          	#{item.menuOpTitle,jdbcType=VARCHAR},#{item.menuSts,jdbcType=TINYINT},#{item.sortNo,jdbcType=TINYINT},
+           	#{item.createId,jdbcType=VARCHAR},#{item.createDt,jdbcType=TIMESTAMP},#{item.menuOpCom,jdbcType=VARCHAR}
+      	from dual
+      </foreach>
+    </if>
+  </insert>
+
+  <insert id="inserTwoShopMenu" keyProperty="id" parameterType="java.util.List" useGeneratedKeys="false">
+    insert into WX_MENU (SHOP_ID, MENU_ID, MENU_NM,
+    MENU_PARENT_ID, MENU_OP_TYPE,MENU_MSG_TYPE, MENU_OP_ID,MENU_OP_WX_ID,
+    MENU_OP_TITLE, MENU_STS, SORT_NO,
+    CREATE_ID, CREATE_DT,
+    MENU_OP_COM)
+    <if test="list.size() > 0">
+      <foreach collection="list" item="item" index="index" separator="union all" >
+      	select
+        	#{item.shopId,jdbcType=BIGINT},#{item.menuId,jdbcType=BIGINT},#{item.menuNm,jdbcType=VARCHAR},#{item.menuParentId,jdbcType=BIGINT},
+          	#{item.menuOpType,jdbcType=VARCHAR},#{item.menuMsgType,jdbcType=INTEGER},#{item.menuOpId,jdbcType=BIGINT},#{item.menuOpWxId,jdbcType=VARCHAR},
+          	#{item.menuOpTitle,jdbcType=VARCHAR},#{item.menuSts,jdbcType=TINYINT},#{item.sortNo,jdbcType=TINYINT},
+           	#{item.createId,jdbcType=VARCHAR},#{item.createDt,jdbcType=TIMESTAMP},#{item.menuOpCom,jdbcType=VARCHAR}
+        from dual
+      </foreach>
+    </if>
+  </insert>
+
+  <delete id="deleteAllShopWxMenu">
+    DELETE  FROM  WX_MENU WHERE SHOP_ID = #{shopId}
+  </delete>
+</mapper>

@@ -1,0 +1,277 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.basoft.service.dao.customer.cust.CustMapper" >
+  <resultMap id="BaseResultMapDto" type="com.basoft.service.dto.customer.CustGradeDto" >
+    <id column="CUST_SYS_ID" property="custSysId" jdbcType="BIGINT" />
+    <result column="CUST_LOGIN_ID" property="custLoginId" jdbcType="VARCHAR" />
+    <result column="WX_IF_OPENID_P" property="wxIfOpenidP" jdbcType="VARCHAR" />
+    <result column="EMAIL" property="email" jdbcType="VARCHAR" />
+    <result column="MOBILE_NO" property="mobileNo" jdbcType="VARCHAR" />
+    <result column="WX_IF_IS_SUBSCRIBE" property="wxIfIsSubscribe" jdbcType="TINYINT" />
+    <result column="WX_IF_NICK_NM" property="wxIfNickNm" jdbcType="VARCHAR" />
+    <result column="WX_IF_SEX_ID" property="wxIfSexId" jdbcType="TINYINT" />
+    <result column="WX_IF_LANGUAGE" property="wxIfLanguage" jdbcType="VARCHAR" />
+    <result column="WX_IF_COUNTRY_NM" property="wxIfCountryNm" jdbcType="VARCHAR" />
+    <result column="WX_IF_PROVINCE_NM" property="wxIfProvinceNm" jdbcType="VARCHAR" />
+    <result column="WX_IF_CITY_NM" property="wxIfCityNm" jdbcType="VARCHAR" />
+    <result column="WX_IF_HEADIMGURL" property="wxIfHeadimgurl" jdbcType="VARCHAR" />
+    <result column="WX_IF_SUBSCRIBE_TIME" property="wxIfSubscribeTime" jdbcType="TIMESTAMP" />
+    <result column="WX_IF_UNIONID" property="wxIfUnionid" jdbcType="VARCHAR" />
+    <result column="WX_IF_GROUPID" property="wxIfGroupid" jdbcType="BIGINT" />
+    <result column="WX_IF_REMARK" property="wxIfRemark" jdbcType="VARCHAR" />
+    <result column="WX_SUBSCRIBE_DT" property="wxSubscribeDt" jdbcType="TIMESTAMP" />
+    <result column="WX_ID_P" property="wxIdP" jdbcType="VARCHAR" />
+    <result column="CUST_NICK_NM" property="custNickNm" jdbcType="VARCHAR" />
+    <result column="CUST_REAL_NM" property="custRealNm" jdbcType="VARCHAR" />
+    <result column="PWD" property="pwd" jdbcType="VARCHAR" />
+    <result column="ACTIVE_STS" property="activeSts" jdbcType="VARCHAR" />
+    <result column="MODIFIED_DT" property="modifiedDt" jdbcType="TIMESTAMP" />
+    <result column="CREATED_DT" property="createdDt" jdbcType="TIMESTAMP" />
+    <result column="WX_IF_IMG_URL" property="wxIfImgUrl" jdbcType="VARCHAR" />
+  </resultMap>
+
+  <resultMap id="BaseResultMapSexRadio" type="com.basoft.service.dto.customer.CustSexRadioDto" >
+
+  </resultMap>
+
+  <select id="findAllCustGrade" resultMap="BaseResultMapDto">
+  	<!-- TODO CAN KAO ORACLE -->
+    SELECT ct.CUST_SYS_ID, ct.WX_IF_HEADIMGURL,ct.WX_IF_NICK_NM,ct.CUST_NICK_NM,gm.BASE_QTY,ct.WX_IF_SUBSCRIBE_TIME,gm.GRADE_ID,gm.GRADE_NM
+    from cust ct
+    left JOIN CUST_SHOP cs on ct.CUST_SYS_ID = cs.CUST_SYS_ID  and cs.SHOP_ID=#{shopId}
+    left JOIN GRADE_MST gm on cs.GRADE_ID=gm.GRADE_ID
+    WHERE 1=1 and ct.WX_IF_IS_SUBSCRIBE = 1
+    <if test="param != null and param!=''">
+      and ct.WX_IF_NICK_UNEMOJI  like concat('%',#{param},'%')
+      or  BASE_QTY like concat('%',#{param},'%')
+    </if>
+    order by ct.WX_IF_SUBSCRIBE_TIME desc
+  </select>
+
+  <select id="findAllCust" resultType="com.basoft.service.dto.customer.CustDto">
+    SELECT ct.CUST_LOGIN_ID,ct.CUST_SYS_ID, ct.WX_IF_HEADIMGURL,
+    ct.WX_IF_NICK_NM,ct.CUST_NICK_NM,ct.WX_IF_SUBSCRIBE_TIME,WX_IF_SEX_ID,
+    ct.WX_IF_OPENID_P,ct.EMAIL,ct.MOBILE_NO,ct.WX_IF_IS_SUBSCRIBE,
+
+    getCode('cust','WX_IF_SEX_ID',WX_IF_SEX_ID)wxIfSexIdStr
+    from cust ct
+    LEFT JOIN CUST_SHOP cs on ct.CUST_SYS_ID = cs.CUST_SYS_ID  and cs.SHOP_ID=#{shopId}
+    WHERE 1=1 and WX_IF_IS_SUBSCRIBE = 1
+    <if test="custName != null and custName!=''">
+      and ct.CUST_NICK_NM  like concat('%',#{custName},'%')
+    </if>
+  </select>
+
+  <!--性别分布柱状图-->
+  <select id="selectSexRadio" resultType="com.basoft.service.dto.customer.CustSexRadioDto">
+    SELECT COUNT(*)	AS custCnt,ifnull(SUM(CASE TT1.WX_IF_SEX_ID WHEN 1 THEN 1 ELSE 0 END),0)AS maleCnt
+    ,ifnull(SUM(CASE TT1.WX_IF_SEX_ID WHEN 2 THEN 1 ELSE 0 END),0)	AS femaleCnt	-- 女性数量
+    ,ifnull(SUM(CASE TT1.WX_IF_SEX_ID WHEN 0 THEN 1 ELSE 0 END),0)	AS unknownCnt	-- 未知数量
+    ,CAST(ifnull(SUM(CASE TT1.WX_IF_SEX_ID WHEN 1 THEN 1 ELSE 0 END),0)*100.00/(CASE COUNT(*) WHEN 0 THEN 1 ELSE COUNT(*) END) AS decimal(10,2))AS maleAvg
+    ,CAST(ifnull(SUM(CASE TT1.WX_IF_SEX_ID WHEN 2 THEN 1 ELSE 0 END),0)*100.00/(CASE COUNT(*) WHEN 0 THEN 1 ELSE COUNT(*) END) AS decimal(10,2))AS femaleAvg
+    ,CAST(ifnull(SUM(CASE TT1.WX_IF_SEX_ID WHEN 0 THEN 1 ELSE 0 END),0)*100.00/(CASE COUNT(*) WHEN 0 THEN 1 ELSE COUNT(*) END) AS decimal(10,2))AS unknownAvg
+    FROM (SELECT T1.CUST_SYS_ID,T1.WX_IF_SEX_ID FROM	CUST AS T1 INNER JOIN	CUST_SHOP AS T2 ON	T2.CUST_SYS_ID = T1.CUST_SYS_ID
+      WHERE	T2.SHOP_ID = #{shopId} AND	T1.WX_IF_IS_SUBSCRIBE = 1 AND	T1.ACTIVE_STS = 1
+
+    <if test="startTime != null and endTime != null" >
+      AND   date_format(T1.WX_IF_SUBSCRIBE_TIME ,'%Y-%m-%d') BETWEEN #{startTime} AND #{endTime}
+    </if>
+      AND	T1.WX_IF_SEX_ID IS NOT NULL
+      GROUP BY T1.CUST_SYS_ID,T1.WX_IF_SEX_ID) AS TT1
+  </select>
+
+  <select id="selectSexRadioList" resultType="com.basoft.service.dto.customer.WxUserTotalProvinDto">
+    select case sex when 1 then '男' when 2 then '女' else '未知' end name,sum(1)as value,
+    cast(ifnull(sum(1),0)*100.00/(SELECT sum(1) from wx_user wu1
+    where  wu1.`SUBSCRIBE`=1 and wu1.SYS_ID =
+    (select  wai.SYS_ID from wx_app_info wai where wai.shop_id=#{shopId}))as decimal(10,2))as proportion
+    from wx_user wu
+    where wu.SYS_ID = (select  wai.SYS_ID from wx_app_info wai where wai.shop_id=#{shopId})
+     and wu.subscribe=1
+    group by sex
+  </select>
+  
+  <select id="selectCustMsgStatic" resultType="com.basoft.service.entity.wechat.wxMessage.WxIfStreamMsgStatsData">
+    select
+    <if test="timeType!=1">
+      T1.REF_DATE,
+    </if>
+    <if test="timeType==1">
+      T1.REF_DATE,
+      T1.REF_HOUR,
+    </if>
+    T1.MSG_TYPE,T1.MSG_USER,T1.MSG_COUNT,T1.COUNT_INTERVAL,round(T1.MSG_COUNT/T1.MSG_USER,1) as average from (
+    select
+    <if test="timeType!=1">
+      REF_DATE,
+    </if>
+    <if test="timeType==1">
+      max(REF_DATE) REF_DATE,
+      REF_HOUR,
+    </if>
+    max(MSG_TYPE) MSG_TYPE,
+    sum(MSG_USER) MSG_USER,
+    sum(MSG_COUNT) MSG_COUNT,
+    max(COUNT_INTERVAL) COUNT_INTERVAL
+    from wx_if_stream_msg_stats_data
+    where shop_id = #{shopId}
+    and ref_date>=#{startTime} and ref_date &lt;=#{endTime}
+    <if test="timeType!=1">
+      and REF_DATE is not null and time_type=0
+      group by REF_DATE
+    </if>
+    <if test="timeType==1">
+      and REF_HOUR is not null and time_type=1
+      group by REF_HOUR
+    </if>
+    order by
+    <if test="timeType!=1">
+      REF_DATE
+    </if>
+    <if test="timeType==1">
+      REF_HOUR
+    </if>
+    desc) T1
+  </select>
+
+  <!--查询发送次数所占百分比 日-->
+  <select id="selectCountIntervalPercent" resultType="com.basoft.service.entity.wechat.wxMessage.WxIfMsgCountPercent">
+    SELECT * from (select '1-5次' as sendTimes, ifnull(sum(msg_user),0)msgUser,
+
+    CONCAT(cast(ifnull(sum(msg_user),0)*100.00/(select sum(msg_user) from wx_if_stream_msg_stats_data
+    where `SHOP_ID`=#{shopId} and time_type=#{timeType} and `REF_DATE`>=#{startTime} and `REF_DATE`&lt;=#{endTime})as decimal(10,2)),'%') as percent
+    from wx_if_stream_msg_stats_data
+
+    where `SHOP_ID`=#{shopId} and time_type=#{timeType}  and `COUNT_INTERVAL`=1
+    and `REF_DATE`>=#{startTime} and `REF_DATE`&lt;=#{endTime}
+    union all
+    select '6-10次' as sendTimes, ifnull(sum(msg_user),0)msgUser,
+    CONCAT(cast(ifnull(sum(msg_user),0)*100.00/
+    (select sum(msg_user) from wx_if_stream_msg_stats_data where
+    `SHOP_ID`=#{shopId} and time_type=#{timeType} and
+    `REF_DATE`>=#{startTime} and `REF_DATE`&lt;=#{endTime} )as decimal(10,2)),'%') as percent
+    from wx_if_stream_msg_stats_data
+    where `SHOP_ID`=#{shopId} and time_type=#{timeType} and `COUNT_INTERVAL`=2
+    and `REF_DATE`>=#{startTime} and `REF_DATE`&lt;=#{endTime}
+    union all
+    select '10次以上' as sendTimes,ifnull(sum(msg_user),0)msgUser,
+    CONCAT(cast(ifnull(sum(msg_user),0)*100.00/(select sum(msg_user)
+    from wx_if_stream_msg_stats_data where `SHOP_ID`=#{shopId} and time_type=#{timeType}
+    and `REF_DATE`>=#{startTime} and `REF_DATE`&lt;=#{endTime})as decimal(10,2)),'%') as percent
+    from wx_if_stream_msg_stats_data
+    where `SHOP_ID`=#{shopId} and time_type=#{timeType} and `COUNT_INTERVAL`=3
+    and `REF_DATE`>=#{startTime} and `REF_DATE`&lt;=#{endTime}
+    )T
+    where T.percent>0
+  </select>
+
+  <!--查询昨日客户发送信息总数据-->
+  <select id="selectMsgSumYestoday" resultType="com.basoft.service.entity.wechat.wxMessage.WxIfMsgSumYestoday">
+    select ifnull(sum(msg_user),0)msg_user,ifnull(sum(msg_count),0)msg_count,
+    cast(ifnull(sum(msg_count),0)/ifnull(sum(msg_user),0) as decimal(10,0)) as average
+    from  wx_if_stream_msg_stats_data where shop_id = #{shopId}
+    and ref_date>#{startTime} and ref_date&lt;#{endTime} and time_type=#{timeType}
+  </select>
+
+
+
+  <!--统计周数据-->
+  <select id="selectCustMsgStaticWeek" resultType="com.basoft.service.entity.wechat.wxMessage.WxIfStreamMsgStatsDataWeek">
+    <![CDATA[
+		SELECT T1.REF_DATE,
+		     T1.MSG_TYPE,
+		     T1.MSG_USER,
+		     T1.MSG_COUNT,
+		     T1.COUNT_INTERVAL,
+		     CAST(T1.MSG_COUNT/T1.MSG_USER AS DECIMAL(10, 1)) AS AVERAGE
+		FROM (SELECT REF_DATE,
+		             MAX(MSG_TYPE) MSG_TYPE,
+		             MAX(MSG_USER) MSG_USER,
+		             MAX(MSG_COUNT) MSG_COUNT,
+		             MAX(COUNT_INTERVAL) COUNT_INTERVAL
+		        FROM WX_IF_GET_UPSTREAM_MSG_WEEK
+		       WHERE SHOP_ID = #{shopId}
+		         AND REF_DATE >= #{startTime}
+		         AND REF_DATE <= #{endTime}
+		         AND TIME_TYPE = #{timeType}
+		       GROUP BY REF_DATE
+		       ORDER BY REF_DATE DESC) T1
+		]]>
+  </select>
+
+  <!--查询发送次数所占百分比 周-->
+  <select id="selectCountIntervalPercentWeek" resultType="com.basoft.service.entity.wechat.wxMessage.WxIfMsgCountPercent">
+    SELECT * from (select '1-5次' as sendTimes, ifnull(sum(msg_user),0)msgUser,
+
+    CONCAT(cast(ifnull(sum(msg_user),0)*100.00/(select sum(msg_user) from wx_if_get_upstream_msg_week
+    where `SHOP_ID`=#{shopId} and time_type=#{timeType} and `REF_DATE`>=#{startTime} and `REF_DATE`&lt;=#{endTime})as decimal(10,2)),'%') as percent
+    from wx_if_get_upstream_msg_week
+
+    where `SHOP_ID`=#{shopId} and time_type=#{timeType}  and `COUNT_INTERVAL`=1
+    and `REF_DATE`>=#{startTime} and `REF_DATE`&lt;=#{endTime}
+    union all
+    select '6-10次' as sendTimes, ifnull(sum(msg_user),0)msgUser,
+    CONCAT(cast(ifnull(sum(msg_user),0)*100.00/
+    (select sum(msg_user) from wx_if_get_upstream_msg_week where
+    `SHOP_ID`=#{shopId} and time_type=#{timeType} and
+    `REF_DATE`>=#{startTime} and `REF_DATE`&lt;=#{endTime} )as decimal(10,2)),'%') as percent
+    from wx_if_get_upstream_msg_week
+    where `SHOP_ID`=#{shopId} and time_type=#{timeType} and `COUNT_INTERVAL`=2
+    and `REF_DATE`>=#{startTime} and `REF_DATE`&lt;=#{endTime}
+    union all
+    select '10次以上' as sendTimes,ifnull(sum(msg_user),0)msgUser,
+    CONCAT(cast(ifnull(sum(msg_user),0)*100.00/(select sum(msg_user)
+    from wx_if_get_upstream_msg_week where `SHOP_ID`=#{shopId} and time_type=#{timeType}
+    and `REF_DATE`>=#{startTime} and `REF_DATE`&lt;=#{endTime})as decimal(10,2)),'%') as percent
+    from wx_if_get_upstream_msg_week
+    where `SHOP_ID`=#{shopId} and time_type=#{timeType} and `COUNT_INTERVAL`=3
+    and `REF_DATE`>=#{startTime} and `REF_DATE`&lt;=#{endTime}
+    )T
+    where T.percent>0
+  </select>
+
+
+
+  <select id="findCustMsgKeyStatic" resultType="com.basoft.service.entity.wechat.wxMessage.WxKeyMsgStats">
+    SELECT  count(1)as times,content, concat(cast(ifnull(count(1),0)*100/
+      (SELECT sum(total) from (SELECT ifnull(COUNT(1),1) total
+      from wx_message wm where wm.SYS_ID=(select SYS_ID  from wx_app_info wai where wai.SHOP_ID=#{shopId})
+      <if test="startTime != null and startTime!='' and endTime != null and endTime!='' ">
+          AND		RECEIVE_DT >= #{startTime}
+          AND		RECEIVE_DT &lt;=#{endTime}
+      </if>
+      GROUP BY CONTENT HAVING total>1) t )as decimal(10,2)),'%') as percent
+    from wx_message wm
+    where wm.SYS_ID=(select SYS_ID  from wx_app_info wai where wai.SHOP_ID=#{shopId})
+
+    <if test="startTime != null and startTime!='' and endTime != null and endTime!='' " >
+      AND		RECEIVE_DT >= #{startTime}
+      AND		RECEIVE_DT &lt;=#{endTime}
+    </if>
+
+    GROUP BY content HAVING times>1
+    order by times desc
+  </select>
+
+  <select id="findKeyStaticByCustom" resultType="com.basoft.service.entity.wechat.wxMessage.WxKeyMsgStats">
+    SELECT count(1)as times,wm.content,concat(cast(count(1)*100/(select sum(total) from  (SELECT ifnull(COUNT(1),1)total
+    from wx_message wm INNER JOIN shop_message_keyword smk on smk.KEYWORD=wm.CONTENT
+    where wm.SYS_ID=(select SYS_ID  from wx_app_info wai where wai.SHOP_ID=#{shopId})
+
+    <if test="startTime != null and startTime!='' and endTime != null and endTime!='' " >
+      AND		RECEIVE_DT >= #{startTime}
+      AND		RECEIVE_DT &lt;=#{endTime}
+    </if>
+
+    GROUP BY CONTENT HAVING total>1)t  )as DECIMAL(10,2)) ,'%') as percent
+    from shop_message_keyword smk
+    INNER JOIN wx_message wm on smk.KEYWORD=wm.CONTENT
+    and smk.SHOP_ID=#{shopId}
+    <if test="startTime != null and startTime!='' and endTime != null and endTime!='' ">
+      AND		RECEIVE_DT >= #{startTime}
+      AND		RECEIVE_DT &lt;=#{endTime}
+    </if>
+    GROUP BY smk.KEYWORD
+    order by times desc
+  </select>
+</mapper>

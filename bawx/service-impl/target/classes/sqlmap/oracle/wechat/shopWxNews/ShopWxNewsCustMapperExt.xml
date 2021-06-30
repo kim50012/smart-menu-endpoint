@@ -1,0 +1,247 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.basoft.service.dao.wechat.shopWxNews.ShopWxNewsCustMapper" >
+	<!-- 给所有人发素材时，更新WX_NEWS_CUST表中已存在的图文用户发送关系的状态  OK -->
+	<update id="updateShopWxNewsCustSendTypeOne">
+		<!-- 由于客户和微信账号ACCOUNT产生关系存入表WX_CUST_ACCOUNT是在设置客户等级时，所以未设置等级，表中无客户和微信账号ACCOUNT的关系，下面的更新逻辑做出调整 -->
+		<!--UPDATE WX_NEWS_CUST T
+			SET SEND_STS = 0,
+			SEND_TYPE = #{sendType}
+		WHERE T.SHOP_ID = #{shopId}
+			AND T.MSG_ID = #{msgId}
+			AND T.CUST_SYS_ID IN (
+				SELECT CS.CUST_SYS_ID
+				FROM WX_CUST_ACCOUNT CS,WX_CUST C
+				WHERE CS.CUST_SYS_ID = C.CUST_SYS_ID
+					AND CS.SHOP_ID = #{shopId}
+				  	AND C.ACTIVE_STS='1'
+				  	AND C.WX_IF_IS_SUBSCRIBE = 1
+			)-->
+		UPDATE WX_NEWS_CUST T
+			SET SEND_STS = 0,
+			SEND_TYPE = #{sendType}
+		WHERE T.SHOP_ID = #{shopId}
+			AND T.MSG_ID = #{msgId}
+			AND T.CUST_SYS_ID IN (
+				SELECT C.CUST_SYS_ID
+				  FROM WX_USER U, WX_CUST C
+				 WHERE U.OPENID = C.WX_IF_OPENID_P
+				   AND U.SUBSCRIBE = 1
+				   AND C.ACTIVE_STS = '1'
+				   AND C.WX_IF_IS_SUBSCRIBE = 1
+				   AND U.SYS_ID = (SELECT T.SYS_ID FROM WX_APP_INFO T where T.SHOP_ID = #{shopId})
+			)
+	</update>
+
+	<!--给所有人发送素材 OK-->
+	<insert id="insertShopWxNewsCustSendTypeOne" useGeneratedKeys="false">
+		<!--独立运行sql是可以的，但是mybatis运行出错：：ORA-00933 SQL命令未正确结束    解决方案：：添加useGeneratedKeys="false" 下面的版本都可以-->
+		INSERT INTO WX_NEWS_CUST
+			(
+				SHOP_ID,
+				MSG_ID,
+				CUST_SYS_ID,
+				OPENID,
+				SEND_TYPE,
+				SEND_STS
+			) 
+			SELECT DISTINCT
+			        #{shopId}, 
+			        #{msgId}, 
+			        C.CUST_SYS_ID, 
+			        C.WX_IF_OPENID_P, 
+			        1, 
+			        0
+			      FROM WX_CUST C , WX_USER U
+			        WHERE C.WX_IF_OPENID_P = U.OPENID
+			          AND C.WX_IF_IS_SUBSCRIBE = 1
+			          AND C.ACTIVE_STS = '1'
+			          AND U.SUBSCRIBE = 1
+			          AND U.SYS_ID = (SELECT T.SYS_ID FROM WX_APP_INFO T WHERE T.SHOP_ID = #{shopId})
+			          AND NOT EXISTS (SELECT 1 FROM WX_NEWS_CUST NC WHERE NC.CUST_SYS_ID = C.CUST_SYS_ID  AND NC.MSG_ID = #{msgId} AND NC.SHOP_ID = #{shopId})
+	</insert>
+
+  	<!-- 给所选等级的人发送素材，更新shop_wx_news_cust表中已存在的图文用户发送关系的状态  OK-->
+  	<update id="updateShopWxNewsCustSendTypeTwo">
+  		UPDATE WX_NEWS_CUST T
+			SET T.SEND_STS = 0,
+			SEND_TYPE = #{sendType}
+		WHERE T.SHOP_ID = #{shopId}
+			AND T.MSG_ID = #{msgId}
+			AND T.CUST_SYS_ID IN (
+				SELECT
+					CA.CUST_SYS_ID
+				FROM WX_CUST_ACCOUNT CA,WX_CUST C
+				WHERE CA.CUST_SYS_ID = C.CUST_SYS_ID
+					AND CA.SHOP_ID = #{shopId}
+					AND CA.GRADE_ID = #{gradeId,jdbcType=BIGINT}
+				  	AND C.ACTIVE_STS='1'
+				  	AND C.WX_IF_IS_SUBSCRIBE = 1
+			)
+  	</update>
+
+  	<!--给所选等级的人发送素材 OK-->
+  	<insert id="insertShopWxNewsCustSendTypeTwo" useGeneratedKeys="false">
+  		<!--INSERT INTO WX_NEWS_CUST
+			(
+				SHOP_ID
+				, MSG_ID
+				, CUST_SYS_ID
+				, OPENID
+				, SEND_TYPE
+				, SEND_STS
+			)
+			SELECT
+				DISTINCT
+				#{shopId}
+				, #{msgId}
+				, T1.CUST_SYS_ID
+				, T3.WX_IF_OPENID_P
+				, 2
+				, 0
+			FROM CUST_SHOP T1
+				INNER JOIN CUST T3 ON T1.CUST_SYS_ID = T3.CUST_SYS_ID
+				LEFT JOIN SHOP_WX_NEWS_CUST T4 ON T1.SHOP_ID = T4.SHOP_ID AND T1.CUST_SYS_ID = T4.CUST_SYS_ID AND T4.MSG_ID = #{msgId}
+			WHERE T1.SHOP_ID = #{shopId}
+				AND	T1.GRADE_ID = #{gradeId,jdbcType=BIGINT}
+				AND T3.WX_IF_IS_SUBSCRIBE = 1
+				AND	T4.CUST_SYS_ID IS NULL-->
+				
+			INSERT INTO WX_NEWS_CUST
+			(
+				SHOP_ID
+				, MSG_ID
+				, CUST_SYS_ID
+				, OPENID
+				, SEND_TYPE
+				, SEND_STS
+			)	
+			SELECT
+		        DISTINCT
+		        #{shopId}
+		        , #{msgId}
+		        , C.CUST_SYS_ID
+		        , C.WX_IF_OPENID_P
+		        , 2
+		        , 0
+		      FROM WX_CUST C
+		        INNER JOIN WX_USER U ON C.WX_IF_OPENID_P = U.OPENID
+		        INNER JOIN WX_CUST_ACCOUNT CA ON C.CUST_SYS_ID = CA.CUST_SYS_ID
+		      WHERE U.SUBSCRIBE = 1
+		        AND U.SYS_ID = (SELECT T.SYS_ID FROM WX_APP_INFO T WHERE T.SHOP_ID = #{shopId})
+		        AND C.WX_IF_IS_SUBSCRIBE = 1
+		        AND C.ACTIVE_STS = '1'
+		        AND CA.SHOP_ID = #{shopId}
+		        AND CA.GRADE_ID = #{gradeId,jdbcType=BIGINT}
+		        AND NOT EXISTS (SELECT 1 FROM WX_NEWS_CUST NC WHERE NC.CUST_SYS_ID = C.CUST_SYS_ID  AND NC.MSG_ID = #{msgId} AND NC.SHOP_ID = #{shopId})
+  	</insert>
+
+  	<!--给所选择的用户发送素材OK-->
+  	<update id="updateShopWxNewsCustSendTypeThree">
+  		UPDATE WX_NEWS_CUST T
+			SET SEND_STS = 0,
+			SEND_TYPE = #{sendType}
+		WHERE T.SHOP_ID = #{shopId}
+			AND T.MSG_ID = #{msgId}
+			AND T.CUST_SYS_ID IN (${custSysId})
+  	</update>
+
+  	<!--给所选择的用户发送素材 OK-->
+  	<insert id="insertShopWxNewsCustSendTypeThree" useGeneratedKeys="false">
+    	INSERT INTO WX_NEWS_CUST
+		(
+			SHOP_ID
+			, MSG_ID
+			, CUST_SYS_ID
+			, OPENID
+			, SEND_TYPE
+			, SEND_STS
+		)
+		SELECT
+	        DISTINCT
+	        #{shopId}
+	        , #{msgId}
+	        , C.CUST_SYS_ID
+	        , C.WX_IF_OPENID_P
+	        , 3
+	        , 0
+	      FROM WX_CUST C
+	        INNER JOIN WX_USER U ON C.WX_IF_OPENID_P = U.OPENID
+	      WHERE U.SUBSCRIBE = 1
+	        AND U.SYS_ID = (SELECT T.SYS_ID FROM WX_APP_INFO T WHERE T.SHOP_ID = #{shopId})
+	        AND C.WX_IF_IS_SUBSCRIBE = 1
+	        AND C.ACTIVE_STS = '1'
+	        AND C.CUST_SYS_ID IN (${custSysId})
+	        AND NOT EXISTS (SELECT 1 FROM WX_NEWS_CUST NC WHERE NC.CUST_SYS_ID = C.CUST_SYS_ID  AND NC.MSG_ID = #{msgId} AND NC.SHOP_ID = #{shopId})
+  	</insert>
+	
+	<!-- 根据shopid和msgid及发送的设定条件（sendtype）、发送状态等查询发送openid ok-->
+	<select id="queryOpenIdWxNewsCust" resultType="java.lang.String">
+		SELECT DISTINCT
+			T2.WX_IF_OPENID_P AS OPENID
+		FROM WX_NEWS_CUST T1 INNER JOIN WX_CUST T2 ON T1.CUST_SYS_ID = T2.CUST_SYS_ID
+		WHERE T1.SHOP_ID = #{shopId}
+			AND	T1.MSG_ID = #{msgId}
+			AND T1.SEND_TYPE = #{sendType}
+			AND T1.SEND_STS = 0
+			AND	T2.WX_IF_IS_SUBSCRIBE = 1
+  	</select>
+	
+	<!-- 保存图文消息发送结果 ok-->
+  	<update id="saveSendResultNewsCust">
+		UPDATE WX_NEWS_CUST
+		SET	SEND_STS = #{SEND_STS} ,SEND_DT = SYSDATE
+		WHERE SHOP_ID = #{SHOP_ID}
+			AND	MSG_ID = #{MSG_ID}
+  	</update>
+  	
+  	<!-- 根据公众号ID查询所有已订阅、已关注且存在cust_shop关系的微信用户OPENID-->
+  	<!-- 20180816说明：由于cust_shop得关系是在设置客户等级时存入得，所以此查询方法没有意义，并不能查询到所有得关注用户OPENID列表-->
+  	<!-- 20180816说明：特别说明，群发全部也不需要查询所有得openid列表-->
+  	<!-- 20180816说明：下面得查询逻辑还是对的【根据公众号ID查询所有已订阅、已关注且存在cust_shop关系的微信用户OPENID】-->
+  	<!-- 
+  		U.SUBSCRIBE = 1 已订阅
+  		C.WX_IF_IS_SUBSCRIBE = 1 已关注
+  	-->
+	<select id="queryAllCustOpenIdList" resultType="java.lang.String" parameterType="com.basoft.service.param.wechat.shopWxNews.SenNewsForm">
+		SELECT DISTINCT WX_IF_OPENID_P AS OPENID
+		FROM WX_CUST C
+		INNER JOIN WX_USER U ON C.WX_IF_OPENID_P = U.OPENID
+		INNER JOIN WX_CUST_ACCOUNT CA ON C.CUST_SYS_ID = CA.CUST_SYS_ID
+		WHERE CA.SHOP_ID = #{shopId}
+		 AND C.WX_IF_IS_SUBSCRIBE = 1
+		 AND U.SUBSCRIBE = 1
+  	</select>
+  	
+  	<!-- 查询指定等级的用户列表  OK -->
+  	<select id="queryCustOpenIdListByGrade" resultType="java.lang.String">
+		SELECT DISTINCT WX_IF_OPENID_P AS OPENID
+		FROM WX_CUST C
+		INNER JOIN WX_USER U ON C.WX_IF_OPENID_P = U.OPENID
+		INNER JOIN WX_CUST_ACCOUNT CA ON C.CUST_SYS_ID = CA.CUST_SYS_ID
+		WHERE CA.SHOP_ID = #{shopId}
+		 AND CA.GRADE_ID = #{gradeId}
+		 AND C.WX_IF_IS_SUBSCRIBE = 1
+		 AND U.SUBSCRIBE = 1
+  	</select>
+  	
+  	<!-- 查询选择用户的OPENID列表  OK -->
+  	<select id="queryCustOpenIdListByCust" resultType="java.lang.String">
+		<!-- SELECT DISTINCT WX_IF_OPENID_P AS OPENID
+		FROM WX_CUST C
+		INNER JOIN WX_USER U ON C.WX_IF_OPENID_P = U.OPENID
+		INNER JOIN WX_CUST_ACCOUNT CA ON C.CUST_SYS_ID = CA.CUST_SYS_ID
+		WHERE CA.SHOP_ID = #{shopId}
+		 AND CA.CUST_SYS_ID in (${custSysId})
+		 AND C.WX_IF_IS_SUBSCRIBE = 1
+		 AND U.SUBSCRIBE = 1-->
+		SELECT DISTINCT WX_IF_OPENID_P AS OPENID
+		FROM WX_CUST C
+		INNER JOIN WX_USER U ON C.WX_IF_OPENID_P = U.OPENID
+		WHERE C.CUST_SYS_ID in (${custSysId})
+		 AND C.ACTIVE_STS = '1'
+		 AND C.WX_IF_IS_SUBSCRIBE = 1
+		 AND U.SUBSCRIBE = 1
+		 AND U.SYS_ID = (SELECT T.SYS_ID FROM WX_APP_INFO T where T.SHOP_ID = #{shopId})
+  	</select>
+</mapper>

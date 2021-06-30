@@ -1,0 +1,466 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.basoft.service.dao.wechat.reply.ShopWxMessageMapper" >
+  <resultMap id="BaseResultMap" type="com.basoft.service.entity.wechat.reply.ShopWxMessageWithBLOBs" >
+    <id column="MESSAGE_ID" property="messageId" jdbcType="BIGINT" />
+    <result column="SHOP_ID" property="shopId" jdbcType="BIGINT" />
+    <result column="MSG_GROUP" property="msgGroup" jdbcType="VARCHAR" />
+    <result column="SEND_FILE_TYPE" property="sendFileType" jdbcType="INTEGER" />
+    <result column="MATERIAL_FILE_ID" property="materialFileId" jdbcType="BIGINT" />
+    <result column="COVER_PAGE_ID" property="coverPageId" jdbcType="INTEGER" />
+    <result column="SEND_TYPE" property="sendType" jdbcType="INTEGER" />
+    <result column="SEND_TIME" property="sendTime" jdbcType="TIMESTAMP" />
+    <result column="CREATED_ID" property="createdId" jdbcType="VARCHAR" />
+    <result column="MODIFIED_ID" property="modifiedId" jdbcType="VARCHAR" />
+    <result column="CREATED_DT" property="createdDt" jdbcType="TIMESTAMP" />
+    <result column="MODIFIED_DT" property="modifiedDt" jdbcType="TIMESTAMP" />
+    <result column="IS_DELETE" property="isDelete" jdbcType="INTEGER" />
+    <result column="SEND_TYPE_ID" property="sendTypeId" jdbcType="INTEGER" />
+
+    <result column="MSG_TITLE" property="msgTitle" jdbcType="VARCHAR" />
+    <result column="SHOP_GOODS_URL" property="shopGoodsUrl" jdbcType="VARCHAR" />
+    <result column="SEND_MSG_BODY" property="sendMsgBody" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    MESSAGE_ID, SHOP_ID, MSG_GROUP, SEND_FILE_TYPE, MATERIAL_FILE_ID, COVER_PAGE_ID, 
+    SEND_TYPE, SEND_TIME, CREATED_ID, MODIFIED_ID, CREATED_DT, MODIFIED_DT, IS_DELETE, 
+    SEND_TYPE_ID,MATERIAL_FILE_WX_ID
+  </sql>
+  <sql id="Blob_Column_List" >
+    MSG_TITLE, SHOP_GOODS_URL, SEND_MSG_BODY
+  </sql>
+  <select id="selectByExampleWithBLOBs" resultMap="BaseResultMap" parameterType="com.basoft.service.entity.wechat.reply.ShopWxMessageExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    'true' as QUERYID,
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from WX_MESSAGE
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.basoft.service.entity.wechat.reply.ShopWxMessageExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    'true' as QUERYID,
+    <include refid="Base_Column_List" />
+    from WX_MESSAGE
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from WX_MESSAGE
+    where MESSAGE_ID = #{messageId,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from WX_MESSAGE
+    where MESSAGE_ID = #{messageId,jdbcType=BIGINT}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.basoft.service.entity.wechat.reply.ShopWxMessageExample" >
+    delete from WX_MESSAGE
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.basoft.service.entity.wechat.reply.ShopWxMessageWithBLOBs" >
+    insert into WX_MESSAGE (MESSAGE_ID, SHOP_ID, MSG_GROUP, 
+      SEND_FILE_TYPE, MATERIAL_FILE_ID, COVER_PAGE_ID, 
+      SEND_TYPE, SEND_TIME, CREATED_ID, 
+      MODIFIED_ID, CREATED_DT, MODIFIED_DT, 
+      IS_DELETE, SEND_TYPE_ID, MSG_TITLE, 
+      SHOP_GOODS_URL, SEND_MSG_BODY)
+    values (#{messageId,jdbcType=BIGINT}, #{shopId,jdbcType=BIGINT}, #{msgGroup,jdbcType=VARCHAR}, 
+      #{sendFileType,jdbcType=INTEGER}, #{materialFileId,jdbcType=BIGINT}, #{coverPageId,jdbcType=INTEGER}, 
+      #{sendType,jdbcType=INTEGER}, #{sendTime,jdbcType=TIMESTAMP}, #{createdId,jdbcType=VARCHAR}, 
+      #{modifiedId,jdbcType=VARCHAR}, #{createdDt,jdbcType=TIMESTAMP}, #{modifiedDt,jdbcType=TIMESTAMP}, 
+      #{isDelete,jdbcType=INTEGER}, #{sendTypeId,jdbcType=INTEGER}, #{msgTitle,jdbcType=VARCHAR}, 
+      #{shopGoodsUrl,jdbcType=VARCHAR}, #{sendMsgBody,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.basoft.service.entity.wechat.reply.ShopWxMessageWithBLOBs" >
+    insert into WX_MESSAGE
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="messageId != null" >
+        MESSAGE_ID,
+      </if>
+      <if test="shopId != null" >
+        SHOP_ID,
+      </if>
+      <if test="msgGroup != null" >
+        MSG_GROUP,
+      </if>
+      <if test="sendFileType != null" >
+        SEND_FILE_TYPE,
+      </if>
+      <if test="materialFileId != null" >
+        MATERIAL_FILE_ID,
+      </if>
+      <if test="coverPageId != null" >
+        COVER_PAGE_ID,
+      </if>
+      <if test="sendType != null" >
+        SEND_TYPE,
+      </if>
+      <if test="sendTime != null" >
+        SEND_TIME,
+      </if>
+      <if test="createdId != null" >
+        CREATED_ID,
+      </if>
+      <if test="modifiedId != null" >
+        MODIFIED_ID,
+      </if>
+      <if test="createdDt != null" >
+        CREATED_DT,
+      </if>
+      <if test="modifiedDt != null" >
+        MODIFIED_DT,
+      </if>
+      <if test="isDelete != null" >
+        IS_DELETE,
+      </if>
+      <if test="sendTypeId != null" >
+        SEND_TYPE_ID,
+      </if>
+      <if test="msgTitle != null" >
+        MSG_TITLE,
+      </if>
+      <if test="shopGoodsUrl != null" >
+        SHOP_GOODS_URL,
+      </if>
+      <if test="sendMsgBody != null" >
+        SEND_MSG_BODY,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="messageId != null" >
+        #{messageId,jdbcType=BIGINT},
+      </if>
+      <if test="shopId != null" >
+        #{shopId,jdbcType=BIGINT},
+      </if>
+      <if test="msgGroup != null" >
+        #{msgGroup,jdbcType=VARCHAR},
+      </if>
+      <if test="sendFileType != null" >
+        #{sendFileType,jdbcType=INTEGER},
+      </if>
+      <if test="materialFileId != null" >
+        #{materialFileId,jdbcType=BIGINT},
+      </if>
+      <if test="coverPageId != null" >
+        #{coverPageId,jdbcType=INTEGER},
+      </if>
+      <if test="sendType != null" >
+        #{sendType,jdbcType=INTEGER},
+      </if>
+      <if test="sendTime != null" >
+        #{sendTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createdId != null" >
+        #{createdId,jdbcType=VARCHAR},
+      </if>
+      <if test="modifiedId != null" >
+        #{modifiedId,jdbcType=VARCHAR},
+      </if>
+      <if test="createdDt != null" >
+        #{createdDt,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifiedDt != null" >
+        #{modifiedDt,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isDelete != null" >
+        #{isDelete,jdbcType=INTEGER},
+      </if>
+      <if test="sendTypeId != null" >
+        #{sendTypeId,jdbcType=INTEGER},
+      </if>
+      <if test="msgTitle != null" >
+        #{msgTitle,jdbcType=VARCHAR},
+      </if>
+      <if test="shopGoodsUrl != null" >
+        #{shopGoodsUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="sendMsgBody != null" >
+        #{sendMsgBody,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.basoft.service.entity.wechat.reply.ShopWxMessageExample" resultType="java.lang.Integer" >
+    select count(*) from WX_MESSAGE
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update WX_MESSAGE
+    <set >
+      <if test="record.messageId != null" >
+        MESSAGE_ID = #{record.messageId,jdbcType=BIGINT},
+      </if>
+      <if test="record.shopId != null" >
+        SHOP_ID = #{record.shopId,jdbcType=BIGINT},
+      </if>
+      <if test="record.msgGroup != null" >
+        MSG_GROUP = #{record.msgGroup,jdbcType=VARCHAR},
+      </if>
+      <if test="record.sendFileType != null" >
+        SEND_FILE_TYPE = #{record.sendFileType,jdbcType=INTEGER},
+      </if>
+      <if test="record.materialFileId != null" >
+        MATERIAL_FILE_ID = #{record.materialFileId,jdbcType=BIGINT},
+      </if>
+      <if test="record.coverPageId != null" >
+        COVER_PAGE_ID = #{record.coverPageId,jdbcType=INTEGER},
+      </if>
+      <if test="record.sendType != null" >
+        SEND_TYPE = #{record.sendType,jdbcType=INTEGER},
+      </if>
+      <if test="record.sendTime != null" >
+        SEND_TIME = #{record.sendTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.createdId != null" >
+        CREATED_ID = #{record.createdId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.modifiedId != null" >
+        MODIFIED_ID = #{record.modifiedId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.createdDt != null" >
+        CREATED_DT = #{record.createdDt,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.modifiedDt != null" >
+        MODIFIED_DT = #{record.modifiedDt,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.isDelete != null" >
+        IS_DELETE = #{record.isDelete,jdbcType=INTEGER},
+      </if>
+      <if test="record.sendTypeId != null" >
+        SEND_TYPE_ID = #{record.sendTypeId,jdbcType=INTEGER},
+      </if>
+      <if test="record.msgTitle != null" >
+        MSG_TITLE = #{record.msgTitle,jdbcType=VARCHAR},
+      </if>
+      <if test="record.shopGoodsUrl != null" >
+        SHOP_GOODS_URL = #{record.shopGoodsUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="record.sendMsgBody != null" >
+        SEND_MSG_BODY = #{record.sendMsgBody,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExampleWithBLOBs" parameterType="map" >
+    update WX_MESSAGE
+    set MESSAGE_ID = #{record.messageId,jdbcType=BIGINT},
+      SHOP_ID = #{record.shopId,jdbcType=BIGINT},
+      MSG_GROUP = #{record.msgGroup,jdbcType=VARCHAR},
+      SEND_FILE_TYPE = #{record.sendFileType,jdbcType=INTEGER},
+      MATERIAL_FILE_ID = #{record.materialFileId,jdbcType=BIGINT},
+      COVER_PAGE_ID = #{record.coverPageId,jdbcType=INTEGER},
+      SEND_TYPE = #{record.sendType,jdbcType=INTEGER},
+      SEND_TIME = #{record.sendTime,jdbcType=TIMESTAMP},
+      CREATED_ID = #{record.createdId,jdbcType=VARCHAR},
+      MODIFIED_ID = #{record.modifiedId,jdbcType=VARCHAR},
+      CREATED_DT = #{record.createdDt,jdbcType=TIMESTAMP},
+      MODIFIED_DT = #{record.modifiedDt,jdbcType=TIMESTAMP},
+      IS_DELETE = #{record.isDelete,jdbcType=INTEGER},
+      SEND_TYPE_ID = #{record.sendTypeId,jdbcType=INTEGER},
+      MSG_TITLE = #{record.msgTitle,jdbcType=VARCHAR},
+      SHOP_GOODS_URL = #{record.shopGoodsUrl,jdbcType=VARCHAR},
+      SEND_MSG_BODY = #{record.sendMsgBody,jdbcType=VARCHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update WX_MESSAGE
+    set MESSAGE_ID = #{record.messageId,jdbcType=BIGINT},
+      SHOP_ID = #{record.shopId,jdbcType=BIGINT},
+      MSG_GROUP = #{record.msgGroup,jdbcType=VARCHAR},
+      SEND_FILE_TYPE = #{record.sendFileType,jdbcType=INTEGER},
+      MATERIAL_FILE_ID = #{record.materialFileId,jdbcType=BIGINT},
+      COVER_PAGE_ID = #{record.coverPageId,jdbcType=INTEGER},
+      SEND_TYPE = #{record.sendType,jdbcType=INTEGER},
+      SEND_TIME = #{record.sendTime,jdbcType=TIMESTAMP},
+      CREATED_ID = #{record.createdId,jdbcType=VARCHAR},
+      MODIFIED_ID = #{record.modifiedId,jdbcType=VARCHAR},
+      CREATED_DT = #{record.createdDt,jdbcType=TIMESTAMP},
+      MODIFIED_DT = #{record.modifiedDt,jdbcType=TIMESTAMP},
+      IS_DELETE = #{record.isDelete,jdbcType=INTEGER},
+      SEND_TYPE_ID = #{record.sendTypeId,jdbcType=INTEGER}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.basoft.service.entity.wechat.reply.ShopWxMessageWithBLOBs" >
+    update WX_MESSAGE
+    <set >
+      <if test="shopId != null" >
+        SHOP_ID = #{shopId,jdbcType=BIGINT},
+      </if>
+      <if test="msgGroup != null" >
+        MSG_GROUP = #{msgGroup,jdbcType=VARCHAR},
+      </if>
+      <if test="sendFileType != null" >
+        SEND_FILE_TYPE = #{sendFileType,jdbcType=INTEGER},
+      </if>
+      <if test="materialFileId != null" >
+        MATERIAL_FILE_ID = #{materialFileId,jdbcType=BIGINT},
+      </if>
+      <if test="materialFileWxId != null">
+        MATERIAL_FILE_WX_ID = #{materialFileWxId,jdbcType=BIGINT},
+      </if>
+      <if test="coverPageId != null" >
+        COVER_PAGE_ID = #{coverPageId,jdbcType=INTEGER},
+      </if>
+      <if test="sendType != null" >
+        SEND_TYPE = #{sendType,jdbcType=INTEGER},
+      </if>
+      <if test="sendTime != null" >
+        SEND_TIME = #{sendTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createdId != null" >
+        CREATED_ID = #{createdId,jdbcType=VARCHAR},
+      </if>
+      <if test="modifiedId != null" >
+        MODIFIED_ID = #{modifiedId,jdbcType=VARCHAR},
+      </if>
+      <if test="createdDt != null" >
+        CREATED_DT = #{createdDt,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifiedDt != null" >
+        MODIFIED_DT = #{modifiedDt,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isDelete != null" >
+        IS_DELETE = #{isDelete,jdbcType=INTEGER},
+      </if>
+      <if test="sendTypeId != null" >
+        SEND_TYPE_ID = #{sendTypeId,jdbcType=INTEGER},
+      </if>
+      <if test="msgTitle != null" >
+        MSG_TITLE = #{msgTitle,jdbcType=VARCHAR},
+      </if>
+      <if test="shopGoodsUrl != null" >
+        SHOP_GOODS_URL = #{shopGoodsUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="sendMsgBody != null" >
+        SEND_MSG_BODY = #{sendMsgBody,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where MESSAGE_ID = #{messageId,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.basoft.service.entity.wechat.reply.ShopWxMessageWithBLOBs" >
+    update WX_MESSAGE
+    set SHOP_ID = #{shopId,jdbcType=BIGINT},
+      MSG_GROUP = #{msgGroup,jdbcType=VARCHAR},
+      SEND_FILE_TYPE = #{sendFileType,jdbcType=INTEGER},
+      MATERIAL_FILE_ID = #{materialFileId,jdbcType=BIGINT},
+      MATERIAL_FILE_WX_ID = #{materialFileWxId,jdbcType=VARCHAR},
+      COVER_PAGE_ID = #{coverPageId,jdbcType=INTEGER},
+      SEND_TYPE = #{sendType,jdbcType=INTEGER},
+      SEND_TIME = #{sendTime,jdbcType=TIMESTAMP},
+      CREATED_ID = #{createdId,jdbcType=VARCHAR},
+      MODIFIED_ID = #{modifiedId,jdbcType=VARCHAR},
+      CREATED_DT = #{createdDt,jdbcType=TIMESTAMP},
+      MODIFIED_DT = #{modifiedDt,jdbcType=TIMESTAMP},
+      IS_DELETE = #{isDelete,jdbcType=INTEGER},
+      SEND_TYPE_ID = #{sendTypeId,jdbcType=INTEGER},
+      MSG_TITLE = #{msgTitle,jdbcType=VARCHAR},
+      SHOP_GOODS_URL = #{shopGoodsUrl,jdbcType=VARCHAR},
+      SEND_MSG_BODY = #{sendMsgBody,jdbcType=VARCHAR}
+    where MESSAGE_ID = #{messageId,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.basoft.service.entity.wechat.reply.ShopWxMessage" >
+    update WX_MESSAGE
+    set SHOP_ID = #{shopId,jdbcType=BIGINT},
+      MSG_GROUP = #{msgGroup,jdbcType=VARCHAR},
+      SEND_FILE_TYPE = #{sendFileType,jdbcType=INTEGER},
+      MATERIAL_FILE_ID = #{materialFileId,jdbcType=BIGINT},
+      COVER_PAGE_ID = #{coverPageId,jdbcType=INTEGER},
+      SEND_TYPE = #{sendType,jdbcType=INTEGER},
+      SEND_TIME = #{sendTime,jdbcType=TIMESTAMP},
+      CREATED_ID = #{createdId,jdbcType=VARCHAR},
+      MODIFIED_ID = #{modifiedId,jdbcType=VARCHAR},
+      CREATED_DT = #{createdDt,jdbcType=TIMESTAMP},
+      MODIFIED_DT = #{modifiedDt,jdbcType=TIMESTAMP},
+      IS_DELETE = #{isDelete,jdbcType=INTEGER},
+      SEND_TYPE_ID = #{sendTypeId,jdbcType=INTEGER}
+    where MESSAGE_ID = #{messageId,jdbcType=BIGINT}
+  </update>
+</mapper>

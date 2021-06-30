@@ -1,0 +1,532 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.basoft.service.dao.wechat.wxMessage.WxMessageMapper" >
+  <resultMap id="BaseResultMap" type="com.basoft.service.entity.wechat.wxMessage.WxMessage" >
+    <id column="ID" property="id" jdbcType="INTEGER" />
+    <result column="SYS_ID" property="sysId" jdbcType="VARCHAR" />
+    <result column="MSG_ID" property="msgId" jdbcType="VARCHAR" />
+    <result column="FROM_TYPE" property="fromType" jdbcType="TINYINT" />
+    <result column="FROM_USER" property="fromUser" jdbcType="VARCHAR" />
+    <result column="TO_USER" property="toUser" jdbcType="VARCHAR" />
+    <result column="MSG_TYPE" property="msgType" jdbcType="VARCHAR" />
+    <result column="RECEIVE_DT" property="receiveDt" jdbcType="TIMESTAMP" />
+    <result column="MEDIA_ID" property="mediaId" jdbcType="VARCHAR" />
+    <result column="PIC_URL" property="picUrl" jdbcType="VARCHAR" />
+    <result column="FORMAT" property="format" jdbcType="VARCHAR" />
+    <result column="THUMB_MEDIA_ID" property="thumbMediaId" jdbcType="VARCHAR" />
+    <result column="LOCATION_X" property="locationX" jdbcType="DECIMAL" />
+    <result column="LOCATION_Y" property="locationY" jdbcType="DECIMAL" />
+    <result column="SCALE" property="scale" jdbcType="INTEGER" />
+    <result column="LINK_TITLE" property="linkTitle" jdbcType="VARCHAR" />
+    <result column="FILE_ID" property="fileId" jdbcType="INTEGER" />
+  </resultMap>
+  <resultMap id="ResultMapWithBLOBs" type="com.basoft.service.entity.wechat.wxMessage.WxMessageWithBLOBs" extends="BaseResultMap" >
+    <result column="CONTENT" property="content" jdbcType="LONGVARCHAR" />
+    <result column="LABEL" property="label" jdbcType="LONGVARCHAR" />
+    <result column="LINK_DES" property="linkDes" jdbcType="LONGVARCHAR" />
+    <result column="LINK_URL" property="linkUrl" jdbcType="LONGVARCHAR" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    ID, SYS_ID, MSG_ID, FROM_TYPE, FROM_USER, TO_USER, MSG_TYPE, RECEIVE_DT, MEDIA_ID, 
+    PIC_URL, FORMAT, THUMB_MEDIA_ID, LOCATION_X, LOCATION_Y, SCALE, LINK_TITLE, FILE_ID
+  </sql>
+  <sql id="Blob_Column_List" >
+    CONTENT, LABEL, LINK_DES, LINK_URL
+  </sql>
+  <select id="selectByExampleWithBLOBs" resultMap="ResultMapWithBLOBs" parameterType="com.basoft.service.entity.wechat.wxMessage.WxMessageExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    'true' as QUERYID,
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from wx_message
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.basoft.service.entity.wechat.wxMessage.WxMessageExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    'true' as QUERYID,
+    <include refid="Base_Column_List" />
+    from wx_message
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from wx_message
+    where ID = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from wx_message
+    where ID = #{id,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.basoft.service.entity.wechat.wxMessage.WxMessageExample" >
+    delete from wx_message
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.basoft.service.entity.wechat.wxMessage.WxMessageWithBLOBs" >
+    insert into wx_message (ID, SYS_ID, MSG_ID, 
+      FROM_TYPE, FROM_USER, TO_USER, 
+      MSG_TYPE, RECEIVE_DT, MEDIA_ID, 
+      PIC_URL, FORMAT, THUMB_MEDIA_ID, 
+      LOCATION_X, LOCATION_Y, SCALE, 
+      LINK_TITLE, FILE_ID, CONTENT, 
+      LABEL, LINK_DES, LINK_URL
+      )
+    values (#{id,jdbcType=INTEGER}, #{sysId,jdbcType=VARCHAR}, #{msgId,jdbcType=VARCHAR}, 
+      #{fromType,jdbcType=TINYINT}, #{fromUser,jdbcType=VARCHAR}, #{toUser,jdbcType=VARCHAR}, 
+      #{msgType,jdbcType=VARCHAR}, #{receiveDt,jdbcType=TIMESTAMP}, #{mediaId,jdbcType=VARCHAR}, 
+      #{picUrl,jdbcType=VARCHAR}, #{format,jdbcType=VARCHAR}, #{thumbMediaId,jdbcType=VARCHAR}, 
+      #{locationX,jdbcType=DECIMAL}, #{locationY,jdbcType=DECIMAL}, #{scale,jdbcType=INTEGER}, 
+      #{linkTitle,jdbcType=VARCHAR}, #{fileId,jdbcType=INTEGER}, #{content,jdbcType=LONGVARCHAR}, 
+      #{label,jdbcType=LONGVARCHAR}, #{linkDes,jdbcType=LONGVARCHAR}, #{linkUrl,jdbcType=LONGVARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.basoft.service.entity.wechat.wxMessage.WxMessageWithBLOBs" >
+    insert into wx_message
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        ID,
+      </if>
+      <if test="sysId != null" >
+        SYS_ID,
+      </if>
+      <if test="msgId != null" >
+        MSG_ID,
+      </if>
+      <if test="fromType != null" >
+        FROM_TYPE,
+      </if>
+      <if test="fromUser != null" >
+        FROM_USER,
+      </if>
+      <if test="toUser != null" >
+        TO_USER,
+      </if>
+      <if test="msgType != null" >
+        MSG_TYPE,
+      </if>
+      <if test="receiveDt != null" >
+        RECEIVE_DT,
+      </if>
+      <if test="mediaId != null" >
+        MEDIA_ID,
+      </if>
+      <if test="picUrl != null" >
+        PIC_URL,
+      </if>
+      <if test="format != null" >
+        FORMAT,
+      </if>
+      <if test="thumbMediaId != null" >
+        THUMB_MEDIA_ID,
+      </if>
+      <if test="locationX != null" >
+        LOCATION_X,
+      </if>
+      <if test="locationY != null" >
+        LOCATION_Y,
+      </if>
+      <if test="scale != null" >
+        SCALE,
+      </if>
+      <if test="linkTitle != null" >
+        LINK_TITLE,
+      </if>
+      <if test="fileId != null" >
+        FILE_ID,
+      </if>
+      <if test="content != null" >
+        CONTENT,
+      </if>
+      <if test="label != null" >
+        LABEL,
+      </if>
+      <if test="linkDes != null" >
+        LINK_DES,
+      </if>
+      <if test="linkUrl != null" >
+        LINK_URL,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="sysId != null" >
+        #{sysId,jdbcType=VARCHAR},
+      </if>
+      <if test="msgId != null" >
+        #{msgId,jdbcType=VARCHAR},
+      </if>
+      <if test="fromType != null" >
+        #{fromType,jdbcType=TINYINT},
+      </if>
+      <if test="fromUser != null" >
+        #{fromUser,jdbcType=VARCHAR},
+      </if>
+      <if test="toUser != null" >
+        #{toUser,jdbcType=VARCHAR},
+      </if>
+      <if test="msgType != null" >
+        #{msgType,jdbcType=VARCHAR},
+      </if>
+      <if test="receiveDt != null" >
+        #{receiveDt,jdbcType=TIMESTAMP},
+      </if>
+      <if test="mediaId != null" >
+        #{mediaId,jdbcType=VARCHAR},
+      </if>
+      <if test="picUrl != null" >
+        #{picUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="format != null" >
+        #{format,jdbcType=VARCHAR},
+      </if>
+      <if test="thumbMediaId != null" >
+        #{thumbMediaId,jdbcType=VARCHAR},
+      </if>
+      <if test="locationX != null" >
+        #{locationX,jdbcType=DECIMAL},
+      </if>
+      <if test="locationY != null" >
+        #{locationY,jdbcType=DECIMAL},
+      </if>
+      <if test="scale != null" >
+        #{scale,jdbcType=INTEGER},
+      </if>
+      <if test="linkTitle != null" >
+        #{linkTitle,jdbcType=VARCHAR},
+      </if>
+      <if test="fileId != null" >
+        #{fileId,jdbcType=INTEGER},
+      </if>
+      <if test="content != null" >
+        #{content,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="label != null" >
+        #{label,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="linkDes != null" >
+        #{linkDes,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="linkUrl != null" >
+        #{linkUrl,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.basoft.service.entity.wechat.wxMessage.WxMessageExample" resultType="java.lang.Integer" >
+    select count(*) from wx_message
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update wx_message
+    <set >
+      <if test="record.id != null" >
+        ID = #{record.id,jdbcType=INTEGER},
+      </if>
+      <if test="record.sysId != null" >
+        SYS_ID = #{record.sysId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.msgId != null" >
+        MSG_ID = #{record.msgId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.fromType != null" >
+        FROM_TYPE = #{record.fromType,jdbcType=TINYINT},
+      </if>
+      <if test="record.fromUser != null" >
+        FROM_USER = #{record.fromUser,jdbcType=VARCHAR},
+      </if>
+      <if test="record.toUser != null" >
+        TO_USER = #{record.toUser,jdbcType=VARCHAR},
+      </if>
+      <if test="record.msgType != null" >
+        MSG_TYPE = #{record.msgType,jdbcType=VARCHAR},
+      </if>
+      <if test="record.receiveDt != null" >
+        RECEIVE_DT = #{record.receiveDt,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.mediaId != null" >
+        MEDIA_ID = #{record.mediaId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.picUrl != null" >
+        PIC_URL = #{record.picUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="record.format != null" >
+        FORMAT = #{record.format,jdbcType=VARCHAR},
+      </if>
+      <if test="record.thumbMediaId != null" >
+        THUMB_MEDIA_ID = #{record.thumbMediaId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.locationX != null" >
+        LOCATION_X = #{record.locationX,jdbcType=DECIMAL},
+      </if>
+      <if test="record.locationY != null" >
+        LOCATION_Y = #{record.locationY,jdbcType=DECIMAL},
+      </if>
+      <if test="record.scale != null" >
+        SCALE = #{record.scale,jdbcType=INTEGER},
+      </if>
+      <if test="record.linkTitle != null" >
+        LINK_TITLE = #{record.linkTitle,jdbcType=VARCHAR},
+      </if>
+      <if test="record.fileId != null" >
+        FILE_ID = #{record.fileId,jdbcType=INTEGER},
+      </if>
+      <if test="record.content != null" >
+        CONTENT = #{record.content,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="record.label != null" >
+        LABEL = #{record.label,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="record.linkDes != null" >
+        LINK_DES = #{record.linkDes,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="record.linkUrl != null" >
+        LINK_URL = #{record.linkUrl,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExampleWithBLOBs" parameterType="map" >
+    update wx_message
+    set ID = #{record.id,jdbcType=INTEGER},
+      SYS_ID = #{record.sysId,jdbcType=VARCHAR},
+      MSG_ID = #{record.msgId,jdbcType=VARCHAR},
+      FROM_TYPE = #{record.fromType,jdbcType=TINYINT},
+      FROM_USER = #{record.fromUser,jdbcType=VARCHAR},
+      TO_USER = #{record.toUser,jdbcType=VARCHAR},
+      MSG_TYPE = #{record.msgType,jdbcType=VARCHAR},
+      RECEIVE_DT = #{record.receiveDt,jdbcType=TIMESTAMP},
+      MEDIA_ID = #{record.mediaId,jdbcType=VARCHAR},
+      PIC_URL = #{record.picUrl,jdbcType=VARCHAR},
+      FORMAT = #{record.format,jdbcType=VARCHAR},
+      THUMB_MEDIA_ID = #{record.thumbMediaId,jdbcType=VARCHAR},
+      LOCATION_X = #{record.locationX,jdbcType=DECIMAL},
+      LOCATION_Y = #{record.locationY,jdbcType=DECIMAL},
+      SCALE = #{record.scale,jdbcType=INTEGER},
+      LINK_TITLE = #{record.linkTitle,jdbcType=VARCHAR},
+      FILE_ID = #{record.fileId,jdbcType=INTEGER},
+      CONTENT = #{record.content,jdbcType=LONGVARCHAR},
+      LABEL = #{record.label,jdbcType=LONGVARCHAR},
+      LINK_DES = #{record.linkDes,jdbcType=LONGVARCHAR},
+      LINK_URL = #{record.linkUrl,jdbcType=LONGVARCHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update wx_message
+    set ID = #{record.id,jdbcType=INTEGER},
+      SYS_ID = #{record.sysId,jdbcType=VARCHAR},
+      MSG_ID = #{record.msgId,jdbcType=VARCHAR},
+      FROM_TYPE = #{record.fromType,jdbcType=TINYINT},
+      FROM_USER = #{record.fromUser,jdbcType=VARCHAR},
+      TO_USER = #{record.toUser,jdbcType=VARCHAR},
+      MSG_TYPE = #{record.msgType,jdbcType=VARCHAR},
+      RECEIVE_DT = #{record.receiveDt,jdbcType=TIMESTAMP},
+      MEDIA_ID = #{record.mediaId,jdbcType=VARCHAR},
+      PIC_URL = #{record.picUrl,jdbcType=VARCHAR},
+      FORMAT = #{record.format,jdbcType=VARCHAR},
+      THUMB_MEDIA_ID = #{record.thumbMediaId,jdbcType=VARCHAR},
+      LOCATION_X = #{record.locationX,jdbcType=DECIMAL},
+      LOCATION_Y = #{record.locationY,jdbcType=DECIMAL},
+      SCALE = #{record.scale,jdbcType=INTEGER},
+      LINK_TITLE = #{record.linkTitle,jdbcType=VARCHAR},
+      FILE_ID = #{record.fileId,jdbcType=INTEGER}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.basoft.service.entity.wechat.wxMessage.WxMessageWithBLOBs" >
+    update wx_message
+    <set >
+      <if test="sysId != null" >
+        SYS_ID = #{sysId,jdbcType=VARCHAR},
+      </if>
+      <if test="msgId != null" >
+        MSG_ID = #{msgId,jdbcType=VARCHAR},
+      </if>
+      <if test="fromType != null" >
+        FROM_TYPE = #{fromType,jdbcType=TINYINT},
+      </if>
+      <if test="fromUser != null" >
+        FROM_USER = #{fromUser,jdbcType=VARCHAR},
+      </if>
+      <if test="toUser != null" >
+        TO_USER = #{toUser,jdbcType=VARCHAR},
+      </if>
+      <if test="msgType != null" >
+        MSG_TYPE = #{msgType,jdbcType=VARCHAR},
+      </if>
+      <if test="receiveDt != null" >
+        RECEIVE_DT = #{receiveDt,jdbcType=TIMESTAMP},
+      </if>
+      <if test="mediaId != null" >
+        MEDIA_ID = #{mediaId,jdbcType=VARCHAR},
+      </if>
+      <if test="picUrl != null" >
+        PIC_URL = #{picUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="format != null" >
+        FORMAT = #{format,jdbcType=VARCHAR},
+      </if>
+      <if test="thumbMediaId != null" >
+        THUMB_MEDIA_ID = #{thumbMediaId,jdbcType=VARCHAR},
+      </if>
+      <if test="locationX != null" >
+        LOCATION_X = #{locationX,jdbcType=DECIMAL},
+      </if>
+      <if test="locationY != null" >
+        LOCATION_Y = #{locationY,jdbcType=DECIMAL},
+      </if>
+      <if test="scale != null" >
+        SCALE = #{scale,jdbcType=INTEGER},
+      </if>
+      <if test="linkTitle != null" >
+        LINK_TITLE = #{linkTitle,jdbcType=VARCHAR},
+      </if>
+      <if test="fileId != null" >
+        FILE_ID = #{fileId,jdbcType=INTEGER},
+      </if>
+      <if test="content != null" >
+        CONTENT = #{content,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="label != null" >
+        LABEL = #{label,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="linkDes != null" >
+        LINK_DES = #{linkDes,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="linkUrl != null" >
+        LINK_URL = #{linkUrl,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.basoft.service.entity.wechat.wxMessage.WxMessageWithBLOBs" >
+    update wx_message
+    set SYS_ID = #{sysId,jdbcType=VARCHAR},
+      MSG_ID = #{msgId,jdbcType=VARCHAR},
+      FROM_TYPE = #{fromType,jdbcType=TINYINT},
+      FROM_USER = #{fromUser,jdbcType=VARCHAR},
+      TO_USER = #{toUser,jdbcType=VARCHAR},
+      MSG_TYPE = #{msgType,jdbcType=VARCHAR},
+      RECEIVE_DT = #{receiveDt,jdbcType=TIMESTAMP},
+      MEDIA_ID = #{mediaId,jdbcType=VARCHAR},
+      PIC_URL = #{picUrl,jdbcType=VARCHAR},
+      FORMAT = #{format,jdbcType=VARCHAR},
+      THUMB_MEDIA_ID = #{thumbMediaId,jdbcType=VARCHAR},
+      LOCATION_X = #{locationX,jdbcType=DECIMAL},
+      LOCATION_Y = #{locationY,jdbcType=DECIMAL},
+      SCALE = #{scale,jdbcType=INTEGER},
+      LINK_TITLE = #{linkTitle,jdbcType=VARCHAR},
+      FILE_ID = #{fileId,jdbcType=INTEGER},
+      CONTENT = #{content,jdbcType=LONGVARCHAR},
+      LABEL = #{label,jdbcType=LONGVARCHAR},
+      LINK_DES = #{linkDes,jdbcType=LONGVARCHAR},
+      LINK_URL = #{linkUrl,jdbcType=LONGVARCHAR}
+    where ID = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.basoft.service.entity.wechat.wxMessage.WxMessage" >
+    update wx_message
+    set SYS_ID = #{sysId,jdbcType=VARCHAR},
+      MSG_ID = #{msgId,jdbcType=VARCHAR},
+      FROM_TYPE = #{fromType,jdbcType=TINYINT},
+      FROM_USER = #{fromUser,jdbcType=VARCHAR},
+      TO_USER = #{toUser,jdbcType=VARCHAR},
+      MSG_TYPE = #{msgType,jdbcType=VARCHAR},
+      RECEIVE_DT = #{receiveDt,jdbcType=TIMESTAMP},
+      MEDIA_ID = #{mediaId,jdbcType=VARCHAR},
+      PIC_URL = #{picUrl,jdbcType=VARCHAR},
+      FORMAT = #{format,jdbcType=VARCHAR},
+      THUMB_MEDIA_ID = #{thumbMediaId,jdbcType=VARCHAR},
+      LOCATION_X = #{locationX,jdbcType=DECIMAL},
+      LOCATION_Y = #{locationY,jdbcType=DECIMAL},
+      SCALE = #{scale,jdbcType=INTEGER},
+      LINK_TITLE = #{linkTitle,jdbcType=VARCHAR},
+      FILE_ID = #{fileId,jdbcType=INTEGER}
+    where ID = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

@@ -1,0 +1,432 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.basoft.service.dao.wechat.shopMenu.ShopWxMenuMapper" >
+  <resultMap id="BaseResultMap" type="com.basoft.service.entity.wechat.shopMenu.ShopWxMenu" >
+    <id column="SHOP_ID" property="shopId" jdbcType="BIGINT" />
+    <id column="MENU_ID" property="menuId" jdbcType="BIGINT" />
+    <result column="MENU_NM" property="menuNm" jdbcType="VARCHAR" />
+    <result column="MENU_PARENT_ID" property="menuParentId" jdbcType="BIGINT" />
+    <result column="MENU_OP_TYPE" property="menuOpType" jdbcType="VARCHAR" />
+    <result column="MENU_MSG_TYPE" property="menuMsgType" jdbcType="INTEGER" />
+    <result column="MENU_OP_ID" property="menuOpId" jdbcType="BIGINT" />
+    <result column="MENU_OP_TITLE" property="menuOpTitle" jdbcType="VARCHAR" />
+    <result column="MENU_STS" property="menuSts" jdbcType="TINYINT" />
+    <result column="SORT_NO" property="sortNo" jdbcType="TINYINT" />
+    <result column="CREATE_ID" property="createId" jdbcType="VARCHAR" />
+    <result column="CREATE_DT" property="createDt" jdbcType="TIMESTAMP" />
+    <result column="MODIFY_ID" property="modifyId" jdbcType="VARCHAR" />
+    <result column="MODIFY_DT" property="modifyDt" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <resultMap id="ResultMapWithBLOBs" type="com.basoft.service.entity.wechat.shopMenu.ShopWxMenu" extends="BaseResultMap" >
+    <result column="MENU_OP_COM" property="menuOpCom" jdbcType="LONGVARCHAR" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    SHOP_ID, MENU_ID, MENU_NM, MENU_PARENT_ID, MENU_OP_TYPE, MENU_MSG_TYPE, MENU_OP_ID, 
+    MENU_OP_TITLE, MENU_STS, SORT_NO, CREATE_ID, CREATE_DT, MODIFY_ID, MODIFY_DT
+  </sql>
+  <sql id="Blob_Column_List" >
+    MENU_OP_COM
+  </sql>
+  <select id="selectByExampleWithBLOBs" resultMap="ResultMapWithBLOBs" parameterType="com.basoft.service.entity.wechat.shopMenu.ShopWxMenuExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    'true' as QUERYID,
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from shop_wx_menu
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.basoft.service.entity.wechat.shopMenu.ShopWxMenuExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    'true' as QUERYID,
+    <include refid="Base_Column_List" />
+    from shop_wx_menu
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="com.basoft.service.entity.wechat.shopMenu.ShopWxMenuKey" >
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from shop_wx_menu
+    where SHOP_ID = #{shopId,jdbcType=BIGINT}
+      and MENU_ID = #{menuId,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="com.basoft.service.entity.wechat.shopMenu.ShopWxMenuKey" >
+    delete from shop_wx_menu
+    where SHOP_ID = #{shopId,jdbcType=BIGINT}
+      and MENU_ID = #{menuId,jdbcType=BIGINT}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.basoft.service.entity.wechat.shopMenu.ShopWxMenuExample" >
+    delete from shop_wx_menu
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.basoft.service.entity.wechat.shopMenu.ShopWxMenu" >
+    insert into shop_wx_menu (SHOP_ID, MENU_ID, MENU_NM, 
+      MENU_PARENT_ID, MENU_OP_TYPE, MENU_MSG_TYPE, 
+      MENU_OP_ID, MENU_OP_TITLE, MENU_STS, 
+      SORT_NO, CREATE_ID, CREATE_DT, 
+      MODIFY_ID, MODIFY_DT, MENU_OP_COM
+      )
+    values (#{shopId,jdbcType=BIGINT}, #{menuId,jdbcType=BIGINT}, #{menuNm,jdbcType=VARCHAR}, 
+      #{menuParentId,jdbcType=BIGINT}, #{menuOpType,jdbcType=VARCHAR}, #{menuMsgType,jdbcType=INTEGER}, 
+      #{menuOpId,jdbcType=BIGINT}, #{menuOpTitle,jdbcType=VARCHAR}, #{menuSts,jdbcType=TINYINT}, 
+      #{sortNo,jdbcType=TINYINT}, #{createId,jdbcType=VARCHAR}, #{createDt,jdbcType=TIMESTAMP}, 
+      #{modifyId,jdbcType=VARCHAR}, #{modifyDt,jdbcType=TIMESTAMP}, #{menuOpCom,jdbcType=LONGVARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.basoft.service.entity.wechat.shopMenu.ShopWxMenu" >
+    insert into shop_wx_menu
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="shopId != null" >
+        SHOP_ID,
+      </if>
+      <if test="menuId != null" >
+        MENU_ID,
+      </if>
+      <if test="menuNm != null" >
+        MENU_NM,
+      </if>
+      <if test="menuParentId != null" >
+        MENU_PARENT_ID,
+      </if>
+      <if test="menuOpType != null" >
+        MENU_OP_TYPE,
+      </if>
+      <if test="menuMsgType != null" >
+        MENU_MSG_TYPE,
+      </if>
+      <if test="menuOpId != null" >
+        MENU_OP_ID,
+      </if>
+      <if test="menuOpTitle != null" >
+        MENU_OP_TITLE,
+      </if>
+      <if test="menuSts != null" >
+        MENU_STS,
+      </if>
+      <if test="sortNo != null" >
+        SORT_NO,
+      </if>
+      <if test="createId != null" >
+        CREATE_ID,
+      </if>
+      <if test="createDt != null" >
+        CREATE_DT,
+      </if>
+      <if test="modifyId != null" >
+        MODIFY_ID,
+      </if>
+      <if test="modifyDt != null" >
+        MODIFY_DT,
+      </if>
+      <if test="menuOpCom != null" >
+        MENU_OP_COM,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="shopId != null" >
+        #{shopId,jdbcType=BIGINT},
+      </if>
+      <if test="menuId != null" >
+        #{menuId,jdbcType=BIGINT},
+      </if>
+      <if test="menuNm != null" >
+        #{menuNm,jdbcType=VARCHAR},
+      </if>
+      <if test="menuParentId != null" >
+        #{menuParentId,jdbcType=BIGINT},
+      </if>
+      <if test="menuOpType != null" >
+        #{menuOpType,jdbcType=VARCHAR},
+      </if>
+      <if test="menuMsgType != null" >
+        #{menuMsgType,jdbcType=INTEGER},
+      </if>
+      <if test="menuOpId != null" >
+        #{menuOpId,jdbcType=BIGINT},
+      </if>
+      <if test="menuOpTitle != null" >
+        #{menuOpTitle,jdbcType=VARCHAR},
+      </if>
+      <if test="menuSts != null" >
+        #{menuSts,jdbcType=TINYINT},
+      </if>
+      <if test="sortNo != null" >
+        #{sortNo,jdbcType=TINYINT},
+      </if>
+      <if test="createId != null" >
+        #{createId,jdbcType=VARCHAR},
+      </if>
+      <if test="createDt != null" >
+        #{createDt,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyId != null" >
+        #{modifyId,jdbcType=VARCHAR},
+      </if>
+      <if test="modifyDt != null" >
+        #{modifyDt,jdbcType=TIMESTAMP},
+      </if>
+      <if test="menuOpCom != null" >
+        #{menuOpCom,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.basoft.service.entity.wechat.shopMenu.ShopWxMenuExample" resultType="java.lang.Integer" >
+    select count(*) from shop_wx_menu
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update shop_wx_menu
+    <set >
+      <if test="record.shopId != null" >
+        SHOP_ID = #{record.shopId,jdbcType=BIGINT},
+      </if>
+      <if test="record.menuId != null" >
+        MENU_ID = #{record.menuId,jdbcType=BIGINT},
+      </if>
+      <if test="record.menuNm != null" >
+        MENU_NM = #{record.menuNm,jdbcType=VARCHAR},
+      </if>
+      <if test="record.menuParentId != null" >
+        MENU_PARENT_ID = #{record.menuParentId,jdbcType=BIGINT},
+      </if>
+      <if test="record.menuOpType != null" >
+        MENU_OP_TYPE = #{record.menuOpType,jdbcType=VARCHAR},
+      </if>
+      <if test="record.menuMsgType != null" >
+        MENU_MSG_TYPE = #{record.menuMsgType,jdbcType=INTEGER},
+      </if>
+      <if test="record.menuOpId != null" >
+        MENU_OP_ID = #{record.menuOpId,jdbcType=BIGINT},
+      </if>
+      <if test="record.menuOpTitle != null" >
+        MENU_OP_TITLE = #{record.menuOpTitle,jdbcType=VARCHAR},
+      </if>
+      <if test="record.menuSts != null" >
+        MENU_STS = #{record.menuSts,jdbcType=TINYINT},
+      </if>
+      <if test="record.sortNo != null" >
+        SORT_NO = #{record.sortNo,jdbcType=TINYINT},
+      </if>
+      <if test="record.createId != null" >
+        CREATE_ID = #{record.createId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.createDt != null" >
+        CREATE_DT = #{record.createDt,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.modifyId != null" >
+        MODIFY_ID = #{record.modifyId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.modifyDt != null" >
+        MODIFY_DT = #{record.modifyDt,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.menuOpCom != null" >
+        MENU_OP_COM = #{record.menuOpCom,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExampleWithBLOBs" parameterType="map" >
+    update shop_wx_menu
+    set SHOP_ID = #{record.shopId,jdbcType=BIGINT},
+      MENU_ID = #{record.menuId,jdbcType=BIGINT},
+      MENU_NM = #{record.menuNm,jdbcType=VARCHAR},
+      MENU_PARENT_ID = #{record.menuParentId,jdbcType=BIGINT},
+      MENU_OP_TYPE = #{record.menuOpType,jdbcType=VARCHAR},
+      MENU_MSG_TYPE = #{record.menuMsgType,jdbcType=INTEGER},
+      MENU_OP_ID = #{record.menuOpId,jdbcType=BIGINT},
+      MENU_OP_TITLE = #{record.menuOpTitle,jdbcType=VARCHAR},
+      MENU_STS = #{record.menuSts,jdbcType=TINYINT},
+      SORT_NO = #{record.sortNo,jdbcType=TINYINT},
+      CREATE_ID = #{record.createId,jdbcType=VARCHAR},
+      CREATE_DT = #{record.createDt,jdbcType=TIMESTAMP},
+      MODIFY_ID = #{record.modifyId,jdbcType=VARCHAR},
+      MODIFY_DT = #{record.modifyDt,jdbcType=TIMESTAMP},
+      MENU_OP_COM = #{record.menuOpCom,jdbcType=LONGVARCHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update shop_wx_menu
+    set SHOP_ID = #{record.shopId,jdbcType=BIGINT},
+      MENU_ID = #{record.menuId,jdbcType=BIGINT},
+      MENU_NM = #{record.menuNm,jdbcType=VARCHAR},
+      MENU_PARENT_ID = #{record.menuParentId,jdbcType=BIGINT},
+      MENU_OP_TYPE = #{record.menuOpType,jdbcType=VARCHAR},
+      MENU_MSG_TYPE = #{record.menuMsgType,jdbcType=INTEGER},
+      MENU_OP_ID = #{record.menuOpId,jdbcType=BIGINT},
+      MENU_OP_TITLE = #{record.menuOpTitle,jdbcType=VARCHAR},
+      MENU_STS = #{record.menuSts,jdbcType=TINYINT},
+      SORT_NO = #{record.sortNo,jdbcType=TINYINT},
+      CREATE_ID = #{record.createId,jdbcType=VARCHAR},
+      CREATE_DT = #{record.createDt,jdbcType=TIMESTAMP},
+      MODIFY_ID = #{record.modifyId,jdbcType=VARCHAR},
+      MODIFY_DT = #{record.modifyDt,jdbcType=TIMESTAMP}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.basoft.service.entity.wechat.shopMenu.ShopWxMenu" >
+    update shop_wx_menu
+    <set >
+      <if test="menuNm != null" >
+        MENU_NM = #{menuNm,jdbcType=VARCHAR},
+      </if>
+      <if test="menuParentId != null" >
+        MENU_PARENT_ID = #{menuParentId,jdbcType=BIGINT},
+      </if>
+      <if test="menuOpType != null" >
+        MENU_OP_TYPE = #{menuOpType,jdbcType=VARCHAR},
+      </if>
+      <if test="menuMsgType != null" >
+        MENU_MSG_TYPE = #{menuMsgType,jdbcType=INTEGER},
+      </if>
+      <if test="menuOpId != null" >
+        MENU_OP_ID = #{menuOpId,jdbcType=BIGINT},
+      </if>
+      <if test="menuOpTitle != null" >
+        MENU_OP_TITLE = #{menuOpTitle,jdbcType=VARCHAR},
+      </if>
+      <if test="menuSts != null" >
+        MENU_STS = #{menuSts,jdbcType=TINYINT},
+      </if>
+      <if test="sortNo != null" >
+        SORT_NO = #{sortNo,jdbcType=TINYINT},
+      </if>
+      <if test="createId != null" >
+        CREATE_ID = #{createId,jdbcType=VARCHAR},
+      </if>
+      <if test="createDt != null" >
+        CREATE_DT = #{createDt,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyId != null" >
+        MODIFY_ID = #{modifyId,jdbcType=VARCHAR},
+      </if>
+      <if test="modifyDt != null" >
+        MODIFY_DT = #{modifyDt,jdbcType=TIMESTAMP},
+      </if>
+      <if test="menuOpCom != null" >
+        MENU_OP_COM = #{menuOpCom,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where SHOP_ID = #{shopId,jdbcType=BIGINT}
+      and MENU_ID = #{menuId,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.basoft.service.entity.wechat.shopMenu.ShopWxMenu" >
+    update shop_wx_menu
+    set MENU_NM = #{menuNm,jdbcType=VARCHAR},
+      MENU_PARENT_ID = #{menuParentId,jdbcType=BIGINT},
+      MENU_OP_TYPE = #{menuOpType,jdbcType=VARCHAR},
+      MENU_MSG_TYPE = #{menuMsgType,jdbcType=INTEGER},
+      MENU_OP_ID = #{menuOpId,jdbcType=BIGINT},
+      MENU_OP_TITLE = #{menuOpTitle,jdbcType=VARCHAR},
+      MENU_STS = #{menuSts,jdbcType=TINYINT},
+      SORT_NO = #{sortNo,jdbcType=TINYINT},
+      CREATE_ID = #{createId,jdbcType=VARCHAR},
+      CREATE_DT = #{createDt,jdbcType=TIMESTAMP},
+      MODIFY_ID = #{modifyId,jdbcType=VARCHAR},
+      MODIFY_DT = #{modifyDt,jdbcType=TIMESTAMP},
+      MENU_OP_COM = #{menuOpCom,jdbcType=LONGVARCHAR}
+    where SHOP_ID = #{shopId,jdbcType=BIGINT}
+      and MENU_ID = #{menuId,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.basoft.service.entity.wechat.shopMenu.ShopWxMenu" >
+    update shop_wx_menu
+    set MENU_NM = #{menuNm,jdbcType=VARCHAR},
+      MENU_PARENT_ID = #{menuParentId,jdbcType=BIGINT},
+      MENU_OP_TYPE = #{menuOpType,jdbcType=VARCHAR},
+      MENU_MSG_TYPE = #{menuMsgType,jdbcType=INTEGER},
+      MENU_OP_ID = #{menuOpId,jdbcType=BIGINT},
+      MENU_OP_TITLE = #{menuOpTitle,jdbcType=VARCHAR},
+      MENU_STS = #{menuSts,jdbcType=TINYINT},
+      SORT_NO = #{sortNo,jdbcType=TINYINT},
+      CREATE_ID = #{createId,jdbcType=VARCHAR},
+      CREATE_DT = #{createDt,jdbcType=TIMESTAMP},
+      MODIFY_ID = #{modifyId,jdbcType=VARCHAR},
+      MODIFY_DT = #{modifyDt,jdbcType=TIMESTAMP}
+    where SHOP_ID = #{shopId,jdbcType=BIGINT}
+      and MENU_ID = #{menuId,jdbcType=BIGINT}
+  </update>
+</mapper>

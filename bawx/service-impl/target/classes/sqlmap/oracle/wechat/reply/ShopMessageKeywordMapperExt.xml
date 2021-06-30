@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.basoft.service.dao.wechat.reply.ShopMessageKeywordMapper">
+  	<!-- 检查关键字数量 -->
+	<select id="checkKeyReply" resultType="int">
+		SELECT count(*) FROM WX_MESSAGE_KEYWORD where SHOP_ID = #{shopId} and KEYWORD = #{keyWord}
+  	</select>
+  	
+	<!--批量新增关键字 -->
+	<insert id="insertReplyKeyList" parameterType="com.basoft.service.entity.wechat.reply.ShopMessageKeyword" useGeneratedKeys="false">
+		insert into WX_MESSAGE_KEYWORD (
+		KEYWORD_ID,
+		MESSAGE_ID,
+		SHOP_ID,
+		KEYWORD,
+		TABLE_NM)
+		<foreach collection="list" item="item" index="index"
+			separator="union all">
+			SELECT
+			#{item.keywordId,jdbcType=BIGINT},
+			#{item.messageId,jdbcType=BIGINT},
+			#{item.shopId,jdbcType=BIGINT},
+			#{item.keyword,jdbcType=VARCHAR},
+			#{item.tableNm,jdbcType=VARCHAR}
+			FROM DUAL
+		</foreach>
+	</insert>
+
+	<delete id="deleteKeyWordAllByMessageId">
+		DELETE from WX_MESSAGE_KEYWORD WHERE MESSAGE_ID = #{messageId}
+	</delete>
+</mapper>

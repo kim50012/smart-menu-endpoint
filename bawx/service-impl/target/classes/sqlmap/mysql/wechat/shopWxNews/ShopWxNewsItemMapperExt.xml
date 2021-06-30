@@ -1,0 +1,232 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.basoft.service.dao.wechat.shopWxNews.ShopWxNewsItemMapper">
+	<resultMap id="BaseResultShopNews"
+		type="com.basoft.service.dto.wechat.shopWxNew.ShopWxNewDto">
+		<id column="MSG_ID" property="msgId" jdbcType="INTEGER" />
+		<id column="NEWS_ID" property="newsId" jdbcType="INTEGER" />
+		<result column="MSG_NM" property="msgNm" jdbcType="VARCHAR" />
+		<result column="MSHOW_COVER_PIC" property="mshowCoverPic"
+			jdbcType="TINYINT" />
+		<result column="CREATED_DT" property="createdDt" jdbcType="TIMESTAMP" />
+		<result column="MTITLE" property="mtitle" jdbcType="VARCHAR" />
+		<result column="MAUTHOR" property="mauthor" jdbcType="VARCHAR" />
+		<result column="FULL_URL" property="fullUrl" jdbcType="VARCHAR" />
+		<result column="MCONTENT" property="mcontent" jdbcType="LONGVARCHAR" />
+	</resultMap>
+  
+	<select id="getNewsByMsgId" resultMap="BaseResultShopNews">
+		SELECT ni.MSHOW_COVER_PIC,ni.NEWS_TYPE,
+		getCode('shop_wx_news_item','NEWS_TYPE',NEWS_TYPE)newsTypeStr,
+		ni.MTITLE,ni.MAUTHOR,ni.MCONTENT,fm.FULL_URL
+		from shop_wx_news_item ni
+		left JOIN shop_file_mst fm ON fm.FILE_ID=ni.MFILE_ID
+		WHERE ni.MSHOW_COVER_PIC=1
+		and nd.MSG_ID=#{msgId}
+	</select>
+
+  <select id="selectNewsListByMsgId" parameterType="java.util.Map" resultType="java.util.Map">
+    SELECT T1.SHOP_ID ,
+    	T1.MSG_ID,
+    	T1.MSG_NM,
+    	T2.NEWS_ID,
+    	T2.MFILE_ID,
+    	(SELECT A.MEDIA_ID FROM	SHOP_FILE_MST A WHERE A.SHOP_ID = T2.SHOP_ID AND A.FILE_ID = T2.MFILE_ID) MEDIA_ID,
+		(SELECT A.FULL_URL FROM	SHOP_FILE_MST A WHERE	A.SHOP_ID = T2.SHOP_ID AND	A.FILE_ID = T2.MFILE_ID) FILE_URL,
+		T2.MAUTHOR,
+		T2.MTITLE,
+		T2.MSOURCE_URL,
+		T2.MCONTENT,
+		T2.MCONTENTWECHAT,
+		T2.MDIGEST,
+		T2.MSHOW_COVER_PIC,
+		T2.CREATED_ID,
+		T2.MODIFIED_ID,
+		T2.CREATED_DT,
+		T2.MODIFIED_DT,
+		(SELECT COUNT(*) FROM SHOP_WX_NEWS_ITEM A WHERE A.SHOP_ID = T1.SHOP_ID AND A.MSG_ID = T1.MSG_ID AND A.IS_DELETE = 0) ITEM_CNT,
+		T2.LIST_IMG,
+		(SELECT A.FULL_URL FROM	SHOP_FILE_MST A WHERE	A.SHOP_ID = T2.SHOP_ID AND A.FILE_ID = T2.MFILE_ID ) LIST_IMG_URL,
+		T1.WX_MSG_ID,
+		T2.READ_CNT,
+		(SELECT ifnull(SUM(A.LIKE_CNT),0) FROM SHOP_WX_NEWS_ITEM_LIKE A WHERE A.MSG_ID = T1.MSG_ID AND A.NEWS_ID = T2.NEWS_ID) AS LIKE_CNT,
+		T2.CREATED_DT AS NEWS_DATE,
+		(SELECT A.FULL_URL FROM	SHOP_FILE_MST A WHERE A.SHOP_ID = T2.SHOP_ID AND A.FILE_ID = T2.LIST_IMG ) LIST_ICON_URL,
+		T2.NEWS_TYPE,
+		(SELECT COUNT(*) FROM	SHOP_WX_NEWS_ITEM_SHARE A WHERE	A.MSG_ID = T1.MSG_ID AND A.NEWS_ID = T2.NEWS_ID ) AS SHARE_CNT
+		FROM SHOP_WX_NEWS_HEAD T1
+			INNER JOIN	SHOP_WX_NEWS_ITEM T2 ON	T1.SHOP_ID = T2.SHOP_ID AND	T1.MSG_ID = T2.MSG_ID
+		WHERE	T1.SHOP_ID = #{shopId}
+		AND		T1.MSG_ID = #{msgId}
+		AND		T1.IS_DELETE = 0
+		AND		T2.IS_DELETE = 0
+		ORDER BY T2.NEWS_ID ASC
+  	</select>
+  
+  	<!--根据公众号id查询具有预览图文消息权限的user列表 -->
+	<!--表CM_CODE的存储预览图文信息user的规则： 
+		FD_NM=BA_NEWS_PREVIEW_USER 组名称为BA_NEWS_PREVIEW_USER
+		CD_DESC 存储user的openid
+		CD_VAL  存储微信公众号的id
+		CD_ID	随意编号
+		如：
+	-->
+	<select id="selectNewsPreviewUsers" resultType="java.util.Map">
+		SELECT B.OPENID
+			,B.NICKNAME
+			,B.HEADIMGURL
+		FROM CM_CODE A, WX_USER B
+		WHERE CD_DESC = B.OPENID
+		AND A.FD_NM='BA_NEWS_PREVIEW_USER'
+		AND A.IS_DELETE = 0
+		AND A.CD_VAL = #{shopId}
+	</select>
+
+	<update id="modifyNewsMaterialItem" parameterType="java.util.Map">
+		UPDATE	SHOP_WX_NEWS_ITEM
+		SET		MFILE_ID 			= #{mfileId}
+				, MAUTHOR 			= #{mauthor}
+				, MTITLE 			= #{mtitle}
+				, MSOURCE_URL 		= #{msourceUrl}
+				, MCONTENT 			= #{mcontent}
+				, MDIGEST 			= #{mdigest}
+				, MSHOW_COVER_PIC 	= #{mshowCoverPic}
+				, MODIFIED_ID 		= #{modifiedId}
+				, MODIFIED_DT 		= sysdate()
+				, LIST_IMG 			= #{listImg}
+				, NEWS_TYPE 		= #{newsType}
+				, MCONTENTWECHAT	= #{mcontentwechat}
+		WHERE	SHOP_ID = #{shopId}
+		AND		MSG_ID = #{msgId}
+		AND		NEWS_ID = #{newsId}
+	</update>
+	
+	<update id="modifyNewsMaterialItemFromPreviewMode" parameterType="java.util.Map">
+		UPDATE	SHOP_WX_NEWS_ITEM
+		SET		MODIFIED_ID 		= #{modifiedId}
+				, MODIFIED_DT 		= sysdate()
+				, MCONTENTWECHAT	= #{mcontentwechat}
+		WHERE	SHOP_ID = #{shopId}
+		AND		MSG_ID = #{msgId}
+		AND		NEWS_ID = #{newsId}
+	</update>
+
+    <!--统计素材发送次数等等（list）单篇-->
+  <select id="messageStatsDataList" resultType="com.basoft.service.dto.wechat.shopWxNew.NewsStatsDataDto">
+    SELECT T1.REF_DATE
+    ,T1.TITLE					AS TITLE
+    ,T1.NEWS_ID					AS  NEWS_ID
+    ,(select count(1) from wx_user u where u.SUBSCRIBE=1
+      and sys_id=(select sys_id from wx_app_info where shop_id=#{shopId}) and u.SUBSCRIBE_TIME &lt;= REF_DATE )AS SEND_TARGET_CNT
+    ,T1.INT_PAGE_READ_USER		AS INT_PAGE_READ_USER
+    ,T1.INT_PAGE_READ_COUNT		AS INT_PAGE_READ_COUNT
+    ,T1.ORI_PAGE_READ_USER		AS ORI_PAGE_READ_USER
+    ,T1.ORI_PAGE_READ_COUNT		AS ORI_PAGE_READ_COUNT
+    ,T1.SHARE_USER				AS SHARE_USER
+    ,T1.SHARE_COUNT				AS SHARE_COUNT
+    ,T1.ADD_TO_FAV_USER			AS ADD_TO_FAV_USER
+    ,T1.ADD_TO_FAV_COUNT		AS ADD_TO_FAV_COUNT
+    from   WX_IF_MESSAGE_STATS_DATA T1
+    where 1=1 and T1.SHOP_ID = #{shopId}
+      <if test="startTime != null and startTime!='' and endTime != null and endTime!='' " >
+          AND T1.REF_DATE >=#{startTime}
+          AND T1.REF_DATE &lt;= #{endTime}
+      </if>
+  </select>
+
+  <!--统计素材发送次数等等(总数)昨日,前天,上周,上个月-->
+  <select id="messageStatsDataSum" resultType="com.basoft.service.dto.wechat.shopWxNew.NewsStatsDataDto">
+      SELECT
+      ifnull(SUM(T1.INT_PAGE_READ_USER),0)		AS INT_PAGE_READ_USER
+      ,ifnull(SUM(T1.INT_PAGE_READ_COUNT),0)	AS INT_PAGE_READ_COUNT
+      ,ifnull(SUM(T1.ORI_PAGE_READ_USER),0)		AS ORI_PAGE_READ_USER
+      ,ifnull(SUM(T1.ORI_PAGE_READ_COUNT),0)	AS ORI_PAGE_READ_COUNT
+      ,ifnull(SUM(T1.SHARE_USER),0)				AS SHARE_USER
+      ,ifnull(SUM(T1.SHARE_COUNT),0)			AS SHARE_COUNT
+      ,ifnull(SUM(T1.ADD_TO_FAV_USER),0)		AS ADD_TO_FAV_USER
+      ,ifnull(SUM(T1.ADD_TO_FAV_COUNT),0)		AS ADD_TO_FAV_COUNT
+      FROM wx_if_message_stats_detail T1
+      WHERE	1=1 and SHOP_ID=#{shopId}
+      and  REF_HOUR is null
+      <if test="dayNum &lt; 7">
+          and  T1.STAT_DATE	= DATE_FORMAT(adddate(now(),#{dayNum}) ,'%y-%m-%d')
+      </if>
+      <if test="dayNum==14">/*上周末*/
+          and  T1.STAT_DATE	>= DATE_FORMAT( DATE_SUB( DATE_SUB(CURDATE(), INTERVAL WEEKDAY(CURDATE()) DAY), INTERVAL 1 WEEK), '%Y-%m-%d')
+          and  T1.STAT_DATE	&lt;= DATE_FORMAT( SUBDATE(CURDATE(), WEEKDAY(CURDATE()) + 1), '%Y-%m-%d')
+      </if>
+      <if  test="dayNum==7">/*本周末*/
+          and  T1.STAT_DATE	>= subdate(curdate(),date_format(curdate(),'%w')-1)
+          and  T1.STAT_DATE	&lt;=DATE_FORMAT( SUBDATE(CURDATE(),DATE_FORMAT(CURDATE(),'%w')-7), '%Y-%m-%d')
+      </if>
+  </select>
+
+    <!--图文阅读人数/次数 原文页阅读人数/次数, 分享人数/次数,收藏人数/次数（list) 以时间分组 日报-->
+    <select id="msgStatsDataListGroupDay" resultType="com.basoft.service.dto.wechat.shopWxNew.NewsStatsDataDto">
+        select data.REF_DATE,sum(INT_PAGE_READ_USER) as INT_PAGE_READ_USER,sum(INT_PAGE_READ_COUNT)as INT_PAGE_READ_COUNT,
+        sum(data.ORI_PAGE_READ_USER)as ORI_PAGE_READ_USER,sum(data.ORI_PAGE_READ_COUNT)as ORI_PAGE_READ_COUNT,
+        sum(SHARE_USER)as SHARE_USER,sum(SHARE_COUNT)as SHARE_COUNT,sum(ADD_TO_FAV_USER) as ADD_TO_FAV_USER,sum(ADD_TO_FAV_COUNT)as ADD_TO_FAV_COUNT
+        from WX_IF_MESSAGE_STATS_DATA data
+        WHERE SHOP_ID = #{shopId}
+        and  data.REF_DATE>=#{startTime} and data.REF_DATE &lt;=#{endTime}
+        GROUP BY data.REF_DATE
+    </select>
+
+
+    <sql id="BASE_STATISTIC_COLUMN">
+        ifnull(sum(INT_PAGE_READ_USER),0)INT_PAGE_READ_USER,ifnull(sum(INT_PAGE_READ_COUNT),0)INT_PAGE_READ_COUNT, /*图文总阅读*/
+        ifnull(sum(ORI_PAGE_READ_USER),0)ORI_PAGE_READ_USER,ifnull(sum(ORI_PAGE_READ_COUNT),0)ORI_PAGE_READ_COUNT,  /*原文页总阅读*/
+        ifnull(sum(INT_PAGE_FROM_SESSION_READ_USER),0)INT_PAGE_FROM_SESSION_READ_USER,ifnull(sum(INT_PAGE_FROM_SESSION_READ_COUNT),0)INT_PAGE_FROM_SESSION_READ_COUNT, /*会话*/
+        ifnull(sum(INT_PAGE_FROM_FRIENDS_READ_USER),0)INT_PAGE_FROM_FRIENDS_READ_USER,ifnull(sum(INT_PAGE_FROM_FRIENDS_READ_COUNT),0)INT_PAGE_FROM_FRIENDS_READ_COUNT, /*好友转发*/
+        ifnull(sum(INT_PAGE_FROM_FEED_READ_USER),0)INT_PAGE_FROM_FEED_READ_USER,ifnull(sum(INT_PAGE_FROM_FEED_READ_COUNT),0)INT_PAGE_FROM_FEED_READ_COUNT, /*朋友圈*/
+        ifnull(sum(INT_PAGE_FROM_HIST_MSG_READ_USER),0)intPageFromHistMsgReadUser,ifnull(sum(INT_PAGE_FROM_HIST_MSG_READ_COUNT),0)intPageFromHistMsgReadCount,/*历史消息*/
+        ifnull(sum(INT_PAGE_FROM_KANYIKAN_READ_USER),0)intPageFromKanyikanReadUser,ifnull(sum(INT_PAGE_FROM_KANYIKAN_READ_COUNT),0)intPageFromKanyikanReadCount,/*看一看*/
+        ifnull(sum(INT_PAGE_FROM_SOUYISOU_READ_USER),0)intPageFromSouyisouReadUser,ifnull(sum(INT_PAGE_FROM_SOUYISOU_READ_COUNT),0)intPageFromSouyisouReadCount,/*搜一搜*/
+        ifnull(sum(INT_PAGE_FROM_OTHER_READ_USER),0)INT_PAGE_FROM_OTHER_READ_USER,ifnull(sum(INT_PAGE_FROM_OTHER_READ_COUNT),0)INT_PAGE_FROM_OTHER_READ_COUNT, /*其他*/
+        ifnull(sum(SHARE_USER),0)SHARE_USER,ifnull(sum(SHARE_COUNT),0)SHARE_COUNT,/*分享次数*/
+        ifnull(sum(ADD_TO_FAV_USER),0)ADD_TO_FAV_USER,ifnull(sum(ADD_TO_FAV_COUNT),0)ADD_TO_FAV_COUNT /*收藏次数*/
+    </sql>
+
+    <!--查询发送图文的发送朋友圈阅读次数，转发阅读次数等等等（chart图或者表格用） -->
+    <select id="wxIfMessageStatsDetail" resultType="com.basoft.service.dto.wechat.shopWxNew.WxIfMessageStatsDetail">
+        select
+        <if test="timeType ==0">
+            stat_date,
+        </if>
+        <if test="timeType ==1">
+            max(stat_date))stat_date,
+            REF_HOUR,
+        </if>
+        <include refid="BASE_STATISTIC_COLUMN"/>
+        from wx_if_message_stats_detail WHERE
+        shop_id=#{shopId}
+        and STAT_DATE>=#{startTime} and STAT_DATE &lt;=#{endTime}
+
+        <if test="timeType ==0">
+            and REF_HOUR is null
+            GROUP BY stat_date
+        </if>
+
+        <if test="timeType ==1">
+            and REF_HOUR is not null
+            GROUP BY REF_HOUR
+        </if>
+
+    </select>
+
+    <!--阅读来源分析-->
+    <select id="wxIfMessageStatsSum" resultType="com.basoft.service.dto.wechat.shopWxNew.WxIfMessageStatsDetail">
+        select <include refid="BASE_STATISTIC_COLUMN"/>
+        from wx_if_message_stats_detail WHERE
+        shop_id=#{shopId}
+
+        <if test="timeType ==0">
+            and REF_HOUR is null
+        </if>
+        <if test="timeType ==1">
+            and REF_HOUR is not null
+        </if>
+
+        and stat_date>=#{startTime} and stat_date &lt;=#{endTime}
+    </select>
+</mapper>

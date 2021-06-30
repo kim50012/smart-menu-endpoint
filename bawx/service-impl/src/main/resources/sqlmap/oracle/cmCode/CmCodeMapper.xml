@@ -1,0 +1,322 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.basoft.service.dao.cmCode.CmCodeMapper" >
+  <resultMap id="BaseResultMap" type="com.basoft.service.entity.code.CmCodeWithBLOBs" >
+    <id column="TB_NM" property="tbNm" jdbcType="VARCHAR" />
+    <id column="FD_NM" property="fdNm" jdbcType="VARCHAR" />
+    <id column="CD_ID" property="cdId" jdbcType="INTEGER" />
+    <result column="IS_DELETE" property="isDelete" jdbcType="TINYINT" />
+    <result column="CREATED_DT" property="createdDt" jdbcType="TIMESTAMP" />
+    <result column="MODIFY_DT" property="modifyDt" jdbcType="TIMESTAMP" />
+    <result column="CD_TP" property="cdTp" jdbcType="VARCHAR" />
+    
+    <result column="CD_VAL" property="cdVal" jdbcType="VARCHAR" />
+    <result column="CD_DESC" property="cdDesc" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    TB_NM, FD_NM, CD_ID, IS_DELETE, CREATED_DT, MODIFY_DT, CD_TP
+  </sql>
+  <sql id="Blob_Column_List" >
+    CD_VAL, CD_DESC
+  </sql>
+  <select id="selectByExampleWithBLOBs" resultMap="BaseResultMap" parameterType="com.basoft.service.entity.code.CmCodeExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    'true' as QUERYID,
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from WX_SYS_CM_CODE
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.basoft.service.entity.code.CmCodeExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    'true' as QUERYID,
+    <include refid="Base_Column_List" />
+    from WX_SYS_CM_CODE
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="com.basoft.service.entity.code.CmCodeKey" >
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from WX_SYS_CM_CODE
+    where TB_NM = #{tbNm,jdbcType=VARCHAR}
+      and FD_NM = #{fdNm,jdbcType=VARCHAR}
+      and CD_ID = #{cdId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="com.basoft.service.entity.code.CmCodeKey" >
+    delete from WX_SYS_CM_CODE
+    where TB_NM = #{tbNm,jdbcType=VARCHAR}
+      and FD_NM = #{fdNm,jdbcType=VARCHAR}
+      and CD_ID = #{cdId,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.basoft.service.entity.code.CmCodeExample" >
+    delete from WX_SYS_CM_CODE
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.basoft.service.entity.code.CmCodeWithBLOBs" >
+    insert into WX_SYS_CM_CODE (TB_NM, FD_NM, CD_ID, 
+      IS_DELETE, CREATED_DT, MODIFY_DT, 
+      CD_TP, CD_VAL, CD_DESC
+      )
+    values (#{tbNm,jdbcType=VARCHAR}, #{fdNm,jdbcType=VARCHAR}, #{cdId,jdbcType=INTEGER}, 
+      #{isDelete,jdbcType=TINYINT}, #{createdDt,jdbcType=TIMESTAMP}, #{modifyDt,jdbcType=TIMESTAMP}, 
+      #{cdTp,jdbcType=VARCHAR}, #{cdVal,jdbcType=VARCHAR}, #{cdDesc,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.basoft.service.entity.code.CmCodeWithBLOBs" >
+    insert into WX_SYS_CM_CODE
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="tbNm != null" >
+        TB_NM,
+      </if>
+      <if test="fdNm != null" >
+        FD_NM,
+      </if>
+      <if test="cdId != null" >
+        CD_ID,
+      </if>
+      <if test="isDelete != null" >
+        IS_DELETE,
+      </if>
+      <if test="createdDt != null" >
+        CREATED_DT,
+      </if>
+      <if test="modifyDt != null" >
+        MODIFY_DT,
+      </if>
+      <if test="cdTp != null" >
+        CD_TP,
+      </if>
+      <if test="cdVal != null" >
+        CD_VAL,
+      </if>
+      <if test="cdDesc != null" >
+        CD_DESC,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="tbNm != null" >
+        #{tbNm,jdbcType=VARCHAR},
+      </if>
+      <if test="fdNm != null" >
+        #{fdNm,jdbcType=VARCHAR},
+      </if>
+      <if test="cdId != null" >
+        #{cdId,jdbcType=INTEGER},
+      </if>
+      <if test="isDelete != null" >
+        #{isDelete,jdbcType=TINYINT},
+      </if>
+      <if test="createdDt != null" >
+        #{createdDt,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyDt != null" >
+        #{modifyDt,jdbcType=TIMESTAMP},
+      </if>
+      <if test="cdTp != null" >
+        #{cdTp,jdbcType=VARCHAR},
+      </if>
+      <if test="cdVal != null" >
+        #{cdVal,jdbcType=VARCHAR},
+      </if>
+      <if test="cdDesc != null" >
+        #{cdDesc,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.basoft.service.entity.code.CmCodeExample" resultType="java.lang.Integer" >
+    select count(*) from WX_SYS_CM_CODE
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update WX_SYS_CM_CODE
+    <set >
+      <if test="record.tbNm != null" >
+        TB_NM = #{record.tbNm,jdbcType=VARCHAR},
+      </if>
+      <if test="record.fdNm != null" >
+        FD_NM = #{record.fdNm,jdbcType=VARCHAR},
+      </if>
+      <if test="record.cdId != null" >
+        CD_ID = #{record.cdId,jdbcType=INTEGER},
+      </if>
+      <if test="record.isDelete != null" >
+        IS_DELETE = #{record.isDelete,jdbcType=TINYINT},
+      </if>
+      <if test="record.createdDt != null" >
+        CREATED_DT = #{record.createdDt,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.modifyDt != null" >
+        MODIFY_DT = #{record.modifyDt,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.cdTp != null" >
+        CD_TP = #{record.cdTp,jdbcType=VARCHAR},
+      </if>
+      <if test="record.cdVal != null" >
+        CD_VAL = #{record.cdVal,jdbcType=VARCHAR},
+      </if>
+      <if test="record.cdDesc != null" >
+        CD_DESC = #{record.cdDesc,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExampleWithBLOBs" parameterType="map" >
+    update WX_SYS_CM_CODE
+    set TB_NM = #{record.tbNm,jdbcType=VARCHAR},
+      FD_NM = #{record.fdNm,jdbcType=VARCHAR},
+      CD_ID = #{record.cdId,jdbcType=INTEGER},
+      IS_DELETE = #{record.isDelete,jdbcType=TINYINT},
+      CREATED_DT = #{record.createdDt,jdbcType=TIMESTAMP},
+      MODIFY_DT = #{record.modifyDt,jdbcType=TIMESTAMP},
+      CD_TP = #{record.cdTp,jdbcType=VARCHAR},
+      CD_VAL = #{record.cdVal,jdbcType=VARCHAR},
+      CD_DESC = #{record.cdDesc,jdbcType=VARCHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update WX_SYS_CM_CODE
+    set TB_NM = #{record.tbNm,jdbcType=VARCHAR},
+      FD_NM = #{record.fdNm,jdbcType=VARCHAR},
+      CD_ID = #{record.cdId,jdbcType=INTEGER},
+      IS_DELETE = #{record.isDelete,jdbcType=TINYINT},
+      CREATED_DT = #{record.createdDt,jdbcType=TIMESTAMP},
+      MODIFY_DT = #{record.modifyDt,jdbcType=TIMESTAMP},
+      CD_TP = #{record.cdTp,jdbcType=VARCHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.basoft.service.entity.code.CmCodeWithBLOBs" >
+    update WX_SYS_CM_CODE
+    <set >
+      <if test="isDelete != null" >
+        IS_DELETE = #{isDelete,jdbcType=TINYINT},
+      </if>
+      <if test="createdDt != null" >
+        CREATED_DT = #{createdDt,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyDt != null" >
+        MODIFY_DT = #{modifyDt,jdbcType=TIMESTAMP},
+      </if>
+      <if test="cdTp != null" >
+        CD_TP = #{cdTp,jdbcType=VARCHAR},
+      </if>
+      <if test="cdVal != null" >
+        CD_VAL = #{cdVal,jdbcType=VARCHAR},
+      </if>
+      <if test="cdDesc != null" >
+        CD_DESC = #{cdDesc,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where TB_NM = #{tbNm,jdbcType=VARCHAR}
+      and FD_NM = #{fdNm,jdbcType=VARCHAR}
+      and CD_ID = #{cdId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.basoft.service.entity.code.CmCodeWithBLOBs" >
+    update WX_SYS_CM_CODE
+    set IS_DELETE = #{isDelete,jdbcType=TINYINT},
+      CREATED_DT = #{createdDt,jdbcType=TIMESTAMP},
+      MODIFY_DT = #{modifyDt,jdbcType=TIMESTAMP},
+      CD_TP = #{cdTp,jdbcType=VARCHAR},
+      CD_VAL = #{cdVal,jdbcType=VARCHAR},
+      CD_DESC = #{cdDesc,jdbcType=VARCHAR}
+    where TB_NM = #{tbNm,jdbcType=VARCHAR}
+      and FD_NM = #{fdNm,jdbcType=VARCHAR}
+      and CD_ID = #{cdId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.basoft.service.entity.code.CmCode" >
+    update WX_SYS_CM_CODE
+    set IS_DELETE = #{isDelete,jdbcType=TINYINT},
+      CREATED_DT = #{createdDt,jdbcType=TIMESTAMP},
+      MODIFY_DT = #{modifyDt,jdbcType=TIMESTAMP},
+      CD_TP = #{cdTp,jdbcType=VARCHAR}
+    where TB_NM = #{tbNm,jdbcType=VARCHAR}
+      and FD_NM = #{fdNm,jdbcType=VARCHAR}
+      and CD_ID = #{cdId,jdbcType=INTEGER}
+  </update>
+</mapper>

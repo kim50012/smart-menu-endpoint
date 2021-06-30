@@ -1,0 +1,512 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.basoft.service.dao.wechat.appinfo.AppInfoMapper">
+  <resultMap id="BaseResultMap" type="com.basoft.service.entity.wechat.appinfo.AppInfo">
+    <id column="SYS_ID" jdbcType="VARCHAR" property="sysId" />
+    <result column="SHOP_ID" jdbcType="BIGINT" property="shopId" />
+    <result column="ORIGINAL_APP_ID" jdbcType="VARCHAR" property="originalAppId" />
+    <result column="COMP_NM" jdbcType="VARCHAR" property="compNm" />
+    <result column="APP_ID" jdbcType="VARCHAR" property="appId" />
+    <result column="APP_SECRET" jdbcType="VARCHAR" property="appSecret" />
+    <result column="URL" jdbcType="VARCHAR" property="url" />
+    <result column="TOKEN" jdbcType="VARCHAR" property="token" />
+    <result column="ENCORDING_AES_KEY" jdbcType="VARCHAR" property="encordingAesKey" />
+    <result column="WECHAT_NO" jdbcType="VARCHAR" property="wechatNo" />
+    <result column="ACCOUNT_TYPE" jdbcType="TINYINT" property="accountType" />
+    <result column="TRANSFER_CUSTOMER_SERVICE" jdbcType="TINYINT" property="transferCustomerService" />
+    <result column="ACCOUNT_STATUS" jdbcType="TINYINT" property="accountStatus" />
+    <result column="OPEN_BATCH_JOB" jdbcType="TINYINT" property="openBatchJob" />
+    <result column="INTERFACED" jdbcType="TINYINT" property="interfaced" />
+    <result column="IF_USERID" jdbcType="VARCHAR" property="ifUserid" />
+  </resultMap>
+  <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="com.basoft.service.entity.wechat.appinfo.AppInfoWithBLOBs">
+    <result column="IF_PASSWORD" jdbcType="LONGVARCHAR" property="ifPassword" />
+    <result column="IF_SIGNKEY" jdbcType="LONGVARCHAR" property="ifSignkey" />
+    <result column="IF_PUSHURL" jdbcType="LONGVARCHAR" property="ifPushurl" />
+    <result column="SSO_URL" jdbcType="LONGVARCHAR" property="ssoUrl" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    SYS_ID, SHOP_ID, ORIGINAL_APP_ID, COMP_NM, APP_ID, APP_SECRET, URL, TOKEN, ENCORDING_AES_KEY, 
+    WECHAT_NO, ACCOUNT_TYPE, TRANSFER_CUSTOMER_SERVICE, ACCOUNT_STATUS, OPEN_BATCH_JOB, 
+    INTERFACED, IF_USERID
+  </sql>
+  <sql id="Blob_Column_List">
+    IF_PASSWORD, IF_SIGNKEY, IF_PUSHURL, SSO_URL
+  </sql>
+  <select id="selectByExampleWithBLOBs" parameterType="com.basoft.service.entity.wechat.appinfo.AppInfoExample" resultMap="ResultMapWithBLOBs">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from wx_app_info
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByExample" parameterType="com.basoft.service.entity.wechat.appinfo.AppInfoExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from wx_app_info
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="ResultMapWithBLOBs">
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from wx_app_info
+    where SYS_ID = #{sysId,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from wx_app_info
+    where SYS_ID = #{sysId,jdbcType=VARCHAR}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.basoft.service.entity.wechat.appinfo.AppInfoExample">
+    delete from wx_app_info
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.basoft.service.entity.wechat.appinfo.AppInfoWithBLOBs">
+    insert into wx_app_info (SYS_ID, SHOP_ID, ORIGINAL_APP_ID, 
+      COMP_NM, APP_ID, APP_SECRET, 
+      URL, TOKEN, ENCORDING_AES_KEY, 
+      WECHAT_NO, ACCOUNT_TYPE, TRANSFER_CUSTOMER_SERVICE, 
+      ACCOUNT_STATUS, OPEN_BATCH_JOB, INTERFACED, 
+      IF_USERID, IF_PASSWORD, IF_SIGNKEY, 
+      IF_PUSHURL, SSO_URL)
+    values (#{sysId,jdbcType=VARCHAR}, #{shopId,jdbcType=BIGINT}, #{originalAppId,jdbcType=VARCHAR}, 
+      #{compNm,jdbcType=VARCHAR}, #{appId,jdbcType=VARCHAR}, #{appSecret,jdbcType=VARCHAR}, 
+      #{url,jdbcType=VARCHAR}, #{token,jdbcType=VARCHAR}, #{encordingAesKey,jdbcType=VARCHAR}, 
+      #{wechatNo,jdbcType=VARCHAR}, #{accountType,jdbcType=TINYINT}, #{transferCustomerService,jdbcType=TINYINT}, 
+      #{accountStatus,jdbcType=TINYINT}, #{openBatchJob,jdbcType=TINYINT}, #{interfaced,jdbcType=TINYINT}, 
+      #{ifUserid,jdbcType=VARCHAR}, #{ifPassword,jdbcType=LONGVARCHAR}, #{ifSignkey,jdbcType=LONGVARCHAR}, 
+      #{ifPushurl,jdbcType=LONGVARCHAR}, #{ssoUrl,jdbcType=LONGVARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.basoft.service.entity.wechat.appinfo.AppInfoWithBLOBs">
+    insert into wx_app_info
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="sysId != null">
+        SYS_ID,
+      </if>
+      <if test="shopId != null">
+        SHOP_ID,
+      </if>
+      <if test="originalAppId != null">
+        ORIGINAL_APP_ID,
+      </if>
+      <if test="compNm != null">
+        COMP_NM,
+      </if>
+      <if test="appId != null">
+        APP_ID,
+      </if>
+      <if test="appSecret != null">
+        APP_SECRET,
+      </if>
+      <if test="url != null">
+        URL,
+      </if>
+      <if test="token != null">
+        TOKEN,
+      </if>
+      <if test="encordingAesKey != null">
+        ENCORDING_AES_KEY,
+      </if>
+      <if test="wechatNo != null">
+        WECHAT_NO,
+      </if>
+      <if test="accountType != null">
+        ACCOUNT_TYPE,
+      </if>
+      <if test="transferCustomerService != null">
+        TRANSFER_CUSTOMER_SERVICE,
+      </if>
+      <if test="accountStatus != null">
+        ACCOUNT_STATUS,
+      </if>
+      <if test="openBatchJob != null">
+        OPEN_BATCH_JOB,
+      </if>
+      <if test="interfaced != null">
+        INTERFACED,
+      </if>
+      <if test="ifUserid != null">
+        IF_USERID,
+      </if>
+      <if test="ifPassword != null">
+        IF_PASSWORD,
+      </if>
+      <if test="ifSignkey != null">
+        IF_SIGNKEY,
+      </if>
+      <if test="ifPushurl != null">
+        IF_PUSHURL,
+      </if>
+      <if test="ssoUrl != null">
+        SSO_URL,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="sysId != null">
+        #{sysId,jdbcType=VARCHAR},
+      </if>
+      <if test="shopId != null">
+        #{shopId,jdbcType=BIGINT},
+      </if>
+      <if test="originalAppId != null">
+        #{originalAppId,jdbcType=VARCHAR},
+      </if>
+      <if test="compNm != null">
+        #{compNm,jdbcType=VARCHAR},
+      </if>
+      <if test="appId != null">
+        #{appId,jdbcType=VARCHAR},
+      </if>
+      <if test="appSecret != null">
+        #{appSecret,jdbcType=VARCHAR},
+      </if>
+      <if test="url != null">
+        #{url,jdbcType=VARCHAR},
+      </if>
+      <if test="token != null">
+        #{token,jdbcType=VARCHAR},
+      </if>
+      <if test="encordingAesKey != null">
+        #{encordingAesKey,jdbcType=VARCHAR},
+      </if>
+      <if test="wechatNo != null">
+        #{wechatNo,jdbcType=VARCHAR},
+      </if>
+      <if test="accountType != null">
+        #{accountType,jdbcType=TINYINT},
+      </if>
+      <if test="transferCustomerService != null">
+        #{transferCustomerService,jdbcType=TINYINT},
+      </if>
+      <if test="accountStatus != null">
+        #{accountStatus,jdbcType=TINYINT},
+      </if>
+      <if test="openBatchJob != null">
+        #{openBatchJob,jdbcType=TINYINT},
+      </if>
+      <if test="interfaced != null">
+        #{interfaced,jdbcType=TINYINT},
+      </if>
+      <if test="ifUserid != null">
+        #{ifUserid,jdbcType=VARCHAR},
+      </if>
+      <if test="ifPassword != null">
+        #{ifPassword,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="ifSignkey != null">
+        #{ifSignkey,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="ifPushurl != null">
+        #{ifPushurl,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="ssoUrl != null">
+        #{ssoUrl,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.basoft.service.entity.wechat.appinfo.AppInfoExample" resultType="java.lang.Long">
+    select count(*) from wx_app_info
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update wx_app_info
+    <set>
+      <if test="record.sysId != null">
+        SYS_ID = #{record.sysId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.shopId != null">
+        SHOP_ID = #{record.shopId,jdbcType=BIGINT},
+      </if>
+      <if test="record.originalAppId != null">
+        ORIGINAL_APP_ID = #{record.originalAppId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.compNm != null">
+        COMP_NM = #{record.compNm,jdbcType=VARCHAR},
+      </if>
+      <if test="record.appId != null">
+        APP_ID = #{record.appId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.appSecret != null">
+        APP_SECRET = #{record.appSecret,jdbcType=VARCHAR},
+      </if>
+      <if test="record.url != null">
+        URL = #{record.url,jdbcType=VARCHAR},
+      </if>
+      <if test="record.token != null">
+        TOKEN = #{record.token,jdbcType=VARCHAR},
+      </if>
+      <if test="record.encordingAesKey != null">
+        ENCORDING_AES_KEY = #{record.encordingAesKey,jdbcType=VARCHAR},
+      </if>
+      <if test="record.wechatNo != null">
+        WECHAT_NO = #{record.wechatNo,jdbcType=VARCHAR},
+      </if>
+      <if test="record.accountType != null">
+        ACCOUNT_TYPE = #{record.accountType,jdbcType=TINYINT},
+      </if>
+      <if test="record.transferCustomerService != null">
+        TRANSFER_CUSTOMER_SERVICE = #{record.transferCustomerService,jdbcType=TINYINT},
+      </if>
+      <if test="record.accountStatus != null">
+        ACCOUNT_STATUS = #{record.accountStatus,jdbcType=TINYINT},
+      </if>
+      <if test="record.openBatchJob != null">
+        OPEN_BATCH_JOB = #{record.openBatchJob,jdbcType=TINYINT},
+      </if>
+      <if test="record.interfaced != null">
+        INTERFACED = #{record.interfaced,jdbcType=TINYINT},
+      </if>
+      <if test="record.ifUserid != null">
+        IF_USERID = #{record.ifUserid,jdbcType=VARCHAR},
+      </if>
+      <if test="record.ifPassword != null">
+        IF_PASSWORD = #{record.ifPassword,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="record.ifSignkey != null">
+        IF_SIGNKEY = #{record.ifSignkey,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="record.ifPushurl != null">
+        IF_PUSHURL = #{record.ifPushurl,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="record.ssoUrl != null">
+        SSO_URL = #{record.ssoUrl,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExampleWithBLOBs" parameterType="map">
+    update wx_app_info
+    set SYS_ID = #{record.sysId,jdbcType=VARCHAR},
+      SHOP_ID = #{record.shopId,jdbcType=BIGINT},
+      ORIGINAL_APP_ID = #{record.originalAppId,jdbcType=VARCHAR},
+      COMP_NM = #{record.compNm,jdbcType=VARCHAR},
+      APP_ID = #{record.appId,jdbcType=VARCHAR},
+      APP_SECRET = #{record.appSecret,jdbcType=VARCHAR},
+      URL = #{record.url,jdbcType=VARCHAR},
+      TOKEN = #{record.token,jdbcType=VARCHAR},
+      ENCORDING_AES_KEY = #{record.encordingAesKey,jdbcType=VARCHAR},
+      WECHAT_NO = #{record.wechatNo,jdbcType=VARCHAR},
+      ACCOUNT_TYPE = #{record.accountType,jdbcType=TINYINT},
+      TRANSFER_CUSTOMER_SERVICE = #{record.transferCustomerService,jdbcType=TINYINT},
+      ACCOUNT_STATUS = #{record.accountStatus,jdbcType=TINYINT},
+      OPEN_BATCH_JOB = #{record.openBatchJob,jdbcType=TINYINT},
+      INTERFACED = #{record.interfaced,jdbcType=TINYINT},
+      IF_USERID = #{record.ifUserid,jdbcType=VARCHAR},
+      IF_PASSWORD = #{record.ifPassword,jdbcType=LONGVARCHAR},
+      IF_SIGNKEY = #{record.ifSignkey,jdbcType=LONGVARCHAR},
+      IF_PUSHURL = #{record.ifPushurl,jdbcType=LONGVARCHAR},
+      SSO_URL = #{record.ssoUrl,jdbcType=LONGVARCHAR}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update wx_app_info
+    set SYS_ID = #{record.sysId,jdbcType=VARCHAR},
+      SHOP_ID = #{record.shopId,jdbcType=BIGINT},
+      ORIGINAL_APP_ID = #{record.originalAppId,jdbcType=VARCHAR},
+      COMP_NM = #{record.compNm,jdbcType=VARCHAR},
+      APP_ID = #{record.appId,jdbcType=VARCHAR},
+      APP_SECRET = #{record.appSecret,jdbcType=VARCHAR},
+      URL = #{record.url,jdbcType=VARCHAR},
+      TOKEN = #{record.token,jdbcType=VARCHAR},
+      ENCORDING_AES_KEY = #{record.encordingAesKey,jdbcType=VARCHAR},
+      WECHAT_NO = #{record.wechatNo,jdbcType=VARCHAR},
+      ACCOUNT_TYPE = #{record.accountType,jdbcType=TINYINT},
+      TRANSFER_CUSTOMER_SERVICE = #{record.transferCustomerService,jdbcType=TINYINT},
+      ACCOUNT_STATUS = #{record.accountStatus,jdbcType=TINYINT},
+      OPEN_BATCH_JOB = #{record.openBatchJob,jdbcType=TINYINT},
+      INTERFACED = #{record.interfaced,jdbcType=TINYINT},
+      IF_USERID = #{record.ifUserid,jdbcType=VARCHAR}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.basoft.service.entity.wechat.appinfo.AppInfoWithBLOBs">
+    update wx_app_info
+    <set>
+      <if test="shopId != null">
+        SHOP_ID = #{shopId,jdbcType=BIGINT},
+      </if>
+      <if test="originalAppId != null">
+        ORIGINAL_APP_ID = #{originalAppId,jdbcType=VARCHAR},
+      </if>
+      <if test="compNm != null">
+        COMP_NM = #{compNm,jdbcType=VARCHAR},
+      </if>
+      <if test="appId != null">
+        APP_ID = #{appId,jdbcType=VARCHAR},
+      </if>
+      <if test="appSecret != null">
+        APP_SECRET = #{appSecret,jdbcType=VARCHAR},
+      </if>
+      <if test="url != null">
+        URL = #{url,jdbcType=VARCHAR},
+      </if>
+      <if test="token != null">
+        TOKEN = #{token,jdbcType=VARCHAR},
+      </if>
+      <if test="encordingAesKey != null">
+        ENCORDING_AES_KEY = #{encordingAesKey,jdbcType=VARCHAR},
+      </if>
+      <if test="wechatNo != null">
+        WECHAT_NO = #{wechatNo,jdbcType=VARCHAR},
+      </if>
+      <if test="accountType != null">
+        ACCOUNT_TYPE = #{accountType,jdbcType=TINYINT},
+      </if>
+      <if test="transferCustomerService != null">
+        TRANSFER_CUSTOMER_SERVICE = #{transferCustomerService,jdbcType=TINYINT},
+      </if>
+      <if test="accountStatus != null">
+        ACCOUNT_STATUS = #{accountStatus,jdbcType=TINYINT},
+      </if>
+      <if test="openBatchJob != null">
+        OPEN_BATCH_JOB = #{openBatchJob,jdbcType=TINYINT},
+      </if>
+      <if test="interfaced != null">
+        INTERFACED = #{interfaced,jdbcType=TINYINT},
+      </if>
+      <if test="ifUserid != null">
+        IF_USERID = #{ifUserid,jdbcType=VARCHAR},
+      </if>
+      <if test="ifPassword != null">
+        IF_PASSWORD = #{ifPassword,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="ifSignkey != null">
+        IF_SIGNKEY = #{ifSignkey,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="ifPushurl != null">
+        IF_PUSHURL = #{ifPushurl,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="ssoUrl != null">
+        SSO_URL = #{ssoUrl,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where SYS_ID = #{sysId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.basoft.service.entity.wechat.appinfo.AppInfoWithBLOBs">
+    update wx_app_info
+    set SHOP_ID = #{shopId,jdbcType=BIGINT},
+      ORIGINAL_APP_ID = #{originalAppId,jdbcType=VARCHAR},
+      COMP_NM = #{compNm,jdbcType=VARCHAR},
+      APP_ID = #{appId,jdbcType=VARCHAR},
+      APP_SECRET = #{appSecret,jdbcType=VARCHAR},
+      URL = #{url,jdbcType=VARCHAR},
+      TOKEN = #{token,jdbcType=VARCHAR},
+      ENCORDING_AES_KEY = #{encordingAesKey,jdbcType=VARCHAR},
+      WECHAT_NO = #{wechatNo,jdbcType=VARCHAR},
+      ACCOUNT_TYPE = #{accountType,jdbcType=TINYINT},
+      TRANSFER_CUSTOMER_SERVICE = #{transferCustomerService,jdbcType=TINYINT},
+      ACCOUNT_STATUS = #{accountStatus,jdbcType=TINYINT},
+      OPEN_BATCH_JOB = #{openBatchJob,jdbcType=TINYINT},
+      INTERFACED = #{interfaced,jdbcType=TINYINT},
+      IF_USERID = #{ifUserid,jdbcType=VARCHAR},
+      IF_PASSWORD = #{ifPassword,jdbcType=LONGVARCHAR},
+      IF_SIGNKEY = #{ifSignkey,jdbcType=LONGVARCHAR},
+      IF_PUSHURL = #{ifPushurl,jdbcType=LONGVARCHAR},
+      SSO_URL = #{ssoUrl,jdbcType=LONGVARCHAR}
+    where SYS_ID = #{sysId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.basoft.service.entity.wechat.appinfo.AppInfo">
+    update wx_app_info
+    set SHOP_ID = #{shopId,jdbcType=BIGINT},
+      ORIGINAL_APP_ID = #{originalAppId,jdbcType=VARCHAR},
+      COMP_NM = #{compNm,jdbcType=VARCHAR},
+      APP_ID = #{appId,jdbcType=VARCHAR},
+      APP_SECRET = #{appSecret,jdbcType=VARCHAR},
+      URL = #{url,jdbcType=VARCHAR},
+      TOKEN = #{token,jdbcType=VARCHAR},
+      ENCORDING_AES_KEY = #{encordingAesKey,jdbcType=VARCHAR},
+      WECHAT_NO = #{wechatNo,jdbcType=VARCHAR},
+      ACCOUNT_TYPE = #{accountType,jdbcType=TINYINT},
+      TRANSFER_CUSTOMER_SERVICE = #{transferCustomerService,jdbcType=TINYINT},
+      ACCOUNT_STATUS = #{accountStatus,jdbcType=TINYINT},
+      OPEN_BATCH_JOB = #{openBatchJob,jdbcType=TINYINT},
+      INTERFACED = #{interfaced,jdbcType=TINYINT},
+      IF_USERID = #{ifUserid,jdbcType=VARCHAR}
+    where SYS_ID = #{sysId,jdbcType=VARCHAR}
+  </update>
+</mapper>

@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.basoft.service.dao.user.UserMapper">
+	<!-- 登陆 -->
+	<select id="getUserByAccount" parameterType="java.lang.String" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		,
+		<include refid="Blob_Column_List" />
+		from WX_SYS_USER
+		where USER_ID = #{account,jdbcType=VARCHAR}
+		AND ACTIVE_STS='1'
+	</select>
+
+	<sql id="Security_Column_List">
+		USER_ID, USER_NICK_NM, USER_REAL_NM, WX_OPENID_U, WX_ID_U, EMAIL, MOBILE_NO,
+		QQ_ID, DEPT, COMP_ID, SHOP_ID, ACTIVE_STS, SEX, IMG_ID, IMG_NM, IMG_SYS_NM,
+		IMG_SIZE,IMG_URL, MODIFIED_DT, CREATED_DT, USER_AUTH
+	</sql>
+  
+	<!-- 根据条件查询所有用户，但不能查询出超级管理员即root用户 -->
+	<select id="getUsers" parameterType="com.basoft.service.entity.user.UserListDTO" resultMap="BaseResultMap">
+		select
+			<include refid="Security_Column_List" />
+			,
+			<include refid="Blob_Column_List" />
+		from WX_SYS_USER
+		where 
+			USER_ID != 'root'
+			<if test="keyword != null and keyword != ''">
+				AND (USER_ID like concat('%', #{keyword,jdbcType=VARCHAR}, '%') OR 
+				USER_NICK_NM like concat('%', #{keyword,jdbcType=VARCHAR}, '%') OR
+				MOBILE_NO like concat('%', #{keyword,jdbcType=VARCHAR}, '%') OR
+				EMAIL like concat('%', #{keyword,jdbcType=VARCHAR}, '%') OR
+				DEPT like concat('%', #{keyword,jdbcType=VARCHAR}, '%'))
+			</if>
+	</select>
+	
+	<!-- oracle 10g前，含oracle10g -->
+	<select id="getUsersWithShops4oracle10g" parameterType="com.basoft.service.entity.user.UserListDTO" resultMap="BaseResultMap">
+		select
+			<include refid="Security_Column_List" />
+			,
+			(SELECT WMSYS.WM_CONCAT(SHOP_ID) FROM WX_SYS_USER_ACCOUNT t where t.USER_ID=a.USER_ID group by SHOP_ID) AS SING_NM
+		from WX_SYS_USER a
+		where 
+			USER_ID != 'root'
+			<if test="keyword != null and keyword != ''">
+				AND (USER_ID like concat(concat('%', #{keyword,jdbcType=VARCHAR}), '%') OR 
+				USER_NICK_NM like concat(concat('%', #{keyword,jdbcType=VARCHAR}), '%') OR
+				MOBILE_NO like concat(concat('%', #{keyword,jdbcType=VARCHAR}), '%') OR
+				EMAIL like concat(concat('%', #{keyword,jdbcType=VARCHAR}), '%') OR
+				DEPT like concat(concat('%', #{keyword,jdbcType=VARCHAR}), '%'))
+			</if>
+	</select>
+	
+	<!-- oracle 11g后，含oracle11g -->
+	<select id="getUsersWithShops" parameterType="com.basoft.service.entity.user.UserListDTO" resultMap="BaseResultMap">
+		select
+			<include refid="Security_Column_List" />
+			,
+			(SELECT listagg(SHOP_ID,',') within group(order by SHOP_ID) FROM WX_SYS_USER_ACCOUNT t where t.USER_ID=a.USER_ID) AS SING_NM
+		from WX_SYS_USER a
+		where 
+			USER_ID != 'root'
+			<if test="keyword != null and keyword != ''">
+				AND (USER_ID like concat(concat('%', #{keyword,jdbcType=VARCHAR}), '%') OR 
+				USER_NICK_NM like concat(concat('%', #{keyword,jdbcType=VARCHAR}), '%') OR
+				MOBILE_NO like concat(concat('%', #{keyword,jdbcType=VARCHAR}), '%') OR
+				EMAIL like concat(concat('%', #{keyword,jdbcType=VARCHAR}), '%') OR
+				DEPT like concat(concat('%', #{keyword,jdbcType=VARCHAR}), '%'))
+			</if>
+	</select>
+	
+	<!-- 根据userId查询用户信息 -->
+	<select id="getUserByUserId" parameterType="java.lang.String" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		,
+		<include refid="Blob_Column_List" />
+		from WX_SYS_USER
+		where USER_ID = #{account,jdbcType=VARCHAR}
+	</select>
+	
+	<!-- 根据用户id修改用户的权限类型 -->
+	<update id="authUser" parameterType="com.basoft.service.entity.user.UserDTO">
+		update WX_SYS_USER set USER_AUTH = #{userType,jdbcType=VARCHAR} where USER_ID = #{userId,jdbcType=VARCHAR}
+	</update>
+	
+	<!-- 根据用户id删除其负责的公众号 -->
+	<delete id="deleteUserShop" parameterType="java.lang.String">
+	    delete from WX_SYS_USER_ACCOUNT
+	    where USER_ID = #{userId,jdbcType=VARCHAR}
+  	</delete>
+	
+	<!-- 根据用户id修改用户的权限类型 -->
+	<insert id="insertUserShop" parameterType="java.util.Map" useGeneratedKeys="false">
+		insert into WX_SYS_USER_ACCOUNT (user_id, shop_id,created_dt)
+        <foreach collection="shopList" item="item" index="index" separator="UNION ALL">
+        	SELECT
+	            #{userId,jdbcType=VARCHAR},
+	            #{item,jdbcType=BIGINT},
+	            sysdate
+            from dual
+        </foreach>
+	</insert>
+</mapper>

@@ -1,0 +1,36 @@
+{
+  "uploadFileRemoteServer":"http://192.168.0.81/file/api/v1/upload",
+  "wechatRootUrl":"http://localhost:9000/public/wechat",
+  "wechatNotifyUrl":"http://localhost:9000/eorder/wechat/api/v1/order_pay",
+  "menuRedirectRoot":"/public/wechat/#",
+  "jpushConfig":{
+    "appKey":"af7c15f02f8a0afc9d2135c2",
+    "secretKey":"e9406bc317020f1c46808cd4"
+  },
+  "externThreadPool":{
+    "multipleOfCore":1,
+    "maxPoolOfCore":4,
+    "keepAliveSeconds":10,
+    "queueCapacity":100
+  },
+  "redis-config":{
+    "server":"127.0.0.1",
+    "password":"kdi5006",
+    "pool.max-idle":5000,
+    "pool.min-idle":1,
+    "timeout":5000,
+    "pool.max-wait":5000,
+    "port":6379
+  },
+  "mysqlDataSource-config":{
+    "url":"jdbc:mysql://127.0.0.1:3306/eorder?useUnicode=true&characterEncoding=utf-8&allowMultiQueries=true&useSSL=false",
+    "user":"root",
+    "password":"kdi5006",
+    "useSsl":"true"
+  },
+  "wxPay-config": {
+    "running-dev": "test",
+    "qr-time": 2592000,
+    "store-qr-cnt":50
+  }
+}

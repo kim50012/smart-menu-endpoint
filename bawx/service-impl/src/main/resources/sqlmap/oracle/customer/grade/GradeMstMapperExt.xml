@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.basoft.service.dao.customer.grade.GradeMstMapper">
+	<resultMap id="BaseResultMapDto" type="com.basoft.service.dto.customer.GradeMstDto">
+		<id column="SHOP_ID" property="shopId" jdbcType="BIGINT" />
+		<id column="GRADE_ID" property="gradeId" jdbcType="BIGINT" />
+		<result column="GRADE_NM" property="gradeNm" jdbcType="VARCHAR" />
+		<result column="BASE_QTY" property="baseQty" jdbcType="INTEGER" />
+		<result column="BASE_PRICE" property="basePrice" jdbcType="DECIMAL" />
+		<result column="IS_USE" property="isUse" jdbcType="TINYINT" />
+		<result column="MODIFIED_DT" property="modifiedDt" jdbcType="TIMESTAMP" />
+		<result column="CREATED_DT" property="createdDt" jdbcType="TIMESTAMP" />
+		<result column="MODIFIED_ID" property="modifiedId" jdbcType="VARCHAR" />
+		<result column="CREATED_ID" property="createdId" jdbcType="VARCHAR" />
+		<result column="EV_CYCLE" property="evCycle" jdbcType="INTEGER" />
+		<result column="EXTENDED" property="extended" jdbcType="INTEGER" />
+		<result column="BUY_POINT" property="buyPoint" jdbcType="INTEGER" />
+		<result column="SELL_FOR_CASH" property="sellForCash" jdbcType="INTEGER" />
+	</resultMap>
+	
+	<select id="gradeMstFindAll" resultMap="BaseResultMapDto">
+		SELECT
+		<include refid="Base_Column_List" />
+		,
+		getCode('shop_wx_menu','MENU_STS',IS_USE)isUseStr
+		FROM WX_GRADE
+		WHERE 1=1 and (SHOP_ID=#{shopId})
+		<if test="param != null and param!=''">
+			and GRADE_NM like concat(concat('%',#{param}),'%')
+		</if>
+		order by BASE_QTY desc
+	</select>
+	
+	<!-- check baseqty is exist -->
+	<select id="checkGradeisExistByBaseQty" resultType="java.lang.Integer">
+		SELECT COUNT(*) FROM WX_GRADE T WHERE T.BASE_QTY=#{baseQty}
+	</select>
+	
+	<!-- check GradeNm is exist -->
+	<select id="checkGradeisExistByGradeNm" resultType="java.lang.Integer">
+		SELECT COUNT(*) FROM WX_GRADE T WHERE T.GRADE_NM=#{gradeNm}
+	</select>
+	
+	<!-- check Gradem is used -->
+	<select id="checkGradeIsUsed" resultType="java.lang.Integer">
+		SELECT COUNT(*) FROM WX_CUST_ACCOUNT T WHERE T.GRADE_ID=#{gradeId}
+	</select>
+</mapper>

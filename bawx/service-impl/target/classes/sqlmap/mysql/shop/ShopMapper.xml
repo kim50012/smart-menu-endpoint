@@ -1,0 +1,1336 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.basoft.service.dao.shop.ShopMapper">
+  <resultMap id="BaseResultMap" type="com.basoft.service.entity.shop.Shop">
+    <id column="SHOP_ID" jdbcType="BIGINT" property="shopId" />
+    <result column="SHOP_NM" jdbcType="VARCHAR" property="shopNm" />
+    <result column="G_CORP_ID" jdbcType="INTEGER" property="gCorpId" />
+    <result column="MKT_ID" jdbcType="INTEGER" property="mktId" />
+    <result column="MKT_IS_MAINSHOP" jdbcType="TINYINT" property="mktIsMainshop" />
+    <result column="WX_OPENID_S" jdbcType="VARCHAR" property="wxOpenidS" />
+    <result column="WX_ID_S" jdbcType="VARCHAR" property="wxIdS" />
+    <result column="WX_NICK_NAME" jdbcType="VARCHAR" property="wxNickName" />
+    <result column="WX_TYPE" jdbcType="TINYINT" property="wxType" />
+    <result column="WX_APP_ID" jdbcType="VARCHAR" property="wxAppId" />
+    <result column="WX_APP_SECRET" jdbcType="VARCHAR" property="wxAppSecret" />
+    <result column="WX_API_URL" jdbcType="VARCHAR" property="wxApiUrl" />
+    <result column="WX_API_TOKEN" jdbcType="VARCHAR" property="wxApiToken" />
+    <result column="WX_IS_USE_QUIK_FOLLOW" jdbcType="TINYINT" property="wxIsUseQuikFollow" />
+    <result column="CORP_NM" jdbcType="VARCHAR" property="corpNm" />
+    <result column="CORP_LICENSE_NO" jdbcType="VARCHAR" property="corpLicenseNo" />
+    <result column="LEGAL_PERSON_NM" jdbcType="VARCHAR" property="legalPersonNm" />
+    <result column="LEGAL_PERSON_IDCARD" jdbcType="VARCHAR" property="legalPersonIdcard" />
+    <result column="CONTACT_NM" jdbcType="VARCHAR" property="contactNm" />
+    <result column="CONTACT_MOBILE_NO" jdbcType="VARCHAR" property="contactMobileNo" />
+    <result column="CONTACT_EMAIL" jdbcType="VARCHAR" property="contactEmail" />
+    <result column="CONTACT_QQ" jdbcType="VARCHAR" property="contactQq" />
+    <result column="CONTACT_HEADIMG" jdbcType="VARCHAR" property="contactHeadimg" />
+    <result column="ADR_PROVINCE_ID" jdbcType="INTEGER" property="adrProvinceId" />
+    <result column="ADR_CITY_ID" jdbcType="INTEGER" property="adrCityId" />
+    <result column="ADR_DISTRICT_ID" jdbcType="INTEGER" property="adrDistrictId" />
+    <result column="ADR_DETAIL" jdbcType="VARCHAR" property="adrDetail" />
+    <result column="ADR_ZIP" jdbcType="VARCHAR" property="adrZip" />
+    <result column="ADR_TEL" jdbcType="VARCHAR" property="adrTel" />
+    <result column="SC_ID" jdbcType="INTEGER" property="scId" />
+    <result column="MAIN_GC_ID" jdbcType="INTEGER" property="mainGcId" />
+    <result column="SG_ID" jdbcType="INTEGER" property="sgId" />
+    <result column="STS_ID" jdbcType="TINYINT" property="stsId" />
+    <result column="STS_DESC" jdbcType="VARCHAR" property="stsDesc" />
+    <result column="OPENED_DT" jdbcType="TIMESTAMP" property="openedDt" />
+    <result column="CLOSED_DT" jdbcType="TIMESTAMP" property="closedDt" />
+    <result column="AUTH_TYPE_ID" jdbcType="TINYINT" property="authTypeId" />
+    <result column="AUTH_IS_SUCC" jdbcType="TINYINT" property="authIsSucc" />
+    <result column="AUTH_IMG_CERT_1" jdbcType="BIGINT" property="authImgCert1" />
+    <result column="AUTH_IMG_CERT_2" jdbcType="BIGINT" property="authImgCert2" />
+    <result column="AUTH_IMG_CERT_3" jdbcType="BIGINT" property="authImgCert3" />
+    <result column="AUTH_IMG_CERT_4" jdbcType="BIGINT" property="authImgCert4" />
+    <result column="AUTH_IMG_CERT_5" jdbcType="BIGINT" property="authImgCert5" />
+    <result column="IMG_LOGO_PIC" jdbcType="BIGINT" property="imgLogoPic" />
+    <result column="IMG_LOGO_LABEL" jdbcType="BIGINT" property="imgLogoLabel" />
+    <result column="IMG_BANNER" jdbcType="BIGINT" property="imgBanner" />
+    <result column="IMG_WATERMARK" jdbcType="BIGINT" property="imgWatermark" />
+    <result column="IMG_2D_BARCODE" jdbcType="BIGINT" property="img2dBarcode" />
+    <result column="DESC_PAGE_CAPTION" jdbcType="VARCHAR" property="descPageCaption" />
+    <result column="SEO_TAG" jdbcType="VARCHAR" property="seoTag" />
+    <result column="SUM_SALES_CNT" jdbcType="SMALLINT" property="sumSalesCnt" />
+    <result column="SUM_SALES_QTY" jdbcType="SMALLINT" property="sumSalesQty" />
+    <result column="SUM_SALES_AMT" jdbcType="DECIMAL" property="sumSalesAmt" />
+    <result column="SUM_COLLECTED_QTY" jdbcType="SMALLINT" property="sumCollectedQty" />
+    <result column="AVG_PRAISE_RATE" jdbcType="TINYINT" property="avgPraiseRate" />
+    <result column="AVG_GOODS_DESC_SCORE" jdbcType="TINYINT" property="avgGoodsDescScore" />
+    <result column="AVG_SERVICE_SCORE" jdbcType="TINYINT" property="avgServiceScore" />
+    <result column="AVG_DELIVERY_RATE" jdbcType="TINYINT" property="avgDeliveryRate" />
+    <result column="CREATED_USER_ID" jdbcType="VARCHAR" property="createdUserId" />
+    <result column="MODIFIED_DT" jdbcType="TIMESTAMP" property="modifiedDt" />
+    <result column="CREATED_DT" jdbcType="TIMESTAMP" property="createdDt" />
+    
+    <!-- 扩展 -->
+    <result column="IMG_LOGO_PIC_FULL_URL" jdbcType="VARCHAR" property="imgLogoPicFullURL" />
+  </resultMap>
+  <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="com.basoft.service.entity.shop.ShopWithBLOBs">
+    <result column="LEGAL_PERSON_INRTODUCE" jdbcType="LONGVARCHAR" property="legalPersonInrtoduce" />
+    <result column="DESC_INTRODUCTION" jdbcType="LONGVARCHAR" property="descIntroduction" />
+    <result column="DESC_BEFORE_SALES" jdbcType="LONGVARCHAR" property="descBeforeSales" />
+    <result column="DESC_AFTER_SALES" jdbcType="LONGVARCHAR" property="descAfterSales" />
+    <result column="DESC_WORKINGTIME" jdbcType="LONGVARCHAR" property="descWorkingtime" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    SHOP_ID, SHOP_NM, G_CORP_ID, MKT_ID, MKT_IS_MAINSHOP, WX_OPENID_S, WX_ID_S, WX_NICK_NAME, 
+    WX_TYPE, WX_APP_ID, WX_APP_SECRET, WX_API_URL, WX_API_TOKEN, WX_IS_USE_QUIK_FOLLOW, 
+    CORP_NM, CORP_LICENSE_NO, LEGAL_PERSON_NM, LEGAL_PERSON_IDCARD, CONTACT_NM, CONTACT_MOBILE_NO, 
+    CONTACT_EMAIL, CONTACT_QQ, CONTACT_HEADIMG, ADR_PROVINCE_ID, ADR_CITY_ID, ADR_DISTRICT_ID, 
+    ADR_DETAIL, ADR_ZIP, ADR_TEL, SC_ID, MAIN_GC_ID, SG_ID, STS_ID, STS_DESC, OPENED_DT, 
+    CLOSED_DT, AUTH_TYPE_ID, AUTH_IS_SUCC, AUTH_IMG_CERT_1, AUTH_IMG_CERT_2, AUTH_IMG_CERT_3, 
+    AUTH_IMG_CERT_4, AUTH_IMG_CERT_5, IMG_LOGO_PIC, IMG_LOGO_LABEL, IMG_BANNER, IMG_WATERMARK, 
+    IMG_2D_BARCODE, DESC_PAGE_CAPTION, SEO_TAG, SUM_SALES_CNT, SUM_SALES_QTY, SUM_SALES_AMT, 
+    SUM_COLLECTED_QTY, AVG_PRAISE_RATE, AVG_GOODS_DESC_SCORE, AVG_SERVICE_SCORE, AVG_DELIVERY_RATE, 
+    CREATED_USER_ID, MODIFIED_DT, CREATED_DT
+  </sql>
+  <sql id="Blob_Column_List">
+    LEGAL_PERSON_INRTODUCE, DESC_INTRODUCTION, DESC_BEFORE_SALES, DESC_AFTER_SALES, DESC_WORKINGTIME
+  </sql>
+  <select id="selectByExampleWithBLOBs" parameterType="com.basoft.service.entity.shop.ShopExample" resultMap="ResultMapWithBLOBs">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from shop
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByExample" parameterType="com.basoft.service.entity.shop.ShopExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from shop
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="ResultMapWithBLOBs">
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from shop
+    where SHOP_ID = #{shopId,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from shop
+    where SHOP_ID = #{shopId,jdbcType=BIGINT}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.basoft.service.entity.shop.ShopExample">
+    delete from shop
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.basoft.service.entity.shop.ShopWithBLOBs">
+    insert into shop (SHOP_ID, SHOP_NM, G_CORP_ID, 
+      MKT_ID, MKT_IS_MAINSHOP, WX_OPENID_S, 
+      WX_ID_S, WX_NICK_NAME, WX_TYPE, 
+      WX_APP_ID, WX_APP_SECRET, WX_API_URL, 
+      WX_API_TOKEN, WX_IS_USE_QUIK_FOLLOW, CORP_NM, 
+      CORP_LICENSE_NO, LEGAL_PERSON_NM, LEGAL_PERSON_IDCARD, 
+      CONTACT_NM, CONTACT_MOBILE_NO, CONTACT_EMAIL, 
+      CONTACT_QQ, CONTACT_HEADIMG, ADR_PROVINCE_ID, 
+      ADR_CITY_ID, ADR_DISTRICT_ID, ADR_DETAIL, 
+      ADR_ZIP, ADR_TEL, SC_ID, 
+      MAIN_GC_ID, SG_ID, STS_ID, 
+      STS_DESC, OPENED_DT, CLOSED_DT, 
+      AUTH_TYPE_ID, AUTH_IS_SUCC, AUTH_IMG_CERT_1, 
+      AUTH_IMG_CERT_2, AUTH_IMG_CERT_3, AUTH_IMG_CERT_4, 
+      AUTH_IMG_CERT_5, IMG_LOGO_PIC, IMG_LOGO_LABEL, 
+      IMG_BANNER, IMG_WATERMARK, IMG_2D_BARCODE, 
+      DESC_PAGE_CAPTION, SEO_TAG, SUM_SALES_CNT, 
+      SUM_SALES_QTY, SUM_SALES_AMT, SUM_COLLECTED_QTY, 
+      AVG_PRAISE_RATE, AVG_GOODS_DESC_SCORE, AVG_SERVICE_SCORE, 
+      AVG_DELIVERY_RATE, CREATED_USER_ID, MODIFIED_DT, 
+      CREATED_DT, LEGAL_PERSON_INRTODUCE, 
+      DESC_INTRODUCTION, DESC_BEFORE_SALES, 
+      DESC_AFTER_SALES, DESC_WORKINGTIME
+      )
+    values (#{shopId,jdbcType=BIGINT}, #{shopNm,jdbcType=VARCHAR}, #{gCorpId,jdbcType=INTEGER}, 
+      #{mktId,jdbcType=INTEGER}, #{mktIsMainshop,jdbcType=TINYINT}, #{wxOpenidS,jdbcType=VARCHAR}, 
+      #{wxIdS,jdbcType=VARCHAR}, #{wxNickName,jdbcType=VARCHAR}, #{wxType,jdbcType=TINYINT}, 
+      #{wxAppId,jdbcType=VARCHAR}, #{wxAppSecret,jdbcType=VARCHAR}, #{wxApiUrl,jdbcType=VARCHAR}, 
+      #{wxApiToken,jdbcType=VARCHAR}, #{wxIsUseQuikFollow,jdbcType=TINYINT}, #{corpNm,jdbcType=VARCHAR}, 
+      #{corpLicenseNo,jdbcType=VARCHAR}, #{legalPersonNm,jdbcType=VARCHAR}, #{legalPersonIdcard,jdbcType=VARCHAR}, 
+      #{contactNm,jdbcType=VARCHAR}, #{contactMobileNo,jdbcType=VARCHAR}, #{contactEmail,jdbcType=VARCHAR}, 
+      #{contactQq,jdbcType=VARCHAR}, #{contactHeadimg,jdbcType=VARCHAR}, #{adrProvinceId,jdbcType=INTEGER}, 
+      #{adrCityId,jdbcType=INTEGER}, #{adrDistrictId,jdbcType=INTEGER}, #{adrDetail,jdbcType=VARCHAR}, 
+      #{adrZip,jdbcType=VARCHAR}, #{adrTel,jdbcType=VARCHAR}, #{scId,jdbcType=INTEGER}, 
+      #{mainGcId,jdbcType=INTEGER}, #{sgId,jdbcType=INTEGER}, #{stsId,jdbcType=TINYINT}, 
+      #{stsDesc,jdbcType=VARCHAR}, #{openedDt,jdbcType=TIMESTAMP}, #{closedDt,jdbcType=TIMESTAMP}, 
+      #{authTypeId,jdbcType=TINYINT}, #{authIsSucc,jdbcType=TINYINT}, #{authImgCert1,jdbcType=BIGINT}, 
+      #{authImgCert2,jdbcType=BIGINT}, #{authImgCert3,jdbcType=BIGINT}, #{authImgCert4,jdbcType=BIGINT}, 
+      #{authImgCert5,jdbcType=BIGINT}, #{imgLogoPic,jdbcType=BIGINT}, #{imgLogoLabel,jdbcType=BIGINT}, 
+      #{imgBanner,jdbcType=BIGINT}, #{imgWatermark,jdbcType=BIGINT}, #{img2dBarcode,jdbcType=BIGINT}, 
+      #{descPageCaption,jdbcType=VARCHAR}, #{seoTag,jdbcType=VARCHAR}, #{sumSalesCnt,jdbcType=SMALLINT}, 
+      #{sumSalesQty,jdbcType=SMALLINT}, #{sumSalesAmt,jdbcType=DECIMAL}, #{sumCollectedQty,jdbcType=SMALLINT}, 
+      #{avgPraiseRate,jdbcType=TINYINT}, #{avgGoodsDescScore,jdbcType=TINYINT}, #{avgServiceScore,jdbcType=TINYINT}, 
+      #{avgDeliveryRate,jdbcType=TINYINT}, #{createdUserId,jdbcType=VARCHAR}, #{modifiedDt,jdbcType=TIMESTAMP}, 
+      #{createdDt,jdbcType=TIMESTAMP}, #{legalPersonInrtoduce,jdbcType=LONGVARCHAR}, 
+      #{descIntroduction,jdbcType=LONGVARCHAR}, #{descBeforeSales,jdbcType=LONGVARCHAR}, 
+      #{descAfterSales,jdbcType=LONGVARCHAR}, #{descWorkingtime,jdbcType=LONGVARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.basoft.service.entity.shop.ShopWithBLOBs">
+    insert into shop
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="shopId != null">
+        SHOP_ID,
+      </if>
+      <if test="shopNm != null">
+        SHOP_NM,
+      </if>
+      <if test="gCorpId != null">
+        G_CORP_ID,
+      </if>
+      <if test="mktId != null">
+        MKT_ID,
+      </if>
+      <if test="mktIsMainshop != null">
+        MKT_IS_MAINSHOP,
+      </if>
+      <if test="wxOpenidS != null">
+        WX_OPENID_S,
+      </if>
+      <if test="wxIdS != null">
+        WX_ID_S,
+      </if>
+      <if test="wxNickName != null">
+        WX_NICK_NAME,
+      </if>
+      <if test="wxType != null">
+        WX_TYPE,
+      </if>
+      <if test="wxAppId != null">
+        WX_APP_ID,
+      </if>
+      <if test="wxAppSecret != null">
+        WX_APP_SECRET,
+      </if>
+      <if test="wxApiUrl != null">
+        WX_API_URL,
+      </if>
+      <if test="wxApiToken != null">
+        WX_API_TOKEN,
+      </if>
+      <if test="wxIsUseQuikFollow != null">
+        WX_IS_USE_QUIK_FOLLOW,
+      </if>
+      <if test="corpNm != null">
+        CORP_NM,
+      </if>
+      <if test="corpLicenseNo != null">
+        CORP_LICENSE_NO,
+      </if>
+      <if test="legalPersonNm != null">
+        LEGAL_PERSON_NM,
+      </if>
+      <if test="legalPersonIdcard != null">
+        LEGAL_PERSON_IDCARD,
+      </if>
+      <if test="contactNm != null">
+        CONTACT_NM,
+      </if>
+      <if test="contactMobileNo != null">
+        CONTACT_MOBILE_NO,
+      </if>
+      <if test="contactEmail != null">
+        CONTACT_EMAIL,
+      </if>
+      <if test="contactQq != null">
+        CONTACT_QQ,
+      </if>
+      <if test="contactHeadimg != null">
+        CONTACT_HEADIMG,
+      </if>
+      <if test="adrProvinceId != null">
+        ADR_PROVINCE_ID,
+      </if>
+      <if test="adrCityId != null">
+        ADR_CITY_ID,
+      </if>
+      <if test="adrDistrictId != null">
+        ADR_DISTRICT_ID,
+      </if>
+      <if test="adrDetail != null">
+        ADR_DETAIL,
+      </if>
+      <if test="adrZip != null">
+        ADR_ZIP,
+      </if>
+      <if test="adrTel != null">
+        ADR_TEL,
+      </if>
+      <if test="scId != null">
+        SC_ID,
+      </if>
+      <if test="mainGcId != null">
+        MAIN_GC_ID,
+      </if>
+      <if test="sgId != null">
+        SG_ID,
+      </if>
+      <if test="stsId != null">
+        STS_ID,
+      </if>
+      <if test="stsDesc != null">
+        STS_DESC,
+      </if>
+      <if test="openedDt != null">
+        OPENED_DT,
+      </if>
+      <if test="closedDt != null">
+        CLOSED_DT,
+      </if>
+      <if test="authTypeId != null">
+        AUTH_TYPE_ID,
+      </if>
+      <if test="authIsSucc != null">
+        AUTH_IS_SUCC,
+      </if>
+      <if test="authImgCert1 != null">
+        AUTH_IMG_CERT_1,
+      </if>
+      <if test="authImgCert2 != null">
+        AUTH_IMG_CERT_2,
+      </if>
+      <if test="authImgCert3 != null">
+        AUTH_IMG_CERT_3,
+      </if>
+      <if test="authImgCert4 != null">
+        AUTH_IMG_CERT_4,
+      </if>
+      <if test="authImgCert5 != null">
+        AUTH_IMG_CERT_5,
+      </if>
+      <if test="imgLogoPic != null">
+        IMG_LOGO_PIC,
+      </if>
+      <if test="imgLogoLabel != null">
+        IMG_LOGO_LABEL,
+      </if>
+      <if test="imgBanner != null">
+        IMG_BANNER,
+      </if>
+      <if test="imgWatermark != null">
+        IMG_WATERMARK,
+      </if>
+      <if test="img2dBarcode != null">
+        IMG_2D_BARCODE,
+      </if>
+      <if test="descPageCaption != null">
+        DESC_PAGE_CAPTION,
+      </if>
+      <if test="seoTag != null">
+        SEO_TAG,
+      </if>
+      <if test="sumSalesCnt != null">
+        SUM_SALES_CNT,
+      </if>
+      <if test="sumSalesQty != null">
+        SUM_SALES_QTY,
+      </if>
+      <if test="sumSalesAmt != null">
+        SUM_SALES_AMT,
+      </if>
+      <if test="sumCollectedQty != null">
+        SUM_COLLECTED_QTY,
+      </if>
+      <if test="avgPraiseRate != null">
+        AVG_PRAISE_RATE,
+      </if>
+      <if test="avgGoodsDescScore != null">
+        AVG_GOODS_DESC_SCORE,
+      </if>
+      <if test="avgServiceScore != null">
+        AVG_SERVICE_SCORE,
+      </if>
+      <if test="avgDeliveryRate != null">
+        AVG_DELIVERY_RATE,
+      </if>
+      <if test="createdUserId != null">
+        CREATED_USER_ID,
+      </if>
+      <if test="modifiedDt != null">
+        MODIFIED_DT,
+      </if>
+      <if test="createdDt != null">
+        CREATED_DT,
+      </if>
+      <if test="legalPersonInrtoduce != null">
+        LEGAL_PERSON_INRTODUCE,
+      </if>
+      <if test="descIntroduction != null">
+        DESC_INTRODUCTION,
+      </if>
+      <if test="descBeforeSales != null">
+        DESC_BEFORE_SALES,
+      </if>
+      <if test="descAfterSales != null">
+        DESC_AFTER_SALES,
+      </if>
+      <if test="descWorkingtime != null">
+        DESC_WORKINGTIME,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="shopId != null">
+        #{shopId,jdbcType=BIGINT},
+      </if>
+      <if test="shopNm != null">
+        #{shopNm,jdbcType=VARCHAR},
+      </if>
+      <if test="gCorpId != null">
+        #{gCorpId,jdbcType=INTEGER},
+      </if>
+      <if test="mktId != null">
+        #{mktId,jdbcType=INTEGER},
+      </if>
+      <if test="mktIsMainshop != null">
+        #{mktIsMainshop,jdbcType=TINYINT},
+      </if>
+      <if test="wxOpenidS != null">
+        #{wxOpenidS,jdbcType=VARCHAR},
+      </if>
+      <if test="wxIdS != null">
+        #{wxIdS,jdbcType=VARCHAR},
+      </if>
+      <if test="wxNickName != null">
+        #{wxNickName,jdbcType=VARCHAR},
+      </if>
+      <if test="wxType != null">
+        #{wxType,jdbcType=TINYINT},
+      </if>
+      <if test="wxAppId != null">
+        #{wxAppId,jdbcType=VARCHAR},
+      </if>
+      <if test="wxAppSecret != null">
+        #{wxAppSecret,jdbcType=VARCHAR},
+      </if>
+      <if test="wxApiUrl != null">
+        #{wxApiUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="wxApiToken != null">
+        #{wxApiToken,jdbcType=VARCHAR},
+      </if>
+      <if test="wxIsUseQuikFollow != null">
+        #{wxIsUseQuikFollow,jdbcType=TINYINT},
+      </if>
+      <if test="corpNm != null">
+        #{corpNm,jdbcType=VARCHAR},
+      </if>
+      <if test="corpLicenseNo != null">
+        #{corpLicenseNo,jdbcType=VARCHAR},
+      </if>
+      <if test="legalPersonNm != null">
+        #{legalPersonNm,jdbcType=VARCHAR},
+      </if>
+      <if test="legalPersonIdcard != null">
+        #{legalPersonIdcard,jdbcType=VARCHAR},
+      </if>
+      <if test="contactNm != null">
+        #{contactNm,jdbcType=VARCHAR},
+      </if>
+      <if test="contactMobileNo != null">
+        #{contactMobileNo,jdbcType=VARCHAR},
+      </if>
+      <if test="contactEmail != null">
+        #{contactEmail,jdbcType=VARCHAR},
+      </if>
+      <if test="contactQq != null">
+        #{contactQq,jdbcType=VARCHAR},
+      </if>
+      <if test="contactHeadimg != null">
+        #{contactHeadimg,jdbcType=VARCHAR},
+      </if>
+      <if test="adrProvinceId != null">
+        #{adrProvinceId,jdbcType=INTEGER},
+      </if>
+      <if test="adrCityId != null">
+        #{adrCityId,jdbcType=INTEGER},
+      </if>
+      <if test="adrDistrictId != null">
+        #{adrDistrictId,jdbcType=INTEGER},
+      </if>
+      <if test="adrDetail != null">
+        #{adrDetail,jdbcType=VARCHAR},
+      </if>
+      <if test="adrZip != null">
+        #{adrZip,jdbcType=VARCHAR},
+      </if>
+      <if test="adrTel != null">
+        #{adrTel,jdbcType=VARCHAR},
+      </if>
+      <if test="scId != null">
+        #{scId,jdbcType=INTEGER},
+      </if>
+      <if test="mainGcId != null">
+        #{mainGcId,jdbcType=INTEGER},
+      </if>
+      <if test="sgId != null">
+        #{sgId,jdbcType=INTEGER},
+      </if>
+      <if test="stsId != null">
+        #{stsId,jdbcType=TINYINT},
+      </if>
+      <if test="stsDesc != null">
+        #{stsDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="openedDt != null">
+        #{openedDt,jdbcType=TIMESTAMP},
+      </if>
+      <if test="closedDt != null">
+        #{closedDt,jdbcType=TIMESTAMP},
+      </if>
+      <if test="authTypeId != null">
+        #{authTypeId,jdbcType=TINYINT},
+      </if>
+      <if test="authIsSucc != null">
+        #{authIsSucc,jdbcType=TINYINT},
+      </if>
+      <if test="authImgCert1 != null">
+        #{authImgCert1,jdbcType=BIGINT},
+      </if>
+      <if test="authImgCert2 != null">
+        #{authImgCert2,jdbcType=BIGINT},
+      </if>
+      <if test="authImgCert3 != null">
+        #{authImgCert3,jdbcType=BIGINT},
+      </if>
+      <if test="authImgCert4 != null">
+        #{authImgCert4,jdbcType=BIGINT},
+      </if>
+      <if test="authImgCert5 != null">
+        #{authImgCert5,jdbcType=BIGINT},
+      </if>
+      <if test="imgLogoPic != null">
+        #{imgLogoPic,jdbcType=BIGINT},
+      </if>
+      <if test="imgLogoLabel != null">
+        #{imgLogoLabel,jdbcType=BIGINT},
+      </if>
+      <if test="imgBanner != null">
+        #{imgBanner,jdbcType=BIGINT},
+      </if>
+      <if test="imgWatermark != null">
+        #{imgWatermark,jdbcType=BIGINT},
+      </if>
+      <if test="img2dBarcode != null">
+        #{img2dBarcode,jdbcType=BIGINT},
+      </if>
+      <if test="descPageCaption != null">
+        #{descPageCaption,jdbcType=VARCHAR},
+      </if>
+      <if test="seoTag != null">
+        #{seoTag,jdbcType=VARCHAR},
+      </if>
+      <if test="sumSalesCnt != null">
+        #{sumSalesCnt,jdbcType=SMALLINT},
+      </if>
+      <if test="sumSalesQty != null">
+        #{sumSalesQty,jdbcType=SMALLINT},
+      </if>
+      <if test="sumSalesAmt != null">
+        #{sumSalesAmt,jdbcType=DECIMAL},
+      </if>
+      <if test="sumCollectedQty != null">
+        #{sumCollectedQty,jdbcType=SMALLINT},
+      </if>
+      <if test="avgPraiseRate != null">
+        #{avgPraiseRate,jdbcType=TINYINT},
+      </if>
+      <if test="avgGoodsDescScore != null">
+        #{avgGoodsDescScore,jdbcType=TINYINT},
+      </if>
+      <if test="avgServiceScore != null">
+        #{avgServiceScore,jdbcType=TINYINT},
+      </if>
+      <if test="avgDeliveryRate != null">
+        #{avgDeliveryRate,jdbcType=TINYINT},
+      </if>
+      <if test="createdUserId != null">
+        #{createdUserId,jdbcType=VARCHAR},
+      </if>
+      <if test="modifiedDt != null">
+        #{modifiedDt,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createdDt != null">
+        #{createdDt,jdbcType=TIMESTAMP},
+      </if>
+      <if test="legalPersonInrtoduce != null">
+        #{legalPersonInrtoduce,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="descIntroduction != null">
+        #{descIntroduction,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="descBeforeSales != null">
+        #{descBeforeSales,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="descAfterSales != null">
+        #{descAfterSales,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="descWorkingtime != null">
+        #{descWorkingtime,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.basoft.service.entity.shop.ShopExample" resultType="java.lang.Long">
+    select count(*) from shop
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update shop
+    <set>
+      <if test="record.shopId != null">
+        SHOP_ID = #{record.shopId,jdbcType=BIGINT},
+      </if>
+      <if test="record.shopNm != null">
+        SHOP_NM = #{record.shopNm,jdbcType=VARCHAR},
+      </if>
+      <if test="record.gCorpId != null">
+        G_CORP_ID = #{record.gCorpId,jdbcType=INTEGER},
+      </if>
+      <if test="record.mktId != null">
+        MKT_ID = #{record.mktId,jdbcType=INTEGER},
+      </if>
+      <if test="record.mktIsMainshop != null">
+        MKT_IS_MAINSHOP = #{record.mktIsMainshop,jdbcType=TINYINT},
+      </if>
+      <if test="record.wxOpenidS != null">
+        WX_OPENID_S = #{record.wxOpenidS,jdbcType=VARCHAR},
+      </if>
+      <if test="record.wxIdS != null">
+        WX_ID_S = #{record.wxIdS,jdbcType=VARCHAR},
+      </if>
+      <if test="record.wxNickName != null">
+        WX_NICK_NAME = #{record.wxNickName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.wxType != null">
+        WX_TYPE = #{record.wxType,jdbcType=TINYINT},
+      </if>
+      <if test="record.wxAppId != null">
+        WX_APP_ID = #{record.wxAppId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.wxAppSecret != null">
+        WX_APP_SECRET = #{record.wxAppSecret,jdbcType=VARCHAR},
+      </if>
+      <if test="record.wxApiUrl != null">
+        WX_API_URL = #{record.wxApiUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="record.wxApiToken != null">
+        WX_API_TOKEN = #{record.wxApiToken,jdbcType=VARCHAR},
+      </if>
+      <if test="record.wxIsUseQuikFollow != null">
+        WX_IS_USE_QUIK_FOLLOW = #{record.wxIsUseQuikFollow,jdbcType=TINYINT},
+      </if>
+      <if test="record.corpNm != null">
+        CORP_NM = #{record.corpNm,jdbcType=VARCHAR},
+      </if>
+      <if test="record.corpLicenseNo != null">
+        CORP_LICENSE_NO = #{record.corpLicenseNo,jdbcType=VARCHAR},
+      </if>
+      <if test="record.legalPersonNm != null">
+        LEGAL_PERSON_NM = #{record.legalPersonNm,jdbcType=VARCHAR},
+      </if>
+      <if test="record.legalPersonIdcard != null">
+        LEGAL_PERSON_IDCARD = #{record.legalPersonIdcard,jdbcType=VARCHAR},
+      </if>
+      <if test="record.contactNm != null">
+        CONTACT_NM = #{record.contactNm,jdbcType=VARCHAR},
+      </if>
+      <if test="record.contactMobileNo != null">
+        CONTACT_MOBILE_NO = #{record.contactMobileNo,jdbcType=VARCHAR},
+      </if>
+      <if test="record.contactEmail != null">
+        CONTACT_EMAIL = #{record.contactEmail,jdbcType=VARCHAR},
+      </if>
+      <if test="record.contactQq != null">
+        CONTACT_QQ = #{record.contactQq,jdbcType=VARCHAR},
+      </if>
+      <if test="record.contactHeadimg != null">
+        CONTACT_HEADIMG = #{record.contactHeadimg,jdbcType=VARCHAR},
+      </if>
+      <if test="record.adrProvinceId != null">
+        ADR_PROVINCE_ID = #{record.adrProvinceId,jdbcType=INTEGER},
+      </if>
+      <if test="record.adrCityId != null">
+        ADR_CITY_ID = #{record.adrCityId,jdbcType=INTEGER},
+      </if>
+      <if test="record.adrDistrictId != null">
+        ADR_DISTRICT_ID = #{record.adrDistrictId,jdbcType=INTEGER},
+      </if>
+      <if test="record.adrDetail != null">
+        ADR_DETAIL = #{record.adrDetail,jdbcType=VARCHAR},
+      </if>
+      <if test="record.adrZip != null">
+        ADR_ZIP = #{record.adrZip,jdbcType=VARCHAR},
+      </if>
+      <if test="record.adrTel != null">
+        ADR_TEL = #{record.adrTel,jdbcType=VARCHAR},
+      </if>
+      <if test="record.scId != null">
+        SC_ID = #{record.scId,jdbcType=INTEGER},
+      </if>
+      <if test="record.mainGcId != null">
+        MAIN_GC_ID = #{record.mainGcId,jdbcType=INTEGER},
+      </if>
+      <if test="record.sgId != null">
+        SG_ID = #{record.sgId,jdbcType=INTEGER},
+      </if>
+      <if test="record.stsId != null">
+        STS_ID = #{record.stsId,jdbcType=TINYINT},
+      </if>
+      <if test="record.stsDesc != null">
+        STS_DESC = #{record.stsDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="record.openedDt != null">
+        OPENED_DT = #{record.openedDt,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.closedDt != null">
+        CLOSED_DT = #{record.closedDt,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.authTypeId != null">
+        AUTH_TYPE_ID = #{record.authTypeId,jdbcType=TINYINT},
+      </if>
+      <if test="record.authIsSucc != null">
+        AUTH_IS_SUCC = #{record.authIsSucc,jdbcType=TINYINT},
+      </if>
+      <if test="record.authImgCert1 != null">
+        AUTH_IMG_CERT_1 = #{record.authImgCert1,jdbcType=BIGINT},
+      </if>
+      <if test="record.authImgCert2 != null">
+        AUTH_IMG_CERT_2 = #{record.authImgCert2,jdbcType=BIGINT},
+      </if>
+      <if test="record.authImgCert3 != null">
+        AUTH_IMG_CERT_3 = #{record.authImgCert3,jdbcType=BIGINT},
+      </if>
+      <if test="record.authImgCert4 != null">
+        AUTH_IMG_CERT_4 = #{record.authImgCert4,jdbcType=BIGINT},
+      </if>
+      <if test="record.authImgCert5 != null">
+        AUTH_IMG_CERT_5 = #{record.authImgCert5,jdbcType=BIGINT},
+      </if>
+      <if test="record.imgLogoPic != null">
+        IMG_LOGO_PIC = #{record.imgLogoPic,jdbcType=BIGINT},
+      </if>
+      <if test="record.imgLogoLabel != null">
+        IMG_LOGO_LABEL = #{record.imgLogoLabel,jdbcType=BIGINT},
+      </if>
+      <if test="record.imgBanner != null">
+        IMG_BANNER = #{record.imgBanner,jdbcType=BIGINT},
+      </if>
+      <if test="record.imgWatermark != null">
+        IMG_WATERMARK = #{record.imgWatermark,jdbcType=BIGINT},
+      </if>
+      <if test="record.img2dBarcode != null">
+        IMG_2D_BARCODE = #{record.img2dBarcode,jdbcType=BIGINT},
+      </if>
+      <if test="record.descPageCaption != null">
+        DESC_PAGE_CAPTION = #{record.descPageCaption,jdbcType=VARCHAR},
+      </if>
+      <if test="record.seoTag != null">
+        SEO_TAG = #{record.seoTag,jdbcType=VARCHAR},
+      </if>
+      <if test="record.sumSalesCnt != null">
+        SUM_SALES_CNT = #{record.sumSalesCnt,jdbcType=SMALLINT},
+      </if>
+      <if test="record.sumSalesQty != null">
+        SUM_SALES_QTY = #{record.sumSalesQty,jdbcType=SMALLINT},
+      </if>
+      <if test="record.sumSalesAmt != null">
+        SUM_SALES_AMT = #{record.sumSalesAmt,jdbcType=DECIMAL},
+      </if>
+      <if test="record.sumCollectedQty != null">
+        SUM_COLLECTED_QTY = #{record.sumCollectedQty,jdbcType=SMALLINT},
+      </if>
+      <if test="record.avgPraiseRate != null">
+        AVG_PRAISE_RATE = #{record.avgPraiseRate,jdbcType=TINYINT},
+      </if>
+      <if test="record.avgGoodsDescScore != null">
+        AVG_GOODS_DESC_SCORE = #{record.avgGoodsDescScore,jdbcType=TINYINT},
+      </if>
+      <if test="record.avgServiceScore != null">
+        AVG_SERVICE_SCORE = #{record.avgServiceScore,jdbcType=TINYINT},
+      </if>
+      <if test="record.avgDeliveryRate != null">
+        AVG_DELIVERY_RATE = #{record.avgDeliveryRate,jdbcType=TINYINT},
+      </if>
+      <if test="record.createdUserId != null">
+        CREATED_USER_ID = #{record.createdUserId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.modifiedDt != null">
+        MODIFIED_DT = #{record.modifiedDt,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.createdDt != null">
+        CREATED_DT = #{record.createdDt,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.legalPersonInrtoduce != null">
+        LEGAL_PERSON_INRTODUCE = #{record.legalPersonInrtoduce,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="record.descIntroduction != null">
+        DESC_INTRODUCTION = #{record.descIntroduction,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="record.descBeforeSales != null">
+        DESC_BEFORE_SALES = #{record.descBeforeSales,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="record.descAfterSales != null">
+        DESC_AFTER_SALES = #{record.descAfterSales,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="record.descWorkingtime != null">
+        DESC_WORKINGTIME = #{record.descWorkingtime,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExampleWithBLOBs" parameterType="map">
+    update shop
+    set SHOP_ID = #{record.shopId,jdbcType=BIGINT},
+      SHOP_NM = #{record.shopNm,jdbcType=VARCHAR},
+      G_CORP_ID = #{record.gCorpId,jdbcType=INTEGER},
+      MKT_ID = #{record.mktId,jdbcType=INTEGER},
+      MKT_IS_MAINSHOP = #{record.mktIsMainshop,jdbcType=TINYINT},
+      WX_OPENID_S = #{record.wxOpenidS,jdbcType=VARCHAR},
+      WX_ID_S = #{record.wxIdS,jdbcType=VARCHAR},
+      WX_NICK_NAME = #{record.wxNickName,jdbcType=VARCHAR},
+      WX_TYPE = #{record.wxType,jdbcType=TINYINT},
+      WX_APP_ID = #{record.wxAppId,jdbcType=VARCHAR},
+      WX_APP_SECRET = #{record.wxAppSecret,jdbcType=VARCHAR},
+      WX_API_URL = #{record.wxApiUrl,jdbcType=VARCHAR},
+      WX_API_TOKEN = #{record.wxApiToken,jdbcType=VARCHAR},
+      WX_IS_USE_QUIK_FOLLOW = #{record.wxIsUseQuikFollow,jdbcType=TINYINT},
+      CORP_NM = #{record.corpNm,jdbcType=VARCHAR},
+      CORP_LICENSE_NO = #{record.corpLicenseNo,jdbcType=VARCHAR},
+      LEGAL_PERSON_NM = #{record.legalPersonNm,jdbcType=VARCHAR},
+      LEGAL_PERSON_IDCARD = #{record.legalPersonIdcard,jdbcType=VARCHAR},
+      CONTACT_NM = #{record.contactNm,jdbcType=VARCHAR},
+      CONTACT_MOBILE_NO = #{record.contactMobileNo,jdbcType=VARCHAR},
+      CONTACT_EMAIL = #{record.contactEmail,jdbcType=VARCHAR},
+      CONTACT_QQ = #{record.contactQq,jdbcType=VARCHAR},
+      CONTACT_HEADIMG = #{record.contactHeadimg,jdbcType=VARCHAR},
+      ADR_PROVINCE_ID = #{record.adrProvinceId,jdbcType=INTEGER},
+      ADR_CITY_ID = #{record.adrCityId,jdbcType=INTEGER},
+      ADR_DISTRICT_ID = #{record.adrDistrictId,jdbcType=INTEGER},
+      ADR_DETAIL = #{record.adrDetail,jdbcType=VARCHAR},
+      ADR_ZIP = #{record.adrZip,jdbcType=VARCHAR},
+      ADR_TEL = #{record.adrTel,jdbcType=VARCHAR},
+      SC_ID = #{record.scId,jdbcType=INTEGER},
+      MAIN_GC_ID = #{record.mainGcId,jdbcType=INTEGER},
+      SG_ID = #{record.sgId,jdbcType=INTEGER},
+      STS_ID = #{record.stsId,jdbcType=TINYINT},
+      STS_DESC = #{record.stsDesc,jdbcType=VARCHAR},
+      OPENED_DT = #{record.openedDt,jdbcType=TIMESTAMP},
+      CLOSED_DT = #{record.closedDt,jdbcType=TIMESTAMP},
+      AUTH_TYPE_ID = #{record.authTypeId,jdbcType=TINYINT},
+      AUTH_IS_SUCC = #{record.authIsSucc,jdbcType=TINYINT},
+      AUTH_IMG_CERT_1 = #{record.authImgCert1,jdbcType=BIGINT},
+      AUTH_IMG_CERT_2 = #{record.authImgCert2,jdbcType=BIGINT},
+      AUTH_IMG_CERT_3 = #{record.authImgCert3,jdbcType=BIGINT},
+      AUTH_IMG_CERT_4 = #{record.authImgCert4,jdbcType=BIGINT},
+      AUTH_IMG_CERT_5 = #{record.authImgCert5,jdbcType=BIGINT},
+      IMG_LOGO_PIC = #{record.imgLogoPic,jdbcType=BIGINT},
+      IMG_LOGO_LABEL = #{record.imgLogoLabel,jdbcType=BIGINT},
+      IMG_BANNER = #{record.imgBanner,jdbcType=BIGINT},
+      IMG_WATERMARK = #{record.imgWatermark,jdbcType=BIGINT},
+      IMG_2D_BARCODE = #{record.img2dBarcode,jdbcType=BIGINT},
+      DESC_PAGE_CAPTION = #{record.descPageCaption,jdbcType=VARCHAR},
+      SEO_TAG = #{record.seoTag,jdbcType=VARCHAR},
+      SUM_SALES_CNT = #{record.sumSalesCnt,jdbcType=SMALLINT},
+      SUM_SALES_QTY = #{record.sumSalesQty,jdbcType=SMALLINT},
+      SUM_SALES_AMT = #{record.sumSalesAmt,jdbcType=DECIMAL},
+      SUM_COLLECTED_QTY = #{record.sumCollectedQty,jdbcType=SMALLINT},
+      AVG_PRAISE_RATE = #{record.avgPraiseRate,jdbcType=TINYINT},
+      AVG_GOODS_DESC_SCORE = #{record.avgGoodsDescScore,jdbcType=TINYINT},
+      AVG_SERVICE_SCORE = #{record.avgServiceScore,jdbcType=TINYINT},
+      AVG_DELIVERY_RATE = #{record.avgDeliveryRate,jdbcType=TINYINT},
+      CREATED_USER_ID = #{record.createdUserId,jdbcType=VARCHAR},
+      MODIFIED_DT = #{record.modifiedDt,jdbcType=TIMESTAMP},
+      CREATED_DT = #{record.createdDt,jdbcType=TIMESTAMP},
+      LEGAL_PERSON_INRTODUCE = #{record.legalPersonInrtoduce,jdbcType=LONGVARCHAR},
+      DESC_INTRODUCTION = #{record.descIntroduction,jdbcType=LONGVARCHAR},
+      DESC_BEFORE_SALES = #{record.descBeforeSales,jdbcType=LONGVARCHAR},
+      DESC_AFTER_SALES = #{record.descAfterSales,jdbcType=LONGVARCHAR},
+      DESC_WORKINGTIME = #{record.descWorkingtime,jdbcType=LONGVARCHAR}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update shop
+    set SHOP_ID = #{record.shopId,jdbcType=BIGINT},
+      SHOP_NM = #{record.shopNm,jdbcType=VARCHAR},
+      G_CORP_ID = #{record.gCorpId,jdbcType=INTEGER},
+      MKT_ID = #{record.mktId,jdbcType=INTEGER},
+      MKT_IS_MAINSHOP = #{record.mktIsMainshop,jdbcType=TINYINT},
+      WX_OPENID_S = #{record.wxOpenidS,jdbcType=VARCHAR},
+      WX_ID_S = #{record.wxIdS,jdbcType=VARCHAR},
+      WX_NICK_NAME = #{record.wxNickName,jdbcType=VARCHAR},
+      WX_TYPE = #{record.wxType,jdbcType=TINYINT},
+      WX_APP_ID = #{record.wxAppId,jdbcType=VARCHAR},
+      WX_APP_SECRET = #{record.wxAppSecret,jdbcType=VARCHAR},
+      WX_API_URL = #{record.wxApiUrl,jdbcType=VARCHAR},
+      WX_API_TOKEN = #{record.wxApiToken,jdbcType=VARCHAR},
+      WX_IS_USE_QUIK_FOLLOW = #{record.wxIsUseQuikFollow,jdbcType=TINYINT},
+      CORP_NM = #{record.corpNm,jdbcType=VARCHAR},
+      CORP_LICENSE_NO = #{record.corpLicenseNo,jdbcType=VARCHAR},
+      LEGAL_PERSON_NM = #{record.legalPersonNm,jdbcType=VARCHAR},
+      LEGAL_PERSON_IDCARD = #{record.legalPersonIdcard,jdbcType=VARCHAR},
+      CONTACT_NM = #{record.contactNm,jdbcType=VARCHAR},
+      CONTACT_MOBILE_NO = #{record.contactMobileNo,jdbcType=VARCHAR},
+      CONTACT_EMAIL = #{record.contactEmail,jdbcType=VARCHAR},
+      CONTACT_QQ = #{record.contactQq,jdbcType=VARCHAR},
+      CONTACT_HEADIMG = #{record.contactHeadimg,jdbcType=VARCHAR},
+      ADR_PROVINCE_ID = #{record.adrProvinceId,jdbcType=INTEGER},
+      ADR_CITY_ID = #{record.adrCityId,jdbcType=INTEGER},
+      ADR_DISTRICT_ID = #{record.adrDistrictId,jdbcType=INTEGER},
+      ADR_DETAIL = #{record.adrDetail,jdbcType=VARCHAR},
+      ADR_ZIP = #{record.adrZip,jdbcType=VARCHAR},
+      ADR_TEL = #{record.adrTel,jdbcType=VARCHAR},
+      SC_ID = #{record.scId,jdbcType=INTEGER},
+      MAIN_GC_ID = #{record.mainGcId,jdbcType=INTEGER},
+      SG_ID = #{record.sgId,jdbcType=INTEGER},
+      STS_ID = #{record.stsId,jdbcType=TINYINT},
+      STS_DESC = #{record.stsDesc,jdbcType=VARCHAR},
+      OPENED_DT = #{record.openedDt,jdbcType=TIMESTAMP},
+      CLOSED_DT = #{record.closedDt,jdbcType=TIMESTAMP},
+      AUTH_TYPE_ID = #{record.authTypeId,jdbcType=TINYINT},
+      AUTH_IS_SUCC = #{record.authIsSucc,jdbcType=TINYINT},
+      AUTH_IMG_CERT_1 = #{record.authImgCert1,jdbcType=BIGINT},
+      AUTH_IMG_CERT_2 = #{record.authImgCert2,jdbcType=BIGINT},
+      AUTH_IMG_CERT_3 = #{record.authImgCert3,jdbcType=BIGINT},
+      AUTH_IMG_CERT_4 = #{record.authImgCert4,jdbcType=BIGINT},
+      AUTH_IMG_CERT_5 = #{record.authImgCert5,jdbcType=BIGINT},
+      IMG_LOGO_PIC = #{record.imgLogoPic,jdbcType=BIGINT},
+      IMG_LOGO_LABEL = #{record.imgLogoLabel,jdbcType=BIGINT},
+      IMG_BANNER = #{record.imgBanner,jdbcType=BIGINT},
+      IMG_WATERMARK = #{record.imgWatermark,jdbcType=BIGINT},
+      IMG_2D_BARCODE = #{record.img2dBarcode,jdbcType=BIGINT},
+      DESC_PAGE_CAPTION = #{record.descPageCaption,jdbcType=VARCHAR},
+      SEO_TAG = #{record.seoTag,jdbcType=VARCHAR},
+      SUM_SALES_CNT = #{record.sumSalesCnt,jdbcType=SMALLINT},
+      SUM_SALES_QTY = #{record.sumSalesQty,jdbcType=SMALLINT},
+      SUM_SALES_AMT = #{record.sumSalesAmt,jdbcType=DECIMAL},
+      SUM_COLLECTED_QTY = #{record.sumCollectedQty,jdbcType=SMALLINT},
+      AVG_PRAISE_RATE = #{record.avgPraiseRate,jdbcType=TINYINT},
+      AVG_GOODS_DESC_SCORE = #{record.avgGoodsDescScore,jdbcType=TINYINT},
+      AVG_SERVICE_SCORE = #{record.avgServiceScore,jdbcType=TINYINT},
+      AVG_DELIVERY_RATE = #{record.avgDeliveryRate,jdbcType=TINYINT},
+      CREATED_USER_ID = #{record.createdUserId,jdbcType=VARCHAR},
+      MODIFIED_DT = #{record.modifiedDt,jdbcType=TIMESTAMP},
+      CREATED_DT = #{record.createdDt,jdbcType=TIMESTAMP}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.basoft.service.entity.shop.ShopWithBLOBs">
+    update shop
+    <set>
+      <if test="shopNm != null">
+        SHOP_NM = #{shopNm,jdbcType=VARCHAR},
+      </if>
+      <if test="gCorpId != null">
+        G_CORP_ID = #{gCorpId,jdbcType=INTEGER},
+      </if>
+      <if test="mktId != null">
+        MKT_ID = #{mktId,jdbcType=INTEGER},
+      </if>
+      <if test="mktIsMainshop != null">
+        MKT_IS_MAINSHOP = #{mktIsMainshop,jdbcType=TINYINT},
+      </if>
+      <if test="wxOpenidS != null">
+        WX_OPENID_S = #{wxOpenidS,jdbcType=VARCHAR},
+      </if>
+      <if test="wxIdS != null">
+        WX_ID_S = #{wxIdS,jdbcType=VARCHAR},
+      </if>
+      <if test="wxNickName != null">
+        WX_NICK_NAME = #{wxNickName,jdbcType=VARCHAR},
+      </if>
+      <if test="wxType != null">
+        WX_TYPE = #{wxType,jdbcType=TINYINT},
+      </if>
+      <if test="wxAppId != null">
+        WX_APP_ID = #{wxAppId,jdbcType=VARCHAR},
+      </if>
+      <if test="wxAppSecret != null">
+        WX_APP_SECRET = #{wxAppSecret,jdbcType=VARCHAR},
+      </if>
+      <if test="wxApiUrl != null">
+        WX_API_URL = #{wxApiUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="wxApiToken != null">
+        WX_API_TOKEN = #{wxApiToken,jdbcType=VARCHAR},
+      </if>
+      <if test="wxIsUseQuikFollow != null">
+        WX_IS_USE_QUIK_FOLLOW = #{wxIsUseQuikFollow,jdbcType=TINYINT},
+      </if>
+      <if test="corpNm != null">
+        CORP_NM = #{corpNm,jdbcType=VARCHAR},
+      </if>
+      <if test="corpLicenseNo != null">
+        CORP_LICENSE_NO = #{corpLicenseNo,jdbcType=VARCHAR},
+      </if>
+      <if test="legalPersonNm != null">
+        LEGAL_PERSON_NM = #{legalPersonNm,jdbcType=VARCHAR},
+      </if>
+      <if test="legalPersonIdcard != null">
+        LEGAL_PERSON_IDCARD = #{legalPersonIdcard,jdbcType=VARCHAR},
+      </if>
+      <if test="contactNm != null">
+        CONTACT_NM = #{contactNm,jdbcType=VARCHAR},
+      </if>
+      <if test="contactMobileNo != null">
+        CONTACT_MOBILE_NO = #{contactMobileNo,jdbcType=VARCHAR},
+      </if>
+      <if test="contactEmail != null">
+        CONTACT_EMAIL = #{contactEmail,jdbcType=VARCHAR},
+      </if>
+      <if test="contactQq != null">
+        CONTACT_QQ = #{contactQq,jdbcType=VARCHAR},
+      </if>
+      <if test="contactHeadimg != null">
+        CONTACT_HEADIMG = #{contactHeadimg,jdbcType=VARCHAR},
+      </if>
+      <if test="adrProvinceId != null">
+        ADR_PROVINCE_ID = #{adrProvinceId,jdbcType=INTEGER},
+      </if>
+      <if test="adrCityId != null">
+        ADR_CITY_ID = #{adrCityId,jdbcType=INTEGER},
+      </if>
+      <if test="adrDistrictId != null">
+        ADR_DISTRICT_ID = #{adrDistrictId,jdbcType=INTEGER},
+      </if>
+      <if test="adrDetail != null">
+        ADR_DETAIL = #{adrDetail,jdbcType=VARCHAR},
+      </if>
+      <if test="adrZip != null">
+        ADR_ZIP = #{adrZip,jdbcType=VARCHAR},
+      </if>
+      <if test="adrTel != null">
+        ADR_TEL = #{adrTel,jdbcType=VARCHAR},
+      </if>
+      <if test="scId != null">
+        SC_ID = #{scId,jdbcType=INTEGER},
+      </if>
+      <if test="mainGcId != null">
+        MAIN_GC_ID = #{mainGcId,jdbcType=INTEGER},
+      </if>
+      <if test="sgId != null">
+        SG_ID = #{sgId,jdbcType=INTEGER},
+      </if>
+      <if test="stsId != null">
+        STS_ID = #{stsId,jdbcType=TINYINT},
+      </if>
+      <if test="stsDesc != null">
+        STS_DESC = #{stsDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="openedDt != null">
+        OPENED_DT = #{openedDt,jdbcType=TIMESTAMP},
+      </if>
+      <if test="closedDt != null">
+        CLOSED_DT = #{closedDt,jdbcType=TIMESTAMP},
+      </if>
+      <if test="authTypeId != null">
+        AUTH_TYPE_ID = #{authTypeId,jdbcType=TINYINT},
+      </if>
+      <if test="authIsSucc != null">
+        AUTH_IS_SUCC = #{authIsSucc,jdbcType=TINYINT},
+      </if>
+      <if test="authImgCert1 != null">
+        AUTH_IMG_CERT_1 = #{authImgCert1,jdbcType=BIGINT},
+      </if>
+      <if test="authImgCert2 != null">
+        AUTH_IMG_CERT_2 = #{authImgCert2,jdbcType=BIGINT},
+      </if>
+      <if test="authImgCert3 != null">
+        AUTH_IMG_CERT_3 = #{authImgCert3,jdbcType=BIGINT},
+      </if>
+      <if test="authImgCert4 != null">
+        AUTH_IMG_CERT_4 = #{authImgCert4,jdbcType=BIGINT},
+      </if>
+      <if test="authImgCert5 != null">
+        AUTH_IMG_CERT_5 = #{authImgCert5,jdbcType=BIGINT},
+      </if>
+      <if test="imgLogoPic != null">
+        IMG_LOGO_PIC = #{imgLogoPic,jdbcType=BIGINT},
+      </if>
+      <if test="imgLogoLabel != null">
+        IMG_LOGO_LABEL = #{imgLogoLabel,jdbcType=BIGINT},
+      </if>
+      <if test="imgBanner != null">
+        IMG_BANNER = #{imgBanner,jdbcType=BIGINT},
+      </if>
+      <if test="imgWatermark != null">
+        IMG_WATERMARK = #{imgWatermark,jdbcType=BIGINT},
+      </if>
+      <if test="img2dBarcode != null">
+        IMG_2D_BARCODE = #{img2dBarcode,jdbcType=BIGINT},
+      </if>
+      <if test="descPageCaption != null">
+        DESC_PAGE_CAPTION = #{descPageCaption,jdbcType=VARCHAR},
+      </if>
+      <if test="seoTag != null">
+        SEO_TAG = #{seoTag,jdbcType=VARCHAR},
+      </if>
+      <if test="sumSalesCnt != null">
+        SUM_SALES_CNT = #{sumSalesCnt,jdbcType=SMALLINT},
+      </if>
+      <if test="sumSalesQty != null">
+        SUM_SALES_QTY = #{sumSalesQty,jdbcType=SMALLINT},
+      </if>
+      <if test="sumSalesAmt != null">
+        SUM_SALES_AMT = #{sumSalesAmt,jdbcType=DECIMAL},
+      </if>
+      <if test="sumCollectedQty != null">
+        SUM_COLLECTED_QTY = #{sumCollectedQty,jdbcType=SMALLINT},
+      </if>
+      <if test="avgPraiseRate != null">
+        AVG_PRAISE_RATE = #{avgPraiseRate,jdbcType=TINYINT},
+      </if>
+      <if test="avgGoodsDescScore != null">
+        AVG_GOODS_DESC_SCORE = #{avgGoodsDescScore,jdbcType=TINYINT},
+      </if>
+      <if test="avgServiceScore != null">
+        AVG_SERVICE_SCORE = #{avgServiceScore,jdbcType=TINYINT},
+      </if>
+      <if test="avgDeliveryRate != null">
+        AVG_DELIVERY_RATE = #{avgDeliveryRate,jdbcType=TINYINT},
+      </if>
+      <if test="createdUserId != null">
+        CREATED_USER_ID = #{createdUserId,jdbcType=VARCHAR},
+      </if>
+      <if test="modifiedDt != null">
+        MODIFIED_DT = #{modifiedDt,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createdDt != null">
+        CREATED_DT = #{createdDt,jdbcType=TIMESTAMP},
+      </if>
+      <if test="legalPersonInrtoduce != null">
+        LEGAL_PERSON_INRTODUCE = #{legalPersonInrtoduce,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="descIntroduction != null">
+        DESC_INTRODUCTION = #{descIntroduction,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="descBeforeSales != null">
+        DESC_BEFORE_SALES = #{descBeforeSales,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="descAfterSales != null">
+        DESC_AFTER_SALES = #{descAfterSales,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="descWorkingtime != null">
+        DESC_WORKINGTIME = #{descWorkingtime,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where SHOP_ID = #{shopId,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.basoft.service.entity.shop.ShopWithBLOBs">
+    update shop
+    set SHOP_NM = #{shopNm,jdbcType=VARCHAR},
+      G_CORP_ID = #{gCorpId,jdbcType=INTEGER},
+      MKT_ID = #{mktId,jdbcType=INTEGER},
+      MKT_IS_MAINSHOP = #{mktIsMainshop,jdbcType=TINYINT},
+      WX_OPENID_S = #{wxOpenidS,jdbcType=VARCHAR},
+      WX_ID_S = #{wxIdS,jdbcType=VARCHAR},
+      WX_NICK_NAME = #{wxNickName,jdbcType=VARCHAR},
+      WX_TYPE = #{wxType,jdbcType=TINYINT},
+      WX_APP_ID = #{wxAppId,jdbcType=VARCHAR},
+      WX_APP_SECRET = #{wxAppSecret,jdbcType=VARCHAR},
+      WX_API_URL = #{wxApiUrl,jdbcType=VARCHAR},
+      WX_API_TOKEN = #{wxApiToken,jdbcType=VARCHAR},
+      WX_IS_USE_QUIK_FOLLOW = #{wxIsUseQuikFollow,jdbcType=TINYINT},
+      CORP_NM = #{corpNm,jdbcType=VARCHAR},
+      CORP_LICENSE_NO = #{corpLicenseNo,jdbcType=VARCHAR},
+      LEGAL_PERSON_NM = #{legalPersonNm,jdbcType=VARCHAR},
+      LEGAL_PERSON_IDCARD = #{legalPersonIdcard,jdbcType=VARCHAR},
+      CONTACT_NM = #{contactNm,jdbcType=VARCHAR},
+      CONTACT_MOBILE_NO = #{contactMobileNo,jdbcType=VARCHAR},
+      CONTACT_EMAIL = #{contactEmail,jdbcType=VARCHAR},
+      CONTACT_QQ = #{contactQq,jdbcType=VARCHAR},
+      CONTACT_HEADIMG = #{contactHeadimg,jdbcType=VARCHAR},
+      ADR_PROVINCE_ID = #{adrProvinceId,jdbcType=INTEGER},
+      ADR_CITY_ID = #{adrCityId,jdbcType=INTEGER},
+      ADR_DISTRICT_ID = #{adrDistrictId,jdbcType=INTEGER},
+      ADR_DETAIL = #{adrDetail,jdbcType=VARCHAR},
+      ADR_ZIP = #{adrZip,jdbcType=VARCHAR},
+      ADR_TEL = #{adrTel,jdbcType=VARCHAR},
+      SC_ID = #{scId,jdbcType=INTEGER},
+      MAIN_GC_ID = #{mainGcId,jdbcType=INTEGER},
+      SG_ID = #{sgId,jdbcType=INTEGER},
+      STS_ID = #{stsId,jdbcType=TINYINT},
+      STS_DESC = #{stsDesc,jdbcType=VARCHAR},
+      OPENED_DT = #{openedDt,jdbcType=TIMESTAMP},
+      CLOSED_DT = #{closedDt,jdbcType=TIMESTAMP},
+      AUTH_TYPE_ID = #{authTypeId,jdbcType=TINYINT},
+      AUTH_IS_SUCC = #{authIsSucc,jdbcType=TINYINT},
+      AUTH_IMG_CERT_1 = #{authImgCert1,jdbcType=BIGINT},
+      AUTH_IMG_CERT_2 = #{authImgCert2,jdbcType=BIGINT},
+      AUTH_IMG_CERT_3 = #{authImgCert3,jdbcType=BIGINT},
+      AUTH_IMG_CERT_4 = #{authImgCert4,jdbcType=BIGINT},
+      AUTH_IMG_CERT_5 = #{authImgCert5,jdbcType=BIGINT},
+      IMG_LOGO_PIC = #{imgLogoPic,jdbcType=BIGINT},
+      IMG_LOGO_LABEL = #{imgLogoLabel,jdbcType=BIGINT},
+      IMG_BANNER = #{imgBanner,jdbcType=BIGINT},
+      IMG_WATERMARK = #{imgWatermark,jdbcType=BIGINT},
+      IMG_2D_BARCODE = #{img2dBarcode,jdbcType=BIGINT},
+      DESC_PAGE_CAPTION = #{descPageCaption,jdbcType=VARCHAR},
+      SEO_TAG = #{seoTag,jdbcType=VARCHAR},
+      SUM_SALES_CNT = #{sumSalesCnt,jdbcType=SMALLINT},
+      SUM_SALES_QTY = #{sumSalesQty,jdbcType=SMALLINT},
+      SUM_SALES_AMT = #{sumSalesAmt,jdbcType=DECIMAL},
+      SUM_COLLECTED_QTY = #{sumCollectedQty,jdbcType=SMALLINT},
+      AVG_PRAISE_RATE = #{avgPraiseRate,jdbcType=TINYINT},
+      AVG_GOODS_DESC_SCORE = #{avgGoodsDescScore,jdbcType=TINYINT},
+      AVG_SERVICE_SCORE = #{avgServiceScore,jdbcType=TINYINT},
+      AVG_DELIVERY_RATE = #{avgDeliveryRate,jdbcType=TINYINT},
+      CREATED_USER_ID = #{createdUserId,jdbcType=VARCHAR},
+      MODIFIED_DT = #{modifiedDt,jdbcType=TIMESTAMP},
+      CREATED_DT = #{createdDt,jdbcType=TIMESTAMP},
+      LEGAL_PERSON_INRTODUCE = #{legalPersonInrtoduce,jdbcType=LONGVARCHAR},
+      DESC_INTRODUCTION = #{descIntroduction,jdbcType=LONGVARCHAR},
+      DESC_BEFORE_SALES = #{descBeforeSales,jdbcType=LONGVARCHAR},
+      DESC_AFTER_SALES = #{descAfterSales,jdbcType=LONGVARCHAR},
+      DESC_WORKINGTIME = #{descWorkingtime,jdbcType=LONGVARCHAR}
+    where SHOP_ID = #{shopId,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.basoft.service.entity.shop.Shop">
+    update shop
+    set SHOP_NM = #{shopNm,jdbcType=VARCHAR},
+      G_CORP_ID = #{gCorpId,jdbcType=INTEGER},
+      MKT_ID = #{mktId,jdbcType=INTEGER},
+      MKT_IS_MAINSHOP = #{mktIsMainshop,jdbcType=TINYINT},
+      WX_OPENID_S = #{wxOpenidS,jdbcType=VARCHAR},
+      WX_ID_S = #{wxIdS,jdbcType=VARCHAR},
+      WX_NICK_NAME = #{wxNickName,jdbcType=VARCHAR},
+      WX_TYPE = #{wxType,jdbcType=TINYINT},
+      WX_APP_ID = #{wxAppId,jdbcType=VARCHAR},
+      WX_APP_SECRET = #{wxAppSecret,jdbcType=VARCHAR},
+      WX_API_URL = #{wxApiUrl,jdbcType=VARCHAR},
+      WX_API_TOKEN = #{wxApiToken,jdbcType=VARCHAR},
+      WX_IS_USE_QUIK_FOLLOW = #{wxIsUseQuikFollow,jdbcType=TINYINT},
+      CORP_NM = #{corpNm,jdbcType=VARCHAR},
+      CORP_LICENSE_NO = #{corpLicenseNo,jdbcType=VARCHAR},
+      LEGAL_PERSON_NM = #{legalPersonNm,jdbcType=VARCHAR},
+      LEGAL_PERSON_IDCARD = #{legalPersonIdcard,jdbcType=VARCHAR},
+      CONTACT_NM = #{contactNm,jdbcType=VARCHAR},
+      CONTACT_MOBILE_NO = #{contactMobileNo,jdbcType=VARCHAR},
+      CONTACT_EMAIL = #{contactEmail,jdbcType=VARCHAR},
+      CONTACT_QQ = #{contactQq,jdbcType=VARCHAR},
+      CONTACT_HEADIMG = #{contactHeadimg,jdbcType=VARCHAR},
+      ADR_PROVINCE_ID = #{adrProvinceId,jdbcType=INTEGER},
+      ADR_CITY_ID = #{adrCityId,jdbcType=INTEGER},
+      ADR_DISTRICT_ID = #{adrDistrictId,jdbcType=INTEGER},
+      ADR_DETAIL = #{adrDetail,jdbcType=VARCHAR},
+      ADR_ZIP = #{adrZip,jdbcType=VARCHAR},
+      ADR_TEL = #{adrTel,jdbcType=VARCHAR},
+      SC_ID = #{scId,jdbcType=INTEGER},
+      MAIN_GC_ID = #{mainGcId,jdbcType=INTEGER},
+      SG_ID = #{sgId,jdbcType=INTEGER},
+      STS_ID = #{stsId,jdbcType=TINYINT},
+      STS_DESC = #{stsDesc,jdbcType=VARCHAR},
+      OPENED_DT = #{openedDt,jdbcType=TIMESTAMP},
+      CLOSED_DT = #{closedDt,jdbcType=TIMESTAMP},
+      AUTH_TYPE_ID = #{authTypeId,jdbcType=TINYINT},
+      AUTH_IS_SUCC = #{authIsSucc,jdbcType=TINYINT},
+      AUTH_IMG_CERT_1 = #{authImgCert1,jdbcType=BIGINT},
+      AUTH_IMG_CERT_2 = #{authImgCert2,jdbcType=BIGINT},
+      AUTH_IMG_CERT_3 = #{authImgCert3,jdbcType=BIGINT},
+      AUTH_IMG_CERT_4 = #{authImgCert4,jdbcType=BIGINT},
+      AUTH_IMG_CERT_5 = #{authImgCert5,jdbcType=BIGINT},
+      IMG_LOGO_PIC = #{imgLogoPic,jdbcType=BIGINT},
+      IMG_LOGO_LABEL = #{imgLogoLabel,jdbcType=BIGINT},
+      IMG_BANNER = #{imgBanner,jdbcType=BIGINT},
+      IMG_WATERMARK = #{imgWatermark,jdbcType=BIGINT},
+      IMG_2D_BARCODE = #{img2dBarcode,jdbcType=BIGINT},
+      DESC_PAGE_CAPTION = #{descPageCaption,jdbcType=VARCHAR},
+      SEO_TAG = #{seoTag,jdbcType=VARCHAR},
+      SUM_SALES_CNT = #{sumSalesCnt,jdbcType=SMALLINT},
+      SUM_SALES_QTY = #{sumSalesQty,jdbcType=SMALLINT},
+      SUM_SALES_AMT = #{sumSalesAmt,jdbcType=DECIMAL},
+      SUM_COLLECTED_QTY = #{sumCollectedQty,jdbcType=SMALLINT},
+      AVG_PRAISE_RATE = #{avgPraiseRate,jdbcType=TINYINT},
+      AVG_GOODS_DESC_SCORE = #{avgGoodsDescScore,jdbcType=TINYINT},
+      AVG_SERVICE_SCORE = #{avgServiceScore,jdbcType=TINYINT},
+      AVG_DELIVERY_RATE = #{avgDeliveryRate,jdbcType=TINYINT},
+      CREATED_USER_ID = #{createdUserId,jdbcType=VARCHAR},
+      MODIFIED_DT = #{modifiedDt,jdbcType=TIMESTAMP},
+      CREATED_DT = #{createdDt,jdbcType=TIMESTAMP}
+    where SHOP_ID = #{shopId,jdbcType=BIGINT}
+  </update>
+</mapper>

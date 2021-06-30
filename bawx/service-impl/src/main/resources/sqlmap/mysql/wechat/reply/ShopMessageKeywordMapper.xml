@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.basoft.service.dao.wechat.reply.ShopMessageKeywordMapper" >
+  <resultMap id="BaseResultMap" type="com.basoft.service.entity.wechat.reply.ShopMessageKeyword" >
+    <id column="KEYWORD_ID" property="keywordId" jdbcType="BIGINT" />
+    <id column="MESSAGE_ID" property="messageId" jdbcType="BIGINT" />
+    <id column="SHOP_ID" property="shopId" jdbcType="BIGINT" />
+    <result column="KEYWORD" property="keyword" jdbcType="VARCHAR" />
+    <result column="TABLE_NM" property="tableNm" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    KEYWORD_ID, MESSAGE_ID, SHOP_ID, KEYWORD, TABLE_NM
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.basoft.service.entity.wechat.reply.ShopMessageKeywordExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    'true' as QUERYID,
+    <include refid="Base_Column_List" />
+    from shop_message_keyword
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="com.basoft.service.entity.wechat.reply.ShopMessageKeywordKey" >
+    select 
+    <include refid="Base_Column_List" />
+    from shop_message_keyword
+    where KEYWORD_ID = #{keywordId,jdbcType=BIGINT}
+      and MESSAGE_ID = #{messageId,jdbcType=BIGINT}
+      and SHOP_ID = #{shopId,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="com.basoft.service.entity.wechat.reply.ShopMessageKeywordKey" >
+    delete from shop_message_keyword
+    where KEYWORD_ID = #{keywordId,jdbcType=BIGINT}
+      and MESSAGE_ID = #{messageId,jdbcType=BIGINT}
+      and SHOP_ID = #{shopId,jdbcType=BIGINT}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.basoft.service.entity.wechat.reply.ShopMessageKeywordExample" >
+    delete from shop_message_keyword
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.basoft.service.entity.wechat.reply.ShopMessageKeyword" >
+    insert into shop_message_keyword (KEYWORD_ID, MESSAGE_ID, SHOP_ID, 
+      KEYWORD, TABLE_NM)
+    values (#{keywordId,jdbcType=BIGINT}, #{messageId,jdbcType=BIGINT}, #{shopId,jdbcType=BIGINT}, 
+      #{keyword,jdbcType=VARCHAR}, #{tableNm,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.basoft.service.entity.wechat.reply.ShopMessageKeyword" >
+    insert into shop_message_keyword
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="keywordId != null" >
+        KEYWORD_ID,
+      </if>
+      <if test="messageId != null" >
+        MESSAGE_ID,
+      </if>
+      <if test="shopId != null" >
+        SHOP_ID,
+      </if>
+      <if test="keyword != null" >
+        KEYWORD,
+      </if>
+      <if test="tableNm != null" >
+        TABLE_NM,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="keywordId != null" >
+        #{keywordId,jdbcType=BIGINT},
+      </if>
+      <if test="messageId != null" >
+        #{messageId,jdbcType=BIGINT},
+      </if>
+      <if test="shopId != null" >
+        #{shopId,jdbcType=BIGINT},
+      </if>
+      <if test="keyword != null" >
+        #{keyword,jdbcType=VARCHAR},
+      </if>
+      <if test="tableNm != null" >
+        #{tableNm,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.basoft.service.entity.wechat.reply.ShopMessageKeywordExample" resultType="java.lang.Integer" >
+    select count(*) from shop_message_keyword
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update shop_message_keyword
+    <set >
+      <if test="record.keywordId != null" >
+        KEYWORD_ID = #{record.keywordId,jdbcType=BIGINT},
+      </if>
+      <if test="record.messageId != null" >
+        MESSAGE_ID = #{record.messageId,jdbcType=BIGINT},
+      </if>
+      <if test="record.shopId != null" >
+        SHOP_ID = #{record.shopId,jdbcType=BIGINT},
+      </if>
+      <if test="record.keyword != null" >
+        KEYWORD = #{record.keyword,jdbcType=VARCHAR},
+      </if>
+      <if test="record.tableNm != null" >
+        TABLE_NM = #{record.tableNm,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update shop_message_keyword
+    set KEYWORD_ID = #{record.keywordId,jdbcType=BIGINT},
+      MESSAGE_ID = #{record.messageId,jdbcType=BIGINT},
+      SHOP_ID = #{record.shopId,jdbcType=BIGINT},
+      KEYWORD = #{record.keyword,jdbcType=VARCHAR},
+      TABLE_NM = #{record.tableNm,jdbcType=VARCHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.basoft.service.entity.wechat.reply.ShopMessageKeyword" >
+    update shop_message_keyword
+    <set >
+      <if test="keyword != null" >
+        KEYWORD = #{keyword,jdbcType=VARCHAR},
+      </if>
+      <if test="tableNm != null" >
+        TABLE_NM = #{tableNm,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where KEYWORD_ID = #{keywordId,jdbcType=BIGINT}
+      and MESSAGE_ID = #{messageId,jdbcType=BIGINT}
+      and SHOP_ID = #{shopId,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.basoft.service.entity.wechat.reply.ShopMessageKeyword" >
+    update shop_message_keyword
+    set KEYWORD = #{keyword,jdbcType=VARCHAR},
+      TABLE_NM = #{tableNm,jdbcType=VARCHAR}
+    where KEYWORD_ID = #{keywordId,jdbcType=BIGINT}
+      and MESSAGE_ID = #{messageId,jdbcType=BIGINT}
+      and SHOP_ID = #{shopId,jdbcType=BIGINT}
+  </update>
+</mapper>

@@ -1,0 +1,26 @@
+{
+  "threadPool":{
+    "multipleOfCore":1,
+    "maxPoolOfCore":2,
+    "keepAliveSeconds":5,
+    "queueCapacity":20
+  },
+  "fileTransferFactory":{
+    "clazz":"com.basoft.file.application.impl.AwsS3FileSerivce$AwsS3FileServiceFactory",
+    "props":{
+      "awsFullPath":"https://basoft-test-images.s3.ap-northeast-2.amazonaws.com",
+      "visitAwsFullPath":"https://d2or24sz8bxkt1.cloudfront.net",
+      "bucket":"basoft-test-images",
+      "client_region":"ap-northeast-2",
+      "appKey":"AKIAIC3O6DK3OOMTAVOQ",
+      "secretAccessKey":"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",
+      "rootKey":"jeju-images"
+    }
+  },
+  "mysqlDataSource-config":{
+    "url":"jdbc:mysql://192.168.0.241:3307/eorder?useUnicode=true&amp;characterEncoding=utf-8&amp;autoReconnect=true&amp;useSSL=true&amp;failOverReadOnly=false",
+    "user":"bawechat",
+    "password":"1q2w3e4r!",
+    "useSsl":"true"
+  }
+}

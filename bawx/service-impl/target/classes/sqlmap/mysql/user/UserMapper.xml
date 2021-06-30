@@ -1,0 +1,571 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.basoft.service.dao.user.UserMapper">
+  <resultMap id="BaseResultMap" type="com.basoft.service.entity.user.User">
+    <id column="USER_ID" jdbcType="VARCHAR" property="userId" />
+    <result column="USER_NICK_NM" jdbcType="VARCHAR" property="userNickNm" />
+    <result column="USER_REAL_NM" jdbcType="VARCHAR" property="userRealNm" />
+    <result column="WX_OPENID_U" jdbcType="VARCHAR" property="wxOpenidU" />
+    <result column="WX_ID_U" jdbcType="VARCHAR" property="wxIdU" />
+    <result column="EMAIL" jdbcType="VARCHAR" property="email" />
+    <result column="MOBILE_NO" jdbcType="VARCHAR" property="mobileNo" />
+    <result column="QQ_ID" jdbcType="VARCHAR" property="qqId" />
+    <result column="PWD" jdbcType="VARCHAR" property="pwd" />
+    <result column="DEPT" jdbcType="VARCHAR" property="dept" />
+    <result column="COMP_ID" jdbcType="INTEGER" property="compId" />
+    <result column="SHOP_ID" jdbcType="INTEGER" property="shopId" />
+    <result column="ACTIVE_STS" jdbcType="VARCHAR" property="activeSts" />
+    <result column="SEX" jdbcType="INTEGER" property="sex" />
+    <result column="IMG_ID" jdbcType="INTEGER" property="imgId" />
+    <result column="IMG_NM" jdbcType="VARCHAR" property="imgNm" />
+    <result column="IMG_SYS_NM" jdbcType="VARCHAR" property="imgSysNm" />
+    <result column="IMG_SIZE" jdbcType="INTEGER" property="imgSize" />
+    <result column="IMG_URL" jdbcType="VARCHAR" property="imgUrl" />
+    <result column="MODIFIED_DT" jdbcType="TIMESTAMP" property="modifiedDt" />
+    <result column="CREATED_DT" jdbcType="TIMESTAMP" property="createdDt" />
+    <result column="USER_AUTH" jdbcType="VARCHAR" property="userAuth" />
+  </resultMap>
+  <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="com.basoft.service.entity.user.User">
+    <result column="SING_NM" jdbcType="LONGVARCHAR" property="singNm" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    USER_ID, USER_NICK_NM, USER_REAL_NM, WX_OPENID_U, WX_ID_U, EMAIL, MOBILE_NO, QQ_ID, 
+    PWD, DEPT, COMP_ID, SHOP_ID, ACTIVE_STS, SEX, IMG_ID, IMG_NM, IMG_SYS_NM, IMG_SIZE, 
+    IMG_URL, MODIFIED_DT, CREATED_DT, USER_AUTH
+  </sql>
+  <sql id="Blob_Column_List">
+    SING_NM
+  </sql>
+  <select id="selectByExampleWithBLOBs" parameterType="com.basoft.service.entity.user.UserExample" resultMap="ResultMapWithBLOBs">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from user
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByExample" parameterType="com.basoft.service.entity.user.UserExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from user
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="ResultMapWithBLOBs">
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from user
+    where USER_ID = #{userId,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from user
+    where USER_ID = #{userId,jdbcType=VARCHAR}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.basoft.service.entity.user.UserExample">
+    delete from user
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.basoft.service.entity.user.User">
+    insert into user (USER_ID, USER_NICK_NM, USER_REAL_NM, 
+      WX_OPENID_U, WX_ID_U, EMAIL, 
+      MOBILE_NO, QQ_ID, PWD, 
+      DEPT, COMP_ID, SHOP_ID, 
+      ACTIVE_STS, SEX, IMG_ID, 
+      IMG_NM, IMG_SYS_NM, IMG_SIZE, 
+      IMG_URL, MODIFIED_DT, CREATED_DT, 
+      USER_AUTH, SING_NM)
+    values (#{userId,jdbcType=VARCHAR}, #{userNickNm,jdbcType=VARCHAR}, #{userRealNm,jdbcType=VARCHAR}, 
+      #{wxOpenidU,jdbcType=VARCHAR}, #{wxIdU,jdbcType=VARCHAR}, #{email,jdbcType=VARCHAR}, 
+      #{mobileNo,jdbcType=VARCHAR}, #{qqId,jdbcType=VARCHAR}, #{pwd,jdbcType=VARCHAR}, 
+      #{dept,jdbcType=VARCHAR}, #{compId,jdbcType=INTEGER}, #{shopId,jdbcType=INTEGER}, 
+      #{activeSts,jdbcType=VARCHAR}, #{sex,jdbcType=INTEGER}, #{imgId,jdbcType=INTEGER}, 
+      #{imgNm,jdbcType=VARCHAR}, #{imgSysNm,jdbcType=VARCHAR}, #{imgSize,jdbcType=INTEGER}, 
+      #{imgUrl,jdbcType=VARCHAR}, #{modifiedDt,jdbcType=TIMESTAMP}, #{createdDt,jdbcType=TIMESTAMP}, 
+      #{userAuth,jdbcType=VARCHAR}, #{singNm,jdbcType=LONGVARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.basoft.service.entity.user.User">
+    insert into user
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="userId != null">
+        USER_ID,
+      </if>
+      <if test="userNickNm != null">
+        USER_NICK_NM,
+      </if>
+      <if test="userRealNm != null">
+        USER_REAL_NM,
+      </if>
+      <if test="wxOpenidU != null">
+        WX_OPENID_U,
+      </if>
+      <if test="wxIdU != null">
+        WX_ID_U,
+      </if>
+      <if test="email != null">
+        EMAIL,
+      </if>
+      <if test="mobileNo != null">
+        MOBILE_NO,
+      </if>
+      <if test="qqId != null">
+        QQ_ID,
+      </if>
+      <if test="pwd != null">
+        PWD,
+      </if>
+      <if test="dept != null">
+        DEPT,
+      </if>
+      <if test="compId != null">
+        COMP_ID,
+      </if>
+      <if test="shopId != null">
+        SHOP_ID,
+      </if>
+      <if test="activeSts != null">
+        ACTIVE_STS,
+      </if>
+      <if test="sex != null">
+        SEX,
+      </if>
+      <if test="imgId != null">
+        IMG_ID,
+      </if>
+      <if test="imgNm != null">
+        IMG_NM,
+      </if>
+      <if test="imgSysNm != null">
+        IMG_SYS_NM,
+      </if>
+      <if test="imgSize != null">
+        IMG_SIZE,
+      </if>
+      <if test="imgUrl != null">
+        IMG_URL,
+      </if>
+      <if test="modifiedDt != null">
+        MODIFIED_DT,
+      </if>
+      <if test="createdDt != null">
+        CREATED_DT,
+      </if>
+      <if test="userAuth != null">
+        USER_AUTH,
+      </if>
+      <if test="singNm != null">
+        SING_NM,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="userId != null">
+        #{userId,jdbcType=VARCHAR},
+      </if>
+      <if test="userNickNm != null">
+        #{userNickNm,jdbcType=VARCHAR},
+      </if>
+      <if test="userRealNm != null">
+        #{userRealNm,jdbcType=VARCHAR},
+      </if>
+      <if test="wxOpenidU != null">
+        #{wxOpenidU,jdbcType=VARCHAR},
+      </if>
+      <if test="wxIdU != null">
+        #{wxIdU,jdbcType=VARCHAR},
+      </if>
+      <if test="email != null">
+        #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="mobileNo != null">
+        #{mobileNo,jdbcType=VARCHAR},
+      </if>
+      <if test="qqId != null">
+        #{qqId,jdbcType=VARCHAR},
+      </if>
+      <if test="pwd != null">
+        #{pwd,jdbcType=VARCHAR},
+      </if>
+      <if test="dept != null">
+        #{dept,jdbcType=VARCHAR},
+      </if>
+      <if test="compId != null">
+        #{compId,jdbcType=INTEGER},
+      </if>
+      <if test="shopId != null">
+        #{shopId,jdbcType=INTEGER},
+      </if>
+      <if test="activeSts != null">
+        #{activeSts,jdbcType=VARCHAR},
+      </if>
+      <if test="sex != null">
+        #{sex,jdbcType=INTEGER},
+      </if>
+      <if test="imgId != null">
+        #{imgId,jdbcType=INTEGER},
+      </if>
+      <if test="imgNm != null">
+        #{imgNm,jdbcType=VARCHAR},
+      </if>
+      <if test="imgSysNm != null">
+        #{imgSysNm,jdbcType=VARCHAR},
+      </if>
+      <if test="imgSize != null">
+        #{imgSize,jdbcType=INTEGER},
+      </if>
+      <if test="imgUrl != null">
+        #{imgUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="modifiedDt != null">
+        #{modifiedDt,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createdDt != null">
+        #{createdDt,jdbcType=TIMESTAMP},
+      </if>
+      <if test="userAuth != null">
+        #{userAuth,jdbcType=VARCHAR},
+      </if>
+      <if test="singNm != null">
+        #{singNm,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.basoft.service.entity.user.UserExample" resultType="java.lang.Long">
+    select count(*) from user
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update user
+    <set>
+      <if test="record.userId != null">
+        USER_ID = #{record.userId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.userNickNm != null">
+        USER_NICK_NM = #{record.userNickNm,jdbcType=VARCHAR},
+      </if>
+      <if test="record.userRealNm != null">
+        USER_REAL_NM = #{record.userRealNm,jdbcType=VARCHAR},
+      </if>
+      <if test="record.wxOpenidU != null">
+        WX_OPENID_U = #{record.wxOpenidU,jdbcType=VARCHAR},
+      </if>
+      <if test="record.wxIdU != null">
+        WX_ID_U = #{record.wxIdU,jdbcType=VARCHAR},
+      </if>
+      <if test="record.email != null">
+        EMAIL = #{record.email,jdbcType=VARCHAR},
+      </if>
+      <if test="record.mobileNo != null">
+        MOBILE_NO = #{record.mobileNo,jdbcType=VARCHAR},
+      </if>
+      <if test="record.qqId != null">
+        QQ_ID = #{record.qqId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.pwd != null">
+        PWD = #{record.pwd,jdbcType=VARCHAR},
+      </if>
+      <if test="record.dept != null">
+        DEPT = #{record.dept,jdbcType=VARCHAR},
+      </if>
+      <if test="record.compId != null">
+        COMP_ID = #{record.compId,jdbcType=INTEGER},
+      </if>
+      <if test="record.shopId != null">
+        SHOP_ID = #{record.shopId,jdbcType=INTEGER},
+      </if>
+      <if test="record.activeSts != null">
+        ACTIVE_STS = #{record.activeSts,jdbcType=VARCHAR},
+      </if>
+      <if test="record.sex != null">
+        SEX = #{record.sex,jdbcType=INTEGER},
+      </if>
+      <if test="record.imgId != null">
+        IMG_ID = #{record.imgId,jdbcType=INTEGER},
+      </if>
+      <if test="record.imgNm != null">
+        IMG_NM = #{record.imgNm,jdbcType=VARCHAR},
+      </if>
+      <if test="record.imgSysNm != null">
+        IMG_SYS_NM = #{record.imgSysNm,jdbcType=VARCHAR},
+      </if>
+      <if test="record.imgSize != null">
+        IMG_SIZE = #{record.imgSize,jdbcType=INTEGER},
+      </if>
+      <if test="record.imgUrl != null">
+        IMG_URL = #{record.imgUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="record.modifiedDt != null">
+        MODIFIED_DT = #{record.modifiedDt,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.createdDt != null">
+        CREATED_DT = #{record.createdDt,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.userAuth != null">
+        USER_AUTH = #{record.userAuth,jdbcType=VARCHAR},
+      </if>
+      <if test="record.singNm != null">
+        SING_NM = #{record.singNm,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExampleWithBLOBs" parameterType="map">
+    update user
+    set USER_ID = #{record.userId,jdbcType=VARCHAR},
+      USER_NICK_NM = #{record.userNickNm,jdbcType=VARCHAR},
+      USER_REAL_NM = #{record.userRealNm,jdbcType=VARCHAR},
+      WX_OPENID_U = #{record.wxOpenidU,jdbcType=VARCHAR},
+      WX_ID_U = #{record.wxIdU,jdbcType=VARCHAR},
+      EMAIL = #{record.email,jdbcType=VARCHAR},
+      MOBILE_NO = #{record.mobileNo,jdbcType=VARCHAR},
+      QQ_ID = #{record.qqId,jdbcType=VARCHAR},
+      PWD = #{record.pwd,jdbcType=VARCHAR},
+      DEPT = #{record.dept,jdbcType=VARCHAR},
+      COMP_ID = #{record.compId,jdbcType=INTEGER},
+      SHOP_ID = #{record.shopId,jdbcType=INTEGER},
+      ACTIVE_STS = #{record.activeSts,jdbcType=VARCHAR},
+      SEX = #{record.sex,jdbcType=INTEGER},
+      IMG_ID = #{record.imgId,jdbcType=INTEGER},
+      IMG_NM = #{record.imgNm,jdbcType=VARCHAR},
+      IMG_SYS_NM = #{record.imgSysNm,jdbcType=VARCHAR},
+      IMG_SIZE = #{record.imgSize,jdbcType=INTEGER},
+      IMG_URL = #{record.imgUrl,jdbcType=VARCHAR},
+      MODIFIED_DT = #{record.modifiedDt,jdbcType=TIMESTAMP},
+      CREATED_DT = #{record.createdDt,jdbcType=TIMESTAMP},
+      USER_AUTH = #{record.userAuth,jdbcType=VARCHAR},
+      SING_NM = #{record.singNm,jdbcType=LONGVARCHAR}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update user
+    set USER_ID = #{record.userId,jdbcType=VARCHAR},
+      USER_NICK_NM = #{record.userNickNm,jdbcType=VARCHAR},
+      USER_REAL_NM = #{record.userRealNm,jdbcType=VARCHAR},
+      WX_OPENID_U = #{record.wxOpenidU,jdbcType=VARCHAR},
+      WX_ID_U = #{record.wxIdU,jdbcType=VARCHAR},
+      EMAIL = #{record.email,jdbcType=VARCHAR},
+      MOBILE_NO = #{record.mobileNo,jdbcType=VARCHAR},
+      QQ_ID = #{record.qqId,jdbcType=VARCHAR},
+      PWD = #{record.pwd,jdbcType=VARCHAR},
+      DEPT = #{record.dept,jdbcType=VARCHAR},
+      COMP_ID = #{record.compId,jdbcType=INTEGER},
+      SHOP_ID = #{record.shopId,jdbcType=INTEGER},
+      ACTIVE_STS = #{record.activeSts,jdbcType=VARCHAR},
+      SEX = #{record.sex,jdbcType=INTEGER},
+      IMG_ID = #{record.imgId,jdbcType=INTEGER},
+      IMG_NM = #{record.imgNm,jdbcType=VARCHAR},
+      IMG_SYS_NM = #{record.imgSysNm,jdbcType=VARCHAR},
+      IMG_SIZE = #{record.imgSize,jdbcType=INTEGER},
+      IMG_URL = #{record.imgUrl,jdbcType=VARCHAR},
+      MODIFIED_DT = #{record.modifiedDt,jdbcType=TIMESTAMP},
+      CREATED_DT = #{record.createdDt,jdbcType=TIMESTAMP},
+      USER_AUTH = #{record.userAuth,jdbcType=VARCHAR}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.basoft.service.entity.user.User">
+    update user
+    <set>
+      <if test="userNickNm != null">
+        USER_NICK_NM = #{userNickNm,jdbcType=VARCHAR},
+      </if>
+      <if test="userRealNm != null">
+        USER_REAL_NM = #{userRealNm,jdbcType=VARCHAR},
+      </if>
+      <if test="wxOpenidU != null">
+        WX_OPENID_U = #{wxOpenidU,jdbcType=VARCHAR},
+      </if>
+      <if test="wxIdU != null">
+        WX_ID_U = #{wxIdU,jdbcType=VARCHAR},
+      </if>
+      <if test="email != null">
+        EMAIL = #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="mobileNo != null">
+        MOBILE_NO = #{mobileNo,jdbcType=VARCHAR},
+      </if>
+      <if test="qqId != null">
+        QQ_ID = #{qqId,jdbcType=VARCHAR},
+      </if>
+      <if test="pwd != null">
+        PWD = #{pwd,jdbcType=VARCHAR},
+      </if>
+      <if test="dept != null">
+        DEPT = #{dept,jdbcType=VARCHAR},
+      </if>
+      <if test="compId != null">
+        COMP_ID = #{compId,jdbcType=INTEGER},
+      </if>
+      <if test="shopId != null">
+        SHOP_ID = #{shopId,jdbcType=INTEGER},
+      </if>
+      <if test="activeSts != null">
+        ACTIVE_STS = #{activeSts,jdbcType=VARCHAR},
+      </if>
+      <if test="sex != null">
+        SEX = #{sex,jdbcType=INTEGER},
+      </if>
+      <if test="imgId != null">
+        IMG_ID = #{imgId,jdbcType=INTEGER},
+      </if>
+      <if test="imgNm != null">
+        IMG_NM = #{imgNm,jdbcType=VARCHAR},
+      </if>
+      <if test="imgSysNm != null">
+        IMG_SYS_NM = #{imgSysNm,jdbcType=VARCHAR},
+      </if>
+      <if test="imgSize != null">
+        IMG_SIZE = #{imgSize,jdbcType=INTEGER},
+      </if>
+      <if test="imgUrl != null">
+        IMG_URL = #{imgUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="modifiedDt != null">
+        MODIFIED_DT = #{modifiedDt,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createdDt != null">
+        CREATED_DT = #{createdDt,jdbcType=TIMESTAMP},
+      </if>
+      <if test="userAuth != null">
+        USER_AUTH = #{userAuth,jdbcType=VARCHAR},
+      </if>
+      <if test="singNm != null">
+        SING_NM = #{singNm,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where USER_ID = #{userId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.basoft.service.entity.user.User">
+    update user
+    set USER_NICK_NM = #{userNickNm,jdbcType=VARCHAR},
+      USER_REAL_NM = #{userRealNm,jdbcType=VARCHAR},
+      WX_OPENID_U = #{wxOpenidU,jdbcType=VARCHAR},
+      WX_ID_U = #{wxIdU,jdbcType=VARCHAR},
+      EMAIL = #{email,jdbcType=VARCHAR},
+      MOBILE_NO = #{mobileNo,jdbcType=VARCHAR},
+      QQ_ID = #{qqId,jdbcType=VARCHAR},
+      PWD = #{pwd,jdbcType=VARCHAR},
+      DEPT = #{dept,jdbcType=VARCHAR},
+      COMP_ID = #{compId,jdbcType=INTEGER},
+      SHOP_ID = #{shopId,jdbcType=INTEGER},
+      ACTIVE_STS = #{activeSts,jdbcType=VARCHAR},
+      SEX = #{sex,jdbcType=INTEGER},
+      IMG_ID = #{imgId,jdbcType=INTEGER},
+      IMG_NM = #{imgNm,jdbcType=VARCHAR},
+      IMG_SYS_NM = #{imgSysNm,jdbcType=VARCHAR},
+      IMG_SIZE = #{imgSize,jdbcType=INTEGER},
+      IMG_URL = #{imgUrl,jdbcType=VARCHAR},
+      MODIFIED_DT = #{modifiedDt,jdbcType=TIMESTAMP},
+      CREATED_DT = #{createdDt,jdbcType=TIMESTAMP},
+      USER_AUTH = #{userAuth,jdbcType=VARCHAR},
+      SING_NM = #{singNm,jdbcType=LONGVARCHAR}
+    where USER_ID = #{userId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.basoft.service.entity.user.User">
+    update user
+    set USER_NICK_NM = #{userNickNm,jdbcType=VARCHAR},
+      USER_REAL_NM = #{userRealNm,jdbcType=VARCHAR},
+      WX_OPENID_U = #{wxOpenidU,jdbcType=VARCHAR},
+      WX_ID_U = #{wxIdU,jdbcType=VARCHAR},
+      EMAIL = #{email,jdbcType=VARCHAR},
+      MOBILE_NO = #{mobileNo,jdbcType=VARCHAR},
+      QQ_ID = #{qqId,jdbcType=VARCHAR},
+      PWD = #{pwd,jdbcType=VARCHAR},
+      DEPT = #{dept,jdbcType=VARCHAR},
+      COMP_ID = #{compId,jdbcType=INTEGER},
+      SHOP_ID = #{shopId,jdbcType=INTEGER},
+      ACTIVE_STS = #{activeSts,jdbcType=VARCHAR},
+      SEX = #{sex,jdbcType=INTEGER},
+      IMG_ID = #{imgId,jdbcType=INTEGER},
+      IMG_NM = #{imgNm,jdbcType=VARCHAR},
+      IMG_SYS_NM = #{imgSysNm,jdbcType=VARCHAR},
+      IMG_SIZE = #{imgSize,jdbcType=INTEGER},
+      IMG_URL = #{imgUrl,jdbcType=VARCHAR},
+      MODIFIED_DT = #{modifiedDt,jdbcType=TIMESTAMP},
+      CREATED_DT = #{createdDt,jdbcType=TIMESTAMP},
+      USER_AUTH = #{userAuth,jdbcType=VARCHAR}
+    where USER_ID = #{userId,jdbcType=VARCHAR}
+  </update>
+</mapper>

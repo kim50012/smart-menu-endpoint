@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.basoft.service.dao.group.GroupMapper">
+	<select id="getGroupListByUserId" resultMap="BaseResultMap" parameterType="java.lang.String">
+		<!-- 独立产品：因为是独立产品，系统部署于一个公司内，所以获取公司列表时只查询一个公司，该公司为内置，不可删除，无维护入口 -->
+		select
+			<include refid="Base_Column_List" />
+		from group_corp t
+		where t.is_delete='0'
+		and t.admin_user_id='root'
+		order by sort_no
+	</select>
+	
+	<!-- 根据公司id获取公司信息 -->
+	<select id="getGroupById" resultMap="BaseResultMap" parameterType="java.lang.String">
+		select
+			<include refid="Base_Column_List" />
+		from group_corp t
+		where t.is_delete='0'
+		and t.g_corp_id=#{groupId}
+	</select>
+	
+	<!-- 根据公司id修改公司信息 -->
+	<update id="updateGroupById" parameterType="com.basoft.service.entity.group.Group">
+		update group_corp
+		<set>
+			<if test="record.gCorpNm != null">
+				G_CORP_NM = #{record.gCorpNm,jdbcType=VARCHAR},
+			</if>
+			<if test="record.contactNm != null">
+				CONTACT_NM = #{record.contactNm,jdbcType=VARCHAR},
+			</if>
+			<if test="record.contactMobileNo != null">
+				CONTACT_MOBILE_NO = #{record.contactMobileNo,jdbcType=VARCHAR},
+			</if>
+			<if test="record.contactEmail != null">
+				CONTACT_EMAIL = #{record.contactEmail,jdbcType=VARCHAR},
+			</if>
+			<if test="record.contactQq != null">
+				CONTACT_QQ = #{record.contactQq,jdbcType=VARCHAR},
+			</if>
+			<if test="record.modifiedDt != null">
+				MODIFIED_DT = #{record.modifiedDt,jdbcType=TIMESTAMP},
+			</if>
+			<if test="record.createdDt != null">
+				CREATED_DT = #{record.createdDt,jdbcType=TIMESTAMP},
+			</if>
+		</set>
+		where G_CORP_ID = #{record.gCorpId,jdbcType=INTEGER}
+	</update>
+</mapper>

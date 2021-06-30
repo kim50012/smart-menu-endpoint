@@ -1,0 +1,48 @@
+{
+  "uploadFileRemoteServer":"http://wechat.batechkorea.com/file/api/v1/upload",
+  "wechatRootUrl":"http://wechat.batechkorea.com/public/wechat/#/",
+  "wechatNotifyUrl":"http://wechat.batechkorea.com/eorder/wechat/api/v1/order_pay",
+  "menuRedirectRoot":"/public/wechat/#",
+  "wechatCertPath":"PROD",
+  "jpushConfig":{
+    "appKey":"96a4e078fc06a27c63cfcd7d",
+    "secretKey":"38b8a757964781ca42c62473"
+  },
+  "externThreadPool":{
+      "multipleOfCore":4,
+      "maxPoolOfCore":16,
+      "keepAliveSeconds":10,
+      "queueCapacity":100
+  },
+  "redis-config":{
+    "server":"127.0.0.1",
+    "port":6379,
+    "password":"kdi5006",
+    "instanceId": "crs-h9jbdkwk",
+    "pool.max-idle":5000,
+    "pool.min-idle":1,
+    "timeout":5000,
+    "pool.max-wait":5000
+  },
+  "mysqlDataSource-config":{
+    "url":"jdbc:mysql://127.0.0.1:3306/eorder?useUnicode=true&characterEncoding=utf-8&allowMultiQueries=true&useSSL=false",
+    "user":"root",
+    "password":"kdi5006",
+    "useSsl":"true"
+  },
+  "wxPay-config": {
+    "running-dev":"real",
+    "qr-time":2592000,
+    "store-qr-cnt":50
+  },
+  "wechatAppId": "wx7202c9b1660cc48d",
+  "wechatDomain":"wechat.batechkorea.com",
+  "template-msg-config": {
+    "hotel_booking_confirm":"Spg0HNY6NyikPXLx4z6vdyvy8rz7lDVdNcgBEqSApUY",
+    "clinic_booking_confirm":"sDQSm4JQ79ktmMNuzMeiTOi7t7ZguhN3jLv3bifZXbg",
+    "shopping_order_confirm":"pQ2C-A_awLihegdy6trPDRvw8UNwDpo-opphmwZrbwE",
+    "order_cancel":"J8oWWhADi5zsm5XbaGSx0v0mEmM7OufD9sZuZnZOVeU",
+    "order_status_change":"1ayeEGiONWEoO5j5dNhpjipl6DMoQaHhiKBza3nopjI"
+  },
+  "serverType":"prod"
+}

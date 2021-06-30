@@ -1,0 +1,244 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.basoft.service.dao.customer.custShop.CustShopMapper" >
+  <resultMap id="BaseResultMap" type="com.basoft.service.entity.customer.custShop.CustShop" >
+    <id column="CUST_SYS_ID" property="custSysId" jdbcType="BIGINT" />
+    <id column="SHOP_ID" property="shopId" jdbcType="BIGINT" />
+    <result column="CREATED_DT" property="createdDt" jdbcType="TIMESTAMP" />
+    <result column="GRADE_ID" property="gradeId" jdbcType="BIGINT" />
+    <result column="CUST_POINT" property="custPoint" jdbcType="INTEGER" />
+    <result column="FOLLOW_DT" property="followDt" jdbcType="TIMESTAMP" />
+    <result column="FOLLOW_DT_CAN" property="followDtCan" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    CUST_SYS_ID, SHOP_ID, CREATED_DT, GRADE_ID, CUST_POINT, FOLLOW_DT, FOLLOW_DT_CAN
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.basoft.service.entity.customer.custShop.CustShopExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    'true' as QUERYID,
+    <include refid="Base_Column_List" />
+    from cust_shop
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="com.basoft.service.entity.customer.custShop.CustShopKey" >
+    select 
+    <include refid="Base_Column_List" />
+    from cust_shop
+    where CUST_SYS_ID = #{custSysId,jdbcType=BIGINT}
+      and SHOP_ID = #{shopId,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="com.basoft.service.entity.customer.custShop.CustShopKey" >
+    delete from cust_shop
+    where CUST_SYS_ID = #{custSysId,jdbcType=BIGINT}
+      and SHOP_ID = #{shopId,jdbcType=BIGINT}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.basoft.service.entity.customer.custShop.CustShopExample" >
+    delete from cust_shop
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.basoft.service.entity.customer.custShop.CustShop" >
+    insert into cust_shop (CUST_SYS_ID, SHOP_ID, CREATED_DT, 
+      GRADE_ID, CUST_POINT, FOLLOW_DT, 
+      FOLLOW_DT_CAN)
+    values (#{custSysId,jdbcType=BIGINT}, #{shopId,jdbcType=BIGINT}, #{createdDt,jdbcType=TIMESTAMP}, 
+      #{gradeId,jdbcType=BIGINT}, #{custPoint,jdbcType=INTEGER}, #{followDt,jdbcType=TIMESTAMP}, 
+      #{followDtCan,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.basoft.service.entity.customer.custShop.CustShop" >
+    insert into cust_shop
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="custSysId != null" >
+        CUST_SYS_ID,
+      </if>
+      <if test="shopId != null" >
+        SHOP_ID,
+      </if>
+      <if test="createdDt != null" >
+        CREATED_DT,
+      </if>
+      <if test="gradeId != null" >
+        GRADE_ID,
+      </if>
+      <if test="custPoint != null" >
+        CUST_POINT,
+      </if>
+      <if test="followDt != null" >
+        FOLLOW_DT,
+      </if>
+      <if test="followDtCan != null" >
+        FOLLOW_DT_CAN,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="custSysId != null" >
+        #{custSysId,jdbcType=BIGINT},
+      </if>
+      <if test="shopId != null" >
+        #{shopId,jdbcType=BIGINT},
+      </if>
+      <if test="createdDt != null" >
+        #{createdDt,jdbcType=TIMESTAMP},
+      </if>
+      <if test="gradeId != null" >
+        #{gradeId,jdbcType=BIGINT},
+      </if>
+      <if test="custPoint != null" >
+        #{custPoint,jdbcType=INTEGER},
+      </if>
+      <if test="followDt != null" >
+        #{followDt,jdbcType=TIMESTAMP},
+      </if>
+      <if test="followDtCan != null" >
+        #{followDtCan,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.basoft.service.entity.customer.custShop.CustShopExample" resultType="java.lang.Integer" >
+    select count(*) from cust_shop
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update cust_shop
+    <set >
+      <if test="record.custSysId != null" >
+        CUST_SYS_ID = #{record.custSysId,jdbcType=BIGINT},
+      </if>
+      <if test="record.shopId != null" >
+        SHOP_ID = #{record.shopId,jdbcType=BIGINT},
+      </if>
+      <if test="record.createdDt != null" >
+        CREATED_DT = #{record.createdDt,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.gradeId != null" >
+        GRADE_ID = #{record.gradeId,jdbcType=BIGINT},
+      </if>
+      <if test="record.custPoint != null" >
+        CUST_POINT = #{record.custPoint,jdbcType=INTEGER},
+      </if>
+      <if test="record.followDt != null" >
+        FOLLOW_DT = #{record.followDt,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.followDtCan != null" >
+        FOLLOW_DT_CAN = #{record.followDtCan,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update cust_shop
+    set CUST_SYS_ID = #{record.custSysId,jdbcType=BIGINT},
+      SHOP_ID = #{record.shopId,jdbcType=BIGINT},
+      CREATED_DT = #{record.createdDt,jdbcType=TIMESTAMP},
+      GRADE_ID = #{record.gradeId,jdbcType=BIGINT},
+      CUST_POINT = #{record.custPoint,jdbcType=INTEGER},
+      FOLLOW_DT = #{record.followDt,jdbcType=TIMESTAMP},
+      FOLLOW_DT_CAN = #{record.followDtCan,jdbcType=TIMESTAMP}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.basoft.service.entity.customer.custShop.CustShop" >
+    update cust_shop
+    <set >
+      <if test="createdDt != null" >
+        CREATED_DT = #{createdDt,jdbcType=TIMESTAMP},
+      </if>
+      <if test="gradeId != null" >
+        GRADE_ID = #{gradeId,jdbcType=BIGINT},
+      </if>
+      <if test="custPoint != null" >
+        CUST_POINT = #{custPoint,jdbcType=INTEGER},
+      </if>
+      <if test="followDt != null" >
+        FOLLOW_DT = #{followDt,jdbcType=TIMESTAMP},
+      </if>
+      <if test="followDtCan != null" >
+        FOLLOW_DT_CAN = #{followDtCan,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where CUST_SYS_ID = #{custSysId,jdbcType=BIGINT}
+      and SHOP_ID = #{shopId,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.basoft.service.entity.customer.custShop.CustShop" >
+    update cust_shop
+    set CREATED_DT = #{createdDt,jdbcType=TIMESTAMP},
+      GRADE_ID = #{gradeId,jdbcType=BIGINT},
+      CUST_POINT = #{custPoint,jdbcType=INTEGER},
+      FOLLOW_DT = #{followDt,jdbcType=TIMESTAMP},
+      FOLLOW_DT_CAN = #{followDtCan,jdbcType=TIMESTAMP}
+    where CUST_SYS_ID = #{custSysId,jdbcType=BIGINT}
+      and SHOP_ID = #{shopId,jdbcType=BIGINT}
+  </update>
+</mapper>

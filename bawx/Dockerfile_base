@@ -1,0 +1,93 @@
+
+FROM 366101287582.dkr.ecr.ap-northeast-2.amazonaws.com/basoft-eorder:maven-3.6
+
+MAINTAINER woonill@aliyun.com
+
+
+
+
+RUN mv /etc/apt/sources.list /etc/apt/sources.list.bak && \
+    echo "deb-src http://archive.ubuntu.com/ubuntu xenial main restricted" >/etc/apt/sources.list && \
+    echo "deb http://mirrors.aliyun.com/ubuntu/ xenial main restricted" >>/etc/apt/sources.list && \
+    echo "deb-src http://mirrors.aliyun.com/ubuntu/ xenial main restricted multiverse universe" >>/etc/apt/sources.list && \
+    echo "deb http://mirrors.aliyun.com/ubuntu/ xenial-updates main restricted" >>/etc/apt/sources.list && \
+    echo "deb-src http://mirrors.aliyun.com/ubuntu/ xenial-updates main restricted multiverse universe" >>/etc/apt/sources.list && \
+    echo "deb http://mirrors.aliyun.com/ubuntu/ xenial universe" >>/etc/apt/sources.list && \
+    echo "deb http://mirrors.aliyun.com/ubuntu/ xenial-updates universe" >>/etc/apt/sources.list && \
+    echo "deb http://mirrors.aliyun.com/ubuntu/ xenial multiverse" >>/etc/apt/sources.list && \
+    echo "deb http://mirrors.aliyun.com/ubuntu/ xenial-updates multiverse" >>/etc/apt/sources.list && \
+    echo "deb http://mirrors.aliyun.com/ubuntu/ xenial-backports main restricted universe multiverse" >>/etc/apt/sources.list && \
+    echo "deb-src http://mirrors.aliyun.com/ubuntu/ xenial-backports main restricted universe multiverse" >>/etc/apt/sources.list && \
+    echo "deb http://archive.canonical.com/ubuntu xenial partner" >>/etc/apt/sources.list && \
+    echo "deb-src http://archive.canonical.com/ubuntu xenial partner" >>/etc/apt/sources.list && \
+    echo "deb http://mirrors.aliyun.com/ubuntu/ xenial-security main restricted" >>/etc/apt/sources.list && \
+    echo "deb-src http://mirrors.aliyun.com/ubuntu/ xenial-security main restricted multiverse universe" >>/etc/apt/sources.list && \
+    echo "deb http://mirrors.aliyun.com/ubuntu/ xenial-security universe" >>/etc/apt/sources.list && \
+    echo "deb http://mirrors.aliyun.com/ubuntu/ xenial-security multiverse" >>/etc/apt/sources.list
+
+
+
+RUN apt-get update
+
+
+RUN apt-get -y install tzdata && \
+       ln -sf /usr/share/zoneinfo/Asia/Seoul /etc/localtime && \
+	    echo "Asia/Shanghai" > /etc/timezone && \
+    	dpkg-reconfigure -f noninteractive tzdata
+
+RUN echo date
+
+# charset
+RUN apt-get install -y locales
+
+RUN locale-gen zh_CN.UTF-8
+ENV LANG zh_CN.UTF-8
+ENV LANGUAGE zh_CN:zh
+ENV LC_ALL zh_CN.UTF-8
+
+
+
+
+
+
+RUN echo $JAVA_HOME
+RUN env
+
+RUN mkdir -p /usr/local/bawx
+WORKDIR /usr/local/bawx
+
+
+#add all files
+
+ADD ./service-definition/src ./service-definition/src
+ADD ./service-definition/pom.xml ./service-definition/pom.xml
+
+#RUN ls /usr/local/bawx/service-definition
+
+ADD ./service-impl/src ./service-impl/src
+ADD ./service-impl/pom.xml ./service-impl/pom.xml
+
+ADD ./web-sys/src ./web-sys/src
+ADD ./web-sys/pom.xml ./web-sys/pom.xml
+
+
+
+ADD ./pom.xml ./pom.xml
+
+RUN echo $USER_HOME_DIR
+
+
+RUN pwd
+RUN ls
+
+RUN mvn install -Dmaven.test.skip=true
+
+WORKDIR /usr/local/bawx/web-sys/target
+RUN chmod +x run.sh
+#WORKDIR /usr/local/bawx/target
+
+
+#useage  docker run -it -e JAVA_OPTS='-server -Xms2048m -Xmx2048m -XX:+UseParallelGC'  d4aaa2845a9e --server.port=9000
+
+ENTRYPOINT ["/usr/local/bawx/web-sys/target/run.sh"]
+

@@ -1,0 +1,30 @@
+# 基础镜像使用java
+FROM base-env-jdk:0.0.1
+# 作者
+MAINTAINER basoft
+
+# charset
+RUN apt-get install -y locales
+
+RUN locale-gen zh_CN.UTF-8
+ENV LANG zh_CN.UTF-8
+ENV LANGUAGE zh_CN:zh
+ENV LC_ALL zh_CN.UTF-8
+# VOLUME 指定了临时文件目录为/tmp。
+# 其效果是在主机 /var/lib/docker 目录下创建了一个临时文件，并链接到容器的/tmp
+VOLUME /tmp
+# 将jar包添加到容器中并更名为app.jar
+ADD ./web-sys/target/*.jar app.jar
+ADD ./web-sys/target/ueditor ueditor
+#jar包解压后缺少lib和配置文件先copy过去吧
+ADD ./web-sys/target/application.properties application.properties
+ADD ./web-sys/target/application-dev.properties application-dev.properties
+ADD ./web-sys/target/application-local.properties application-local.properties
+ADD ./web-sys/target/application-test.properties application-test.properties
+ADD ./web-sys/target/application-prod.properties application-prod.properties
+ADD ./web-sys/target/application-baprod.properties application-baprod.properties
+ADD ./web-sys/target/logback-spring.xml logback-spring.xml
+ADD ./web-sys/target/lib lib
+# 运行jar包
+RUN bash -c 'touch /app.jar'
+ENTRYPOINT ["java","-Djava.security.egd=file:/dev/./urandom","-jar","/app.jar"]

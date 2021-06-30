@@ -1,0 +1,475 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.basoft.service.dao.wechat.common.WechatMapper">
+	<select id="getAccessToken" parameterType="string" resultType="string">
+		SELECT TOKEN
+		FROM WX_TOKEN
+		WHERE SYS_ID = #{sysId}
+		AND TOKEN_EXPIRES_DT > SYSDATE()
+	</select>
+
+	<update id="saveAccessToken" parameterType="com.basoft.core.ware.wechat.domain.AccessToken">
+		REPLACE INTO
+		WX_TOKEN 
+		(SYS_ID,TOKEN,TOKEN_EXPIRES_DT,CREATE_DT,UPDATE_DT)
+		VALUES 
+		(#{SYS_ID}, #{ACCESS_TOKEN}, DATE_ADD(SYSDATE(), INTERVAL 119 MINUTE), SYSDATE(), SYSDATE())
+	</update>
+
+	<select id="getSessionMemberById" parameterType="string" resultType="com.basoft.core.ware.wechat.domain.user.SessionMember">
+	   	SELECT
+			A.CUST_SYS_ID as custSysId
+			,A.CUST_LOGIN_ID as custLoginId
+			,A.WX_IF_OPENID_P AS openid
+			,B.SYS_ID AS sysid
+			,(select SHOP_ID from WX_APP_INFO T WHERE T.SYS_ID  = B.SYS_ID) AS shopId 
+			,A.WX_IF_HEADIMGURL as custImgUrl
+			, B.NICKNAME as nickname
+		FROM CUST A, WX_USER B
+		WHERE A.WX_IF_OPENID_P = B.OPENID
+			AND B.OPENID = #{openid}
+			AND B.SUBSCRIBE = 1
+    </select>
+    
+    <select id="getSessionMemberByCustId" parameterType="java.lang.Integer" resultType="com.basoft.core.ware.wechat.domain.user.SessionMember">
+	   	SELECT
+			A.CUST_SYS_ID as custSysId
+			,A.CUST_LOGIN_ID as custLoginId
+			,A.WX_IF_OPENID_P AS openid
+			,B.SYS_ID AS sysid
+			,(select SHOP_ID from WX_APP_INFO T WHERE T.SYS_ID  = B.SYS_ID) AS shopId 
+			,A.WX_IF_HEADIMGURL as custImgUrl
+			, B.NICKNAME as nickname
+		FROM  CUST A, WX_USER B
+		WHERE A.WX_IF_OPENID_P = B.OPENID
+			AND A.CUST_SYS_ID = #{userId}
+			AND B.SUBSCRIBE = 1
+    </select>
+    
+    <select id="getUserInfoByOpenid" parameterType="string" resultType="com.basoft.core.ware.wechat.domain.user.WXUser">
+	    SELECT
+	       OPENID
+	      ,SYS_ID
+	      ,NICKNAME
+	      ,SEX
+	      ,SUBSCRIBE
+	      ,CITY
+	      ,COUNTRY
+	      ,PROVINCE
+	      ,LANGUAGE
+	      ,HEADIMGURL
+	      ,SUBSCRIBE_TIME
+	      ,UNIONID
+	      ,GROUPID
+	  	FROM WX_USER
+	  	where OPENID = #{openid}
+    </select>
+    
+    <!-- MYSQL 用户新增或更新 -->
+	<select id="userSubscribe" parameterType="com.basoft.core.ware.wechat.domain.user.WXUser" resultType="java.util.Map">
+		<![CDATA[
+			{CALL BATCH_WX_USER_SUBSCRIBE(
+				#{openid},
+				#{sysId},
+				#{unionid},
+				#{nickname} ,
+				#{nickUnemoji},
+				#{sex},
+				#{city},
+				#{country},
+				#{province},
+				#{language},
+				#{headimgurl},
+				#{subscribe_time},
+				#{groupid},
+				#{remark}
+			)}
+		]]>
+	</select>
+    
+    <select id="userUnsubscribe" parameterType="com.basoft.core.ware.wechat.domain.user.WXUser" resultType="java.util.Map">
+	    <![CDATA[
+			 {CALL BATCH_WX_USER_UNSUBSCRIBE(#{openid})}
+	    ]]>
+    </select>
+
+	<select id="batchUserUnsubscribe" statementType="CALLABLE">
+		<![CDATA[
+			 {call batch_wx_user_unsubscribe_batch(
+				 #{sysId,mode=IN,jdbcType=VARCHAR},
+				 #{ifStartDate,mode=IN,jdbcType=TIMESTAMP}
+			 )}
+	    ]]>
+	</select>
+    
+    <!-- MYSQL 客户新增或更新 -->
+    <select id="saveCust" parameterType="com.basoft.service.entity.customer.cust.Cust" resultType="java.util.List">
+	    <![CDATA[
+			 {CALL BATCH_CUST_INSERT(
+			 	#{shopId},
+			 	#{custSysId},
+			 	#{custLoginId},
+				#{wxIfOpenidP},
+				#{email},
+				#{mobileNo},
+				#{wxIfIsSubscribe},
+				#{wxIfNickNm},
+				#{wxIfNickUnemoji},
+				#{wxIfSexId},
+				#{wxIfLanguage},
+				#{wxIfCountryNm},
+				#{wxIfProvinceNm},
+				#{wxIfCityNm},
+				#{wxIfHeadimgurl},
+				#{wxIfSubscribeTime},
+				#{wxIfUnionid},
+				#{wxIfGroupid},
+				#{wxIfRemark},
+				#{wxSubscribeDt},
+				#{wxIdP},
+				#{custNickNm},
+				#{custRealNm},
+				#{pwd}
+			)}
+	    ]]>
+    </select>
+    
+	<insert id="insertTextMsg" parameterType="com.basoft.core.ware.wechat.domain.msg.Text">
+		INSERT INTO WX_MESSAGE
+	    	(ID
+	    	,SYS_ID
+	        ,MSG_ID
+	        ,FROM_TYPE
+	        ,FROM_USER
+	        ,TO_USER
+	        ,MSG_TYPE
+	        ,CONTENT
+	        ,RECEIVE_DT)
+	     VALUES
+	        (#{id}
+	        ,#{sysId}
+	        ,#{msgId}
+	        ,1
+	        ,#{fromUserName}
+	        ,#{toUserName}
+	        ,#{msgType}
+	        ,#{content}
+	        ,sysdate())
+ 	</insert>
+ 	
+ 	<!-- 关注回复 -->
+    <select id="getFocusMessage" resultType="java.util.HashMap">
+		SELECT M.SHOP_ID,
+	    	M.MESSAGE_ID,
+	    	M.MSG_GROUP,
+	    	M.MSG_TITLE,
+	    	M.SEND_FILE_TYPE,
+	    	M.MATERIAL_FILE_ID,
+	    	M.MATERIAL_FILE_WX_ID,
+	    	M.COVER_PAGE_ID,
+	    	M.SHOP_GOODS_URL,
+			M.SEND_MSG_BODY,
+			M.SEND_TYPE,
+			M.SEND_TYPE_ID
+		FROM SHOP_WX_MESSAGE M
+		WHERE M.MSG_GROUP='FOCUS'
+			AND M.IS_DELETE = 0
+			AND M.SHOP_ID= #{shopId}
+    </select>
+    
+    <!-- 关键字回复 -->
+    <select id="getKeyWordMessage" resultType="java.util.HashMap">
+    	SELECT K.SHOP_ID,
+	    	K.KEYWORD_ID,
+	    	K.MESSAGE_ID,
+	    	K.KEYWORD,
+	    	K.TABLE_NM,
+	    	M.MSG_GROUP,
+	    	M.MSG_TITLE,
+	    	M.SEND_FILE_TYPE,
+	    	M.MATERIAL_FILE_ID,
+	    	M.MATERIAL_FILE_WX_ID,
+	    	M.COVER_PAGE_ID,
+	    	M.SHOP_GOODS_URL,
+			M.SEND_MSG_BODY,
+			M.SEND_TYPE,
+			M.SEND_TYPE_ID,
+			M.CALLCENTER_ID
+		FROM SHOP_MESSAGE_KEYWORD K INNER JOIN SHOP_WX_MESSAGE M ON K.MESSAGE_ID= M.MESSAGE_ID AND K.SHOP_ID = M.SHOP_ID
+		WHERE M.MSG_GROUP='KEYWORD'
+			AND M.IS_DELETE = 0
+			AND K.KEYWORD = #{keyWord}
+			AND K.SHOP_ID= #{shopId}
+    </select>
+    
+    <!-- 自动回复 -->
+    <select id="getAutoMessage" resultType="java.util.HashMap">
+		SELECT M.SHOP_ID,
+	    	M.MESSAGE_ID,
+	    	M.MSG_GROUP,
+	    	M.MSG_TITLE,
+	    	M.SEND_FILE_TYPE,
+	    	M.MATERIAL_FILE_ID,
+	    	M.MATERIAL_FILE_WX_ID,
+	    	M.COVER_PAGE_ID,
+	    	M.SHOP_GOODS_URL,
+			M.SEND_MSG_BODY,
+			M.SEND_TYPE,
+			M.SEND_TYPE_ID
+		FROM SHOP_WX_MESSAGE M
+		WHERE M.MSG_GROUP='AUTO'
+			AND M.IS_DELETE = 0
+			AND M.SHOP_ID= #{shopId}
+    </select>
+    
+    <update id="updateMediaId" parameterType="java.util.HashMap">
+		 UPDATE SHOP_FILE_MST
+		 SET  MEDIA_ID = #{mediaId}
+		 	,MEDIA_UP_DT = sysdate()
+		 WHERE FILE_ID = #{fileId}
+	</update>
+
+
+	<!--图文群发每日数据 并插入-->
+	<insert id="insertArticleSummary" parameterType="com.basoft.core.ware.wechat.domain.statistic.ArticleSummary">
+		insert into wx_if_message_stats_data (REF_DATE, MSGID, SHOP_ID,
+		WX_MSGID, WX_NEWSID, MSG_ID,
+		NEWS_ID, INT_PAGE_READ_USER, INT_PAGE_READ_COUNT,
+		ORI_PAGE_READ_USER, ORI_PAGE_READ_COUNT, SHARE_USER,
+		SHARE_COUNT, ADD_TO_FAV_USER, ADD_TO_FAV_COUNT,
+		USER_SOURCE, TITLE,CREATE_DT)
+		values (#{ref_date}, #{msgid}, #{shopId},
+		#{wx_msgid}, #{wx_newsid}, #{msgId},
+		#{newsId,jdbcType=BIGINT}, #{int_page_read_user}, #{int_page_read_count},
+		#{ori_page_read_user}, #{ori_page_read_count}, #{share_user},
+		#{share_count}, #{add_to_fav_user}, #{add_to_fav_count},
+		#{user_source}, #{title},SYSDATE())
+	</insert>
+
+	<update id="updateArticleTargetUser" parameterType="com.basoft.core.ware.wechat.domain.statistic.ArticleDetail">
+		 update wx_if_message_stats_data set TARGET_USER = #{target_user} where REF_DATE=#{stat_date}
+	</update>
+
+
+	<select id="getMaxWxIfMsgStasDetailId" resultType="java.lang.Long">
+		select ifnull(max(id),0)as id from  wx_if_message_stats_detail
+	</select>
+	<!-- 添加图文发送统计总数 -->
+	<insert  id="insertArticleSummaryStatics" parameterType="com.basoft.core.ware.wechat.domain.statistic.ArticleGroupDetails" >
+		insert into wx_if_message_stats_detail(
+		REF_DATE,REF_HOUR,
+		MSGID,SHOP_ID,TITLE,
+		STAT_DATE, TARGET_USER, INT_PAGE_READ_USER,
+		INT_PAGE_READ_COUNT, ORI_PAGE_READ_USER, ORI_PAGE_READ_COUNT,
+		SHARE_USER, SHARE_COUNT, ADD_TO_FAV_USER,
+		ADD_TO_FAV_COUNT, INT_PAGE_FROM_SESSION_READ_USER,
+		INT_PAGE_FROM_SESSION_READ_COUNT, INT_PAGE_FROM_HIST_MSG_READ_USER,
+		INT_PAGE_FROM_HIST_MSG_READ_COUNT, INT_PAGE_FROM_FEED_READ_USER,
+		INT_PAGE_FROM_FEED_READ_COUNT, INT_PAGE_FROM_FRIENDS_READ_USER,
+		INT_PAGE_FROM_FRIENDS_READ_COUNT, INT_PAGE_FROM_OTHER_READ_USER,
+		INT_PAGE_FROM_OTHER_READ_COUNT, FEED_SHARE_FROM_SESSION_USER,
+		FEED_SHARE_FROM_SESSION_CNT, FEED_SHARE_FROM_FEED_USER,
+		FEED_SHARE_FROM_FEED_CNT, FEED_SHARE_FROM_OTHER_USER,
+		FEED_SHARE_FROM_OTHER_CNT, USER_SOURCE,
+		INT_PAGE_FROM_KANYIKAN_READ_USER,INT_PAGE_FROM_KANYIKAN_READ_COUNT,
+		INT_PAGE_FROM_SOUYISOU_READ_USER,INT_PAGE_FROM_SOUYISOU_READ_COUNT,
+		CREATE_DT)
+		values(
+		#{ref_date,jdbcType=TIMESTAMP},#{ref_hour,jdbcType=VARCHAR},
+		#{msgid,jdbcType=VARCHAR},#{shopId},#{title,jdbcType=VARCHAR},
+		#{stat_date,jdbcType=TIMESTAMP}, #{target_user,jdbcType=INTEGER}, #{int_page_read_user,jdbcType=INTEGER},
+		#{int_page_read_count,jdbcType=INTEGER}, #{ori_page_read_user,jdbcType=INTEGER},
+		#{ori_page_read_count,jdbcType=INTEGER},
+		#{share_user,jdbcType=INTEGER}, #{share_count,jdbcType=INTEGER}, #{add_to_fav_user,jdbcType=INTEGER},
+		#{add_to_fav_count,jdbcType=INTEGER}, #{int_page_from_session_read_user,jdbcType=INTEGER},
+		#{int_page_from_session_read_count,jdbcType=INTEGER}, #{int_page_from_hist_msg_read_user,jdbcType=INTEGER},
+		#{int_page_from_hist_msg_read_count,jdbcType=INTEGER}, #{int_page_from_feed_read_user,jdbcType=INTEGER},
+		#{int_page_from_feed_read_count,jdbcType=INTEGER}, #{int_page_from_friends_read_user,jdbcType=INTEGER},
+		#{int_page_from_friends_read_count,jdbcType=INTEGER}, #{int_page_from_other_read_user,jdbcType=INTEGER},
+		#{int_page_from_other_read_count,jdbcType=INTEGER}, #{feed_share_from_session_user,jdbcType=INTEGER},
+		#{feed_share_from_session_cnt,jdbcType=INTEGER}, #{feed_share_from_feed_user,jdbcType=INTEGER},
+		#{feed_share_from_feed_cnt,jdbcType=INTEGER}, #{feed_share_from_other_user,jdbcType=INTEGER},
+		#{feed_share_from_other_cnt,jdbcType=INTEGER}, #{userSource,jdbcType=INTEGER},
+		#{int_page_fromkanyikan_read_user,jdbcType=INTEGER}, #{int_page_fromkanyikan_read_count,jdbcType=INTEGER},
+		#{int_page_souyisou_read_user,jdbcType=INTEGER}, #{int_page_souyisou_read_count,jdbcType=INTEGER},
+		sysdate())
+	</insert>
+
+	<select id="getMaxWxIfMsgWeekId" resultType="java.lang.Long">
+		SELECT  ifnull(max(id),0)as id from wx_if_get_upstream_msg_week
+	</select>
+
+	<!--  插入统计周数据 -->
+	<insert id="insertBatchStreamMsgWeekList" parameterType="com.basoft.core.ware.wechat.domain.statistic.WxIfStreamMsgStatsData">
+		insert into wx_if_get_upstream_msg_week
+		(SHOP_ID,REF_DATE, MSG_TYPE,
+		MSG_USER, MSG_COUNT, COUNT_INTERVAL,TIME_TYPE,CREATE_DT)
+		values
+		(#{shopId,jdbcType=BIGINT},#{ref_date,jdbcType=VARCHAR},#{msg_type,jdbcType=TINYINT},#{msg_user,jdbcType=VARCHAR},
+		#{msg_count,jdbcType=INTEGER},#{count_interval,jdbcType=TINYINT},#{time_Type,jdbcType=TINYINT},sysdate())
+	</insert>
+
+	<!--  插入用户发送消息统计 -->
+	<insert id="insertBatchStreamMsgList" parameterType="com.basoft.core.ware.wechat.domain.statistic.WxIfStreamMsgStatsData">
+		insert into wx_if_stream_msg_stats_data
+		(SHOP_ID,REF_DATE, REF_HOUR, MSG_TYPE,
+		MSG_USER, MSG_COUNT, COUNT_INTERVAL,TIME_TYPE,CREATED_DT)
+		values
+		(#{shopId,jdbcType=BIGINT},#{ref_date,jdbcType=VARCHAR},#{ref_hour,jdbcType=VARCHAR},#{msg_type,jdbcType=TINYINT},
+		#{msg_user,jdbcType=VARCHAR},#{msg_count,jdbcType=INTEGER},
+		#{count_interval,jdbcType=TINYINT},#{time_Type,jdbcType=TINYINT},sysdate())
+	</insert>
+
+	<!-- ******************************************************定时任务锁 START************************************************************ -->
+	<!-- 查询定时任务锁状态 -->
+	<select id="selectWxBatchLock" resultType="string">
+		<!-- 状态为0则返回0；状态为1时，如果未过期则返回1，如果过期则返回0；状态为其他则返回0 -->
+		SELECT CASE WHEN IS_RUN = '0' THEN '0'
+		WHEN IS_RUN = '1' THEN
+		CASE WHEN RUN_EXPIRES_DT > sysdate() THEN '1'
+		ELSE '0' END
+		ELSE '0' END AS ISRUN
+		FROM WX_BATCH_LOCK
+		WHERE SYS_ID = #{sysId}
+		AND BATCH_TYPE = #{batchType}
+	</select>
+
+	<!--  新增定时任务锁-加锁状态 -->
+	<insert id="insertWxBatchLockStart">
+		INSERT INTO WX_BATCH_LOCK
+		(SYS_ID,
+		BATCH_TYPE,
+		IS_RUN,
+		RUN_EXPIRES_DT,
+		CREATE_DT)
+		VALUES
+		(#{sysId,jdbcType = VARCHAR},
+		#{batchType,jdbcType = INTEGER},
+		'1',
+		sysdate()  + #{expires}/(24*60),
+		sysdate() )
+	</insert>
+
+	<!-- 更新定时任务锁-加锁状态 -->
+	<update id="updateWxBatchLockStart">
+		UPDATE WX_BATCH_LOCK
+		SET IS_RUN = '1',
+		RUN_EXPIRES_DT = sysdate() + #{expires}/(24*60),
+		UPDATE_DT = SYSDATE()
+		WHERE SYS_ID = #{sysId}
+		AND BATCH_TYPE = #{batchType}
+	</update>
+
+	<!-- 更新定时任务锁-非加锁状态 -->
+	<update id="updateWxBatchLockEnd">
+		UPDATE WX_BATCH_LOCK
+		SET IS_RUN = '0',
+		RUN_EXPIRES_DT = NULL,
+		UPDATE_DT = sysdate()
+		WHERE SYS_ID = #{sysId}
+		AND BATCH_TYPE = #{batchType}
+	</update>
+	<!-- ******************************************************定时任务锁 END************************************************************ -->
+
+
+    <!-- 关键字回复 -->
+	<!--CONCAT('http://www.', REPLACE((SELECT MAX(A.URL) FROM BAWECHAT.WX_APP_INFO A WHERE A.SYS_ID = #{sysId}), 'http://', ''), '/eorder/wechat/api/v1/initbasoft/', ST.ID, '?qrTime=', date_format(date_add(CURRENT_TIME(), interval 3 hour), '%Y-%m-%d %H:%i')) AS LINK_URL-->
+    <select id="getReturnMessage" resultType="java.util.HashMap">
+		SELECT 
+				'tempMsg' AS MSG_TYPE
+		        , Q.QRCODE_ID AS KEYWORD
+		        , CONCAT(N'扫码成功，欢迎使用', CAST(ST.NUMBER AS CHAR), N'号桌') AS FIRST
+				, S.NAME AS KEYWORD1
+                , CONCAT(CAST(ST.TAG AS CHAR), N'层', CAST(ST.NUMBER AS CHAR), N'号桌') AS KEYWORD2
+                , DATE_FORMAT(SYSDATE(), '%Y-%m-%d %H:%i') AS KEYWORD3
+                , S.DETAIL_ADDR
+                , N'点击下单' AS REMARK
+		        , CONCAT(#{deployDomainPrefix}, REPLACE((SELECT MAX(A.URL) FROM BAWECHAT.WX_APP_INFO A WHERE A.SYS_ID = #{sysId}), 'http://', ''), '/eorder/wechat/api/v1/initbasoft/', ST.ID, '?qrTime=', date_format(date_add(CURRENT_TIME(), interval 3 hour), '%Y-%m-%d %H:%i')) AS LINK_URL
+                , CASE WHEN IFNULL(S.STATUS, 2) IN(2, 3) OR IFNULL(ST.STATUS, 3) = 3 THEN 'EXPIRE_QR' ELSE 'NORMAL' END AS STATUS
+                , N'你好，扫码品鉴失败' AS ER_FIRST
+                , DATE_FORMAT(SYSDATE(), '%Y-%m-%d %H:%i') AS ER_KEYWORD1
+                , N'服务已过期' AS ER_KEYWORD2
+                , N'感谢你的关注。' AS ER_REMARK
+                , IFNULL(S.STATUS, 2) AS ST_STATUS
+                , IFNULL(ST.STATUS, 3) AS QR_STATUS
+		FROM 	EORDER.STORE S
+                INNER JOIN EORDER.QRCODE Q ON S.ID = Q.STORE_ID
+				LEFT JOIN EORDER.STORE_TABLE ST ON S.ID = ST.STORE_ID AND Q.QRCODE_ID = ST.QRCODE_ID AND ST.STATUS != 3
+		WHERE 	Q.QRCODE_ID = #{keyWord}
+    </select>
+
+    
+    <select id="getListWxUser" resultType="java.util.HashMap">
+	   	SELECT
+			A.CUST_SYS_ID as custSysId
+			,A.CUST_LOGIN_ID as custLoginId
+			,A.WX_IF_OPENID_P AS openid
+			,B.SYS_ID AS sysid
+			,(select SHOP_ID from WX_APP_INFO T WHERE T.SYS_ID  = B.SYS_ID) AS shopId 
+			,A.WX_IF_HEADIMGURL as custImgUrl
+			, B.NICKNAME as nickname
+		FROM  CUST A, WX_USER B
+		WHERE A.WX_IF_OPENID_P = B.OPENID
+		AND B.SUBSCRIBE = 1
+    </select>
+
+	<!-- 查询代理商和用户的绑定关系 -->
+	<select id="queryBindInfoByOpenidAndAgent" resultType="java.util.HashMap">
+		SELECT ID,
+			AGT_ID,
+			OPEN_ID,
+			STATUS,
+			CONTRACT_ST,
+			CREATE_TIME,
+			UPDATE_TIME
+		FROM EORDER.agent_wx_map
+		WHERE OPEN_ID = #{fromUserName}
+			AND AGT_ID = #{agentId}
+    </select>
+
+	<!-- 查询代理商和用户的绑定关系 -->
+	<select id="getWxUserByOpenid" resultType="java.util.HashMap">
+	   	SELECT B.OPENID FROM  WX_USER B WHERE B.OPENID = #{fromUserName}
+    </select>
+
+	<select id="queryBindInfoByOpenid" resultType="java.util.HashMap">
+		SELECT ID,
+			AGT_ID,
+			OPEN_ID,
+			STATUS,
+			CONTRACT_ST,
+			CREATE_TIME,
+			UPDATE_TIME
+		FROM EORDER.agent_wx_map
+		WHERE OPEN_ID = #{fromUserName}
+    </select>
+
+	<!-- 绑定代理商和用户的关系 -->
+	<insert id="bandAgentAndOpenid">
+		INSERT INTO EORDER.agent_wx_map
+		(AGT_ID,
+		OPEN_ID,
+		STATUS,
+		CONTRACT_ST,
+		CREATE_TIME,
+		UPDATE_TIME)
+		VALUES
+		(#{agentId,jdbcType = VARCHAR},
+		#{fromUserName,jdbcType = VARCHAR},
+		'1',
+		now(),
+		now(),
+		now())
+	</insert>
+
+	<!-- 根据代理商ID查询代理商信息 -->
+	<select id="getAgentListByAgentId" resultType="java.util.HashMap">
+		SELECT AGT_ID,
+			AGT_TYPE,
+			AGT_NAME,
+			STATUS
+		FROM EORDER.agent
+		WHERE AGT_ID = #{agentId}
+			AND STATUS = 1
+    </select>
+</mapper>

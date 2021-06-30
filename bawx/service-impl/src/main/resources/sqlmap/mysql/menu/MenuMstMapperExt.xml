@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.basoft.service.dao.menu.MenuMstMapper" >
+
+    <resultMap id="BaseResultDto" type="com.basoft.service.dto.menu.MenuDto" >
+        <id column="ID" property="id" jdbcType="INTEGER" />
+        <result column="MENU_ID" property="menuId" jdbcType="INTEGER" />
+        <result column="MENU_NM" property="menuNm" jdbcType="VARCHAR" />
+        <result column="MENU_PID" property="menuPid" jdbcType="INTEGER" />
+        <result column="MENU_ICON" property="menuIcon" jdbcType="VARCHAR" />
+        <result column="MENU_LEVEL" property="menuLevel" jdbcType="TINYINT" />
+        <result column="MENU_URL" property="menuUrl" jdbcType="VARCHAR" />
+        <result column="ORDER_BY" property="orderBy" jdbcType="INTEGER" />
+        <result column="ACTIVE_STS" property="activeSts" jdbcType="TINYINT" />
+    </resultMap>
+
+    <sql id="menuWhere">
+        WHERE 1=1
+        <if test="menuNm != null and menuNm!=''">
+            AND MENU_NM like concat('%',#{menuNm},'%')
+        </if>
+        <if test="menuLevel != null and menuLevel!=''">
+            AND MENU_LEVEL = #{menuLevel}
+        </if>
+        <if test="pid != null and pid!=''">
+            AND MENU_PID = #{pid}
+        </if>
+        <if test="menuId != null and menuId!=''">
+            AND MENU_ID = #{menuId}
+        </if>
+        <if test="disabled != null and disabled!=''">
+            AND DISABLED = #{disabled}
+        </if>
+    </sql>
+
+    <select id="menuFindAll" resultMap="BaseResultDto">
+        SELECT
+        <include refid="Base_Column_List" />,
+        getCode('shop_wx_menu','MENU_STS',mu.ACTIVE_STS)activeStStr
+        FROM menu_mst mu
+        <include refid="menuWhere" />
+        ORDER BY  ORDER_BY asc
+    </select>
+
+    <!--根据父id查询菜单-->
+    <select id="menuFindByPid" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM menu_mst
+        WHERE MENU_ID = #{pid}
+        ORDER BY  ORDER_BY asc
+    </select>
+
+    <update id="updateChildMenu">
+        update menu_mst
+        set ACTIVE_STS = #{record.activeSts,jdbcType=TINYINT}
+        where ID in
+        <foreach collection="menuMstList" item="var" open="(" separator="," close=")">
+            #{var.id}
+        </foreach>
+    </update>
+
+    <select id="selectMaxOrder" resultType="java.lang.Integer">
+        SELECT  max(ORDER_BY)ORDER_BY FROM  menu_mst
+    </select>
+
+    <!--查询一级菜单-->
+    <select id="findMenuByPid" resultMap="BaseResultDto">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM menu_mst
+        WHERE 1=1
+        <if test="menuList != null and menuList.size()>0">
+            and MENU_ID in
+            <foreach collection="menuList" item="one" open="(" close=")" separator="," >
+                (#{one.menuId})
+            </foreach>
+        </if>
+        ORDER BY  ORDER_BY asc
+    </select>
+</mapper>

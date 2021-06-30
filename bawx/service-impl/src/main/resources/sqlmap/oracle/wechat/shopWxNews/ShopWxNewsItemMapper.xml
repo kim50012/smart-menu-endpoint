@@ -1,0 +1,496 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.basoft.service.dao.wechat.shopWxNews.ShopWxNewsItemMapper" >
+  <resultMap id="BaseResultMap" type="com.basoft.service.entity.wechat.shopWxNews.ShopWxNewsItem" >
+    <id column="SHOP_ID" property="shopId" jdbcType="BIGINT" />
+    <id column="MSG_ID" property="msgId" jdbcType="BIGINT" />
+    <id column="NEWS_ID" property="newsId" jdbcType="BIGINT" />
+    <result column="MFILE_ID" property="mfileId" jdbcType="BIGINT" />
+    <result column="MAUTHOR" property="mauthor" jdbcType="VARCHAR" />
+    <result column="MTITLE" property="mtitle" jdbcType="VARCHAR" />
+    <result column="MSHOW_COVER_PIC" property="mshowCoverPic" jdbcType="TINYINT" />
+    <result column="IS_DELETE" property="isDelete" jdbcType="INTEGER" />
+    <result column="CREATED_ID" property="createdId" jdbcType="VARCHAR" />
+    <result column="MODIFIED_ID" property="modifiedId" jdbcType="VARCHAR" />
+    <result column="CREATED_DT" property="createdDt" jdbcType="TIMESTAMP" />
+    <result column="MODIFIED_DT" property="modifiedDt" jdbcType="TIMESTAMP" />
+    <result column="READ_CNT" property="readCnt" jdbcType="INTEGER" />
+    <result column="LIST_IMG" property="listImg" jdbcType="INTEGER" />
+    <result column="NEWS_TYPE" property="newsType" jdbcType="INTEGER" />
+  </resultMap>
+  <resultMap id="ResultMapWithBLOBs" type="com.basoft.service.entity.wechat.shopWxNews.ShopWxNewsItemWithBLOBs" extends="BaseResultMap" >
+    <result column="MSOURCE_URL" property="msourceUrl" jdbcType="VARCHAR" />
+    <result column="MCONTENT" property="mcontent" jdbcType="CLOB" />
+    <result column="MDIGEST" property="mdigest" jdbcType="VARCHAR" />
+    <result column="MCONTENTWECHAT" property="mcontentwechat" jdbcType="CLOB" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    SHOP_ID, MSG_ID, NEWS_ID, MFILE_ID, MAUTHOR, MTITLE, MSHOW_COVER_PIC, IS_DELETE, 
+    CREATED_ID, MODIFIED_ID, CREATED_DT, MODIFIED_DT, READ_CNT, LIST_IMG, NEWS_TYPE
+  </sql>
+  <sql id="Blob_Column_List" >
+    MSOURCE_URL, MCONTENT, MDIGEST, MCONTENTWECHAT
+  </sql>
+  <select id="selectByExampleWithBLOBs" resultMap="ResultMapWithBLOBs" parameterType="com.basoft.service.entity.wechat.shopWxNews.ShopWxNewsItemExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    'true' as QUERYID,
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from WX_NEWS_ITEM
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.basoft.service.entity.wechat.shopWxNews.ShopWxNewsItemExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    'true' as QUERYID,
+    <include refid="Base_Column_List" />
+    from WX_NEWS_ITEM
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="com.basoft.service.entity.wechat.shopWxNews.ShopWxNewsItemKey" >
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from WX_NEWS_ITEM
+    where SHOP_ID = #{shopId,jdbcType=BIGINT}
+      and MSG_ID = #{msgId,jdbcType=BIGINT}
+      and NEWS_ID = #{newsId,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="com.basoft.service.entity.wechat.shopWxNews.ShopWxNewsItemKey" >
+    delete from WX_NEWS_ITEM
+    where SHOP_ID = #{shopId,jdbcType=BIGINT}
+      and MSG_ID = #{msgId,jdbcType=BIGINT}
+      and NEWS_ID = #{newsId,jdbcType=BIGINT}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.basoft.service.entity.wechat.shopWxNews.ShopWxNewsItemExample" >
+    delete from WX_NEWS_ITEM
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.basoft.service.entity.wechat.shopWxNews.ShopWxNewsItemWithBLOBs" >
+    insert into WX_NEWS_ITEM (SHOP_ID, MSG_ID, NEWS_ID, 
+      MFILE_ID, MAUTHOR, MTITLE, 
+      MSHOW_COVER_PIC, IS_DELETE, CREATED_ID, 
+      MODIFIED_ID, CREATED_DT, MODIFIED_DT, 
+      READ_CNT, LIST_IMG, NEWS_TYPE, 
+      MSOURCE_URL, MCONTENT, MDIGEST, 
+      MCONTENTWECHAT)
+    values (#{shopId,jdbcType=BIGINT}, #{msgId,jdbcType=BIGINT}, #{newsId,jdbcType=BIGINT}, 
+      #{mfileId,jdbcType=BIGINT}, #{mauthor,jdbcType=VARCHAR}, #{mtitle,jdbcType=VARCHAR}, 
+      #{mshowCoverPic,jdbcType=TINYINT}, #{isDelete,jdbcType=INTEGER}, #{createdId,jdbcType=VARCHAR}, 
+      #{modifiedId,jdbcType=VARCHAR}, #{createdDt,jdbcType=TIMESTAMP}, #{modifiedDt,jdbcType=TIMESTAMP}, 
+      #{readCnt,jdbcType=INTEGER}, #{listImg,jdbcType=INTEGER}, #{newsType,jdbcType=INTEGER}, 
+      #{msourceUrl,jdbcType=VARCHAR}, #{mcontent,jdbcType=CLOB}, #{mdigest,jdbcType=VARCHAR}, 
+      #{mcontentwechat,jdbcType=CLOB})
+  </insert>
+  <insert id="insertSelective" parameterType="com.basoft.service.entity.wechat.shopWxNews.ShopWxNewsItemWithBLOBs" >
+    insert into WX_NEWS_ITEM
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="shopId != null" >
+        SHOP_ID,
+      </if>
+      <if test="msgId != null" >
+        MSG_ID,
+      </if>
+      <if test="newsId != null" >
+        NEWS_ID,
+      </if>
+      <if test="mfileId != null" >
+        MFILE_ID,
+      </if>
+      <if test="mauthor != null" >
+        MAUTHOR,
+      </if>
+      <if test="mtitle != null" >
+        MTITLE,
+      </if>
+      <if test="mshowCoverPic != null" >
+        MSHOW_COVER_PIC,
+      </if>
+      <if test="isDelete != null" >
+        IS_DELETE,
+      </if>
+      <if test="createdId != null" >
+        CREATED_ID,
+      </if>
+      <if test="modifiedId != null" >
+        MODIFIED_ID,
+      </if>
+      <if test="createdDt != null" >
+        CREATED_DT,
+      </if>
+      <if test="modifiedDt != null" >
+        MODIFIED_DT,
+      </if>
+      <if test="readCnt != null" >
+        READ_CNT,
+      </if>
+      <if test="listImg != null" >
+        LIST_IMG,
+      </if>
+      <if test="newsType != null" >
+        NEWS_TYPE,
+      </if>
+      <if test="msourceUrl != null" >
+        MSOURCE_URL,
+      </if>
+      <if test="mcontent != null" >
+        MCONTENT,
+      </if>
+      <if test="mdigest != null" >
+        MDIGEST,
+      </if>
+      <if test="mcontentwechat != null" >
+        MCONTENTWECHAT,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="shopId != null" >
+        #{shopId,jdbcType=BIGINT},
+      </if>
+      <if test="msgId != null" >
+        #{msgId,jdbcType=BIGINT},
+      </if>
+      <if test="newsId != null" >
+        #{newsId,jdbcType=BIGINT},
+      </if>
+      <if test="mfileId != null" >
+        #{mfileId,jdbcType=BIGINT},
+      </if>
+      <if test="mauthor != null" >
+        #{mauthor,jdbcType=VARCHAR},
+      </if>
+      <if test="mtitle != null" >
+        #{mtitle,jdbcType=VARCHAR},
+      </if>
+      <if test="mshowCoverPic != null" >
+        #{mshowCoverPic,jdbcType=TINYINT},
+      </if>
+      <if test="isDelete != null" >
+        #{isDelete,jdbcType=INTEGER},
+      </if>
+      <if test="createdId != null" >
+        #{createdId,jdbcType=VARCHAR},
+      </if>
+      <if test="modifiedId != null" >
+        #{modifiedId,jdbcType=VARCHAR},
+      </if>
+      <if test="createdDt != null" >
+        #{createdDt,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifiedDt != null" >
+        #{modifiedDt,jdbcType=TIMESTAMP},
+      </if>
+      <if test="readCnt != null" >
+        #{readCnt,jdbcType=INTEGER},
+      </if>
+      <if test="listImg != null" >
+        #{listImg,jdbcType=INTEGER},
+      </if>
+      <if test="newsType != null" >
+        #{newsType,jdbcType=INTEGER},
+      </if>
+      <if test="msourceUrl != null" >
+        #{msourceUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="mcontent != null" >
+        #{mcontent,jdbcType=CLOB},
+      </if>
+      <if test="mdigest != null" >
+        #{mdigest,jdbcType=VARCHAR},
+      </if>
+      <if test="mcontentwechat != null" >
+        #{mcontentwechat,jdbcType=CLOB},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.basoft.service.entity.wechat.shopWxNews.ShopWxNewsItemExample" resultType="java.lang.Integer" >
+    select count(*) from WX_NEWS_ITEM
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update WX_NEWS_ITEM
+    <set >
+      <if test="record.shopId != null" >
+        SHOP_ID = #{record.shopId,jdbcType=BIGINT},
+      </if>
+      <if test="record.msgId != null" >
+        MSG_ID = #{record.msgId,jdbcType=BIGINT},
+      </if>
+      <if test="record.newsId != null" >
+        NEWS_ID = #{record.newsId,jdbcType=BIGINT},
+      </if>
+      <if test="record.mfileId != null" >
+        MFILE_ID = #{record.mfileId,jdbcType=BIGINT},
+      </if>
+      <if test="record.mauthor != null" >
+        MAUTHOR = #{record.mauthor,jdbcType=VARCHAR},
+      </if>
+      <if test="record.mtitle != null" >
+        MTITLE = #{record.mtitle,jdbcType=VARCHAR},
+      </if>
+      <if test="record.mshowCoverPic != null" >
+        MSHOW_COVER_PIC = #{record.mshowCoverPic,jdbcType=TINYINT},
+      </if>
+      <if test="record.isDelete != null" >
+        IS_DELETE = #{record.isDelete,jdbcType=INTEGER},
+      </if>
+      <if test="record.createdId != null" >
+        CREATED_ID = #{record.createdId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.modifiedId != null" >
+        MODIFIED_ID = #{record.modifiedId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.createdDt != null" >
+        CREATED_DT = #{record.createdDt,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.modifiedDt != null" >
+        MODIFIED_DT = #{record.modifiedDt,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.readCnt != null" >
+        READ_CNT = #{record.readCnt,jdbcType=INTEGER},
+      </if>
+      <if test="record.listImg != null" >
+        LIST_IMG = #{record.listImg,jdbcType=INTEGER},
+      </if>
+      <if test="record.newsType != null" >
+        NEWS_TYPE = #{record.newsType,jdbcType=INTEGER},
+      </if>
+      <if test="record.msourceUrl != null" >
+        MSOURCE_URL = #{record.msourceUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="record.mcontent != null" >
+        MCONTENT = #{record.mcontent,jdbcType=CLOB},
+      </if>
+      <if test="record.mdigest != null" >
+        MDIGEST = #{record.mdigest,jdbcType=VARCHAR},
+      </if>
+      <if test="record.mcontentwechat != null" >
+        MCONTENTWECHAT = #{record.mcontentwechat,jdbcType=CLOB},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExampleWithBLOBs" parameterType="map" >
+    update WX_NEWS_ITEM
+    set SHOP_ID = #{record.shopId,jdbcType=BIGINT},
+      MSG_ID = #{record.msgId,jdbcType=BIGINT},
+      NEWS_ID = #{record.newsId,jdbcType=BIGINT},
+      MFILE_ID = #{record.mfileId,jdbcType=BIGINT},
+      MAUTHOR = #{record.mauthor,jdbcType=VARCHAR},
+      MTITLE = #{record.mtitle,jdbcType=VARCHAR},
+      MSHOW_COVER_PIC = #{record.mshowCoverPic,jdbcType=TINYINT},
+      IS_DELETE = #{record.isDelete,jdbcType=INTEGER},
+      CREATED_ID = #{record.createdId,jdbcType=VARCHAR},
+      MODIFIED_ID = #{record.modifiedId,jdbcType=VARCHAR},
+      CREATED_DT = #{record.createdDt,jdbcType=TIMESTAMP},
+      MODIFIED_DT = #{record.modifiedDt,jdbcType=TIMESTAMP},
+      READ_CNT = #{record.readCnt,jdbcType=INTEGER},
+      LIST_IMG = #{record.listImg,jdbcType=INTEGER},
+      NEWS_TYPE = #{record.newsType,jdbcType=INTEGER},
+      MSOURCE_URL = #{record.msourceUrl,jdbcType=VARCHAR},
+      MCONTENT = #{record.mcontent,jdbcType=CLOB},
+      MDIGEST = #{record.mdigest,jdbcType=VARCHAR},
+      MCONTENTWECHAT = #{record.mcontentwechat,jdbcType=CLOB}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update WX_NEWS_ITEM
+    set SHOP_ID = #{record.shopId,jdbcType=BIGINT},
+      MSG_ID = #{record.msgId,jdbcType=BIGINT},
+      NEWS_ID = #{record.newsId,jdbcType=BIGINT},
+      MFILE_ID = #{record.mfileId,jdbcType=BIGINT},
+      MAUTHOR = #{record.mauthor,jdbcType=VARCHAR},
+      MTITLE = #{record.mtitle,jdbcType=VARCHAR},
+      MSHOW_COVER_PIC = #{record.mshowCoverPic,jdbcType=TINYINT},
+      IS_DELETE = #{record.isDelete,jdbcType=INTEGER},
+      CREATED_ID = #{record.createdId,jdbcType=VARCHAR},
+      MODIFIED_ID = #{record.modifiedId,jdbcType=VARCHAR},
+      CREATED_DT = #{record.createdDt,jdbcType=TIMESTAMP},
+      MODIFIED_DT = #{record.modifiedDt,jdbcType=TIMESTAMP},
+      READ_CNT = #{record.readCnt,jdbcType=INTEGER},
+      LIST_IMG = #{record.listImg,jdbcType=INTEGER},
+      NEWS_TYPE = #{record.newsType,jdbcType=INTEGER}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.basoft.service.entity.wechat.shopWxNews.ShopWxNewsItemWithBLOBs" >
+    update WX_NEWS_ITEM
+    <set >
+      <if test="mfileId != null" >
+        MFILE_ID = #{mfileId,jdbcType=BIGINT},
+      </if>
+      <if test="mauthor != null" >
+        MAUTHOR = #{mauthor,jdbcType=VARCHAR},
+      </if>
+      <if test="mtitle != null" >
+        MTITLE = #{mtitle,jdbcType=VARCHAR},
+      </if>
+      <if test="mshowCoverPic != null" >
+        MSHOW_COVER_PIC = #{mshowCoverPic,jdbcType=TINYINT},
+      </if>
+      <if test="isDelete != null" >
+        IS_DELETE = #{isDelete,jdbcType=INTEGER},
+      </if>
+      <if test="createdId != null" >
+        CREATED_ID = #{createdId,jdbcType=VARCHAR},
+      </if>
+      <if test="modifiedId != null" >
+        MODIFIED_ID = #{modifiedId,jdbcType=VARCHAR},
+      </if>
+      <if test="createdDt != null" >
+        CREATED_DT = #{createdDt,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifiedDt != null" >
+        MODIFIED_DT = #{modifiedDt,jdbcType=TIMESTAMP},
+      </if>
+      <if test="readCnt != null" >
+        READ_CNT = #{readCnt,jdbcType=INTEGER},
+      </if>
+      <if test="listImg != null" >
+        LIST_IMG = #{listImg,jdbcType=INTEGER},
+      </if>
+      <if test="newsType != null" >
+        NEWS_TYPE = #{newsType,jdbcType=INTEGER},
+      </if>
+      <if test="msourceUrl != null" >
+        MSOURCE_URL = #{msourceUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="mcontent != null" >
+        MCONTENT = #{mcontent,jdbcType=CLOB},
+      </if>
+      <if test="mdigest != null" >
+        MDIGEST = #{mdigest,jdbcType=VARCHAR},
+      </if>
+      <if test="mcontentwechat != null" >
+        MCONTENTWECHAT = #{mcontentwechat,jdbcType=CLOB},
+      </if>
+    </set>
+    where SHOP_ID = #{shopId,jdbcType=BIGINT}
+      and MSG_ID = #{msgId,jdbcType=BIGINT}
+      and NEWS_ID = #{newsId,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.basoft.service.entity.wechat.shopWxNews.ShopWxNewsItemWithBLOBs" >
+    update WX_NEWS_ITEM
+    set MFILE_ID = #{mfileId,jdbcType=BIGINT},
+      MAUTHOR = #{mauthor,jdbcType=VARCHAR},
+      MTITLE = #{mtitle,jdbcType=VARCHAR},
+      MSHOW_COVER_PIC = #{mshowCoverPic,jdbcType=TINYINT},
+      IS_DELETE = #{isDelete,jdbcType=INTEGER},
+      CREATED_ID = #{createdId,jdbcType=VARCHAR},
+      MODIFIED_ID = #{modifiedId,jdbcType=VARCHAR},
+      CREATED_DT = #{createdDt,jdbcType=TIMESTAMP},
+      MODIFIED_DT = #{modifiedDt,jdbcType=TIMESTAMP},
+      READ_CNT = #{readCnt,jdbcType=INTEGER},
+      LIST_IMG = #{listImg,jdbcType=INTEGER},
+      NEWS_TYPE = #{newsType,jdbcType=INTEGER},
+      MSOURCE_URL = #{msourceUrl,jdbcType=VARCHAR},
+      MCONTENT = #{mcontent,jdbcType=CLOB},
+      MDIGEST = #{mdigest,jdbcType=VARCHAR},
+      MCONTENTWECHAT = #{mcontentwechat,jdbcType=CLOB}
+    where SHOP_ID = #{shopId,jdbcType=BIGINT}
+      and MSG_ID = #{msgId,jdbcType=BIGINT}
+      and NEWS_ID = #{newsId,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.basoft.service.entity.wechat.shopWxNews.ShopWxNewsItem" >
+    update WX_NEWS_ITEM
+    set MFILE_ID = #{mfileId,jdbcType=BIGINT},
+      MAUTHOR = #{mauthor,jdbcType=VARCHAR},
+      MTITLE = #{mtitle,jdbcType=VARCHAR},
+      MSHOW_COVER_PIC = #{mshowCoverPic,jdbcType=TINYINT},
+      IS_DELETE = #{isDelete,jdbcType=INTEGER},
+      CREATED_ID = #{createdId,jdbcType=VARCHAR},
+      MODIFIED_ID = #{modifiedId,jdbcType=VARCHAR},
+      CREATED_DT = #{createdDt,jdbcType=TIMESTAMP},
+      MODIFIED_DT = #{modifiedDt,jdbcType=TIMESTAMP},
+      READ_CNT = #{readCnt,jdbcType=INTEGER},
+      LIST_IMG = #{listImg,jdbcType=INTEGER},
+      NEWS_TYPE = #{newsType,jdbcType=INTEGER}
+    where SHOP_ID = #{shopId,jdbcType=BIGINT}
+      and MSG_ID = #{msgId,jdbcType=BIGINT}
+      and NEWS_ID = #{newsId,jdbcType=BIGINT}
+  </update>
+</mapper>

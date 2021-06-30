@@ -1,0 +1,419 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.basoft.service.dao.customer.wxUser.WxUserMapper" >
+  <resultMap id="BaseResultMap" type="com.basoft.service.entity.customer.wxUser.WxUser">
+    <id column="OPENID" jdbcType="VARCHAR" property="openid" />
+    <result column="SYS_ID" jdbcType="VARCHAR" property="sysId" />
+    <result column="UNIONID" jdbcType="VARCHAR" property="unionid" />
+    <result column="NICKNAME" jdbcType="VARCHAR" property="nickname" />
+    <result column="SEX" jdbcType="CHAR" property="sex" />
+    <result column="SUBSCRIBE" jdbcType="TINYINT" property="subscribe" />
+    <result column="IS_FIRST_SUBSCRIBE" jdbcType="CHAR" property="isFirstSubscribe" />
+    <result column="CITY" jdbcType="VARCHAR" property="city" />
+    <result column="COUNTRY" jdbcType="VARCHAR" property="country" />
+    <result column="PROVINCE" jdbcType="VARCHAR" property="province" />
+    <result column="LANGUAGE" jdbcType="VARCHAR" property="language" />
+    <result column="HEADIMGURL" jdbcType="VARCHAR" property="headimgurl" />
+    <result column="SUBSCRIBE_TIME" jdbcType="TIMESTAMP" property="subscribeTime" />
+    <result column="UNSUBSCRIBE_TIME" jdbcType="TIMESTAMP" property="unsubscribeTime" />
+    <result column="GROUPID" jdbcType="INTEGER" property="groupid" />
+    <result column="REMARK" jdbcType="VARCHAR" property="remark" />
+    <result column="CREATE_DT" jdbcType="TIMESTAMP" property="createDt" />
+    <result column="UPDATE_DT" jdbcType="TIMESTAMP" property="updateDt" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    OPENID, SYS_ID, UNIONID, NICKNAME, SEX, SUBSCRIBE, IS_FIRST_SUBSCRIBE, CITY, COUNTRY,
+    PROVINCE, LANGUAGE, HEADIMGURL, SUBSCRIBE_TIME, UNSUBSCRIBE_TIME, GROUPID, REMARK,
+    CREATE_DT, UPDATE_DT
+  </sql>
+  <select id="selectByExample" parameterType="com.basoft.service.entity.customer.wxUser.WxUserExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    'true' as QUERYID,
+    <include refid="Base_Column_List" />
+    from wx_user
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from wx_user
+    where OPENID = #{openid,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from wx_user
+    where OPENID = #{openid,jdbcType=VARCHAR}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.basoft.service.entity.customer.wxUser.WxUserExample">
+    delete from wx_user
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.basoft.service.entity.customer.wxUser.WxUser">
+    insert into wx_user (OPENID, SYS_ID, UNIONID,
+    NICKNAME, SEX, SUBSCRIBE,
+    IS_FIRST_SUBSCRIBE, CITY, COUNTRY,
+    PROVINCE, LANGUAGE, HEADIMGURL,
+    SUBSCRIBE_TIME, UNSUBSCRIBE_TIME, GROUPID,
+    REMARK, CREATE_DT, UPDATE_DT
+    )
+    values (#{openid,jdbcType=VARCHAR}, #{sysId,jdbcType=VARCHAR}, #{unionid,jdbcType=VARCHAR},
+    #{nickname,jdbcType=VARCHAR}, #{sex,jdbcType=CHAR}, #{subscribe,jdbcType=TINYINT},
+    #{isFirstSubscribe,jdbcType=CHAR}, #{city,jdbcType=VARCHAR}, #{country,jdbcType=VARCHAR},
+    #{province,jdbcType=VARCHAR}, #{language,jdbcType=VARCHAR}, #{headimgurl,jdbcType=VARCHAR},
+    #{subscribeTime,jdbcType=TIMESTAMP}, #{unsubscribeTime,jdbcType=TIMESTAMP}, #{groupid,jdbcType=INTEGER},
+    #{remark,jdbcType=VARCHAR}, #{createDt,jdbcType=TIMESTAMP}, #{updateDt,jdbcType=TIMESTAMP}
+    )
+  </insert>
+  <insert id="insertSelective" parameterType="com.basoft.service.entity.customer.wxUser.WxUser">
+    insert into wx_user
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="openid != null">
+        OPENID,
+      </if>
+      <if test="sysId != null">
+        SYS_ID,
+      </if>
+      <if test="unionid != null">
+        UNIONID,
+      </if>
+      <if test="nickname != null">
+        NICKNAME,
+      </if>
+      <if test="sex != null">
+        SEX,
+      </if>
+      <if test="subscribe != null">
+        SUBSCRIBE,
+      </if>
+      <if test="isFirstSubscribe != null">
+        IS_FIRST_SUBSCRIBE,
+      </if>
+      <if test="city != null">
+        CITY,
+      </if>
+      <if test="country != null">
+        COUNTRY,
+      </if>
+      <if test="province != null">
+        PROVINCE,
+      </if>
+      <if test="language != null">
+        LANGUAGE,
+      </if>
+      <if test="headimgurl != null">
+        HEADIMGURL,
+      </if>
+      <if test="subscribeTime != null">
+        SUBSCRIBE_TIME,
+      </if>
+      <if test="unsubscribeTime != null">
+        UNSUBSCRIBE_TIME,
+      </if>
+      <if test="groupid != null">
+        GROUPID,
+      </if>
+      <if test="remark != null">
+        REMARK,
+      </if>
+      <if test="createDt != null">
+        CREATE_DT,
+      </if>
+      <if test="updateDt != null">
+        UPDATE_DT,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="openid != null">
+        #{openid,jdbcType=VARCHAR},
+      </if>
+      <if test="sysId != null">
+        #{sysId,jdbcType=VARCHAR},
+      </if>
+      <if test="unionid != null">
+        #{unionid,jdbcType=VARCHAR},
+      </if>
+      <if test="nickname != null">
+        #{nickname,jdbcType=VARCHAR},
+      </if>
+      <if test="sex != null">
+        #{sex,jdbcType=CHAR},
+      </if>
+      <if test="subscribe != null">
+        #{subscribe,jdbcType=TINYINT},
+      </if>
+      <if test="isFirstSubscribe != null">
+        #{isFirstSubscribe,jdbcType=CHAR},
+      </if>
+      <if test="city != null">
+        #{city,jdbcType=VARCHAR},
+      </if>
+      <if test="country != null">
+        #{country,jdbcType=VARCHAR},
+      </if>
+      <if test="province != null">
+        #{province,jdbcType=VARCHAR},
+      </if>
+      <if test="language != null">
+        #{language,jdbcType=VARCHAR},
+      </if>
+      <if test="headimgurl != null">
+        #{headimgurl,jdbcType=VARCHAR},
+      </if>
+      <if test="subscribeTime != null">
+        #{subscribeTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="unsubscribeTime != null">
+        #{unsubscribeTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="groupid != null">
+        #{groupid,jdbcType=INTEGER},
+      </if>
+      <if test="remark != null">
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="createDt != null">
+        #{createDt,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateDt != null">
+        #{updateDt,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.basoft.service.entity.customer.wxUser.WxUserExample" resultType="java.lang.Integer">
+    select count(*) from wx_user
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update wx_user
+    <set>
+      <if test="record.openid != null">
+        OPENID = #{record.openid,jdbcType=VARCHAR},
+      </if>
+      <if test="record.sysId != null">
+        SYS_ID = #{record.sysId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.unionid != null">
+        UNIONID = #{record.unionid,jdbcType=VARCHAR},
+      </if>
+      <if test="record.nickname != null">
+        NICKNAME = #{record.nickname,jdbcType=VARCHAR},
+      </if>
+      <if test="record.sex != null">
+        SEX = #{record.sex,jdbcType=CHAR},
+      </if>
+      <if test="record.subscribe != null">
+        SUBSCRIBE = #{record.subscribe,jdbcType=TINYINT},
+      </if>
+      <if test="record.isFirstSubscribe != null">
+        IS_FIRST_SUBSCRIBE = #{record.isFirstSubscribe,jdbcType=CHAR},
+      </if>
+      <if test="record.city != null">
+        CITY = #{record.city,jdbcType=VARCHAR},
+      </if>
+      <if test="record.country != null">
+        COUNTRY = #{record.country,jdbcType=VARCHAR},
+      </if>
+      <if test="record.province != null">
+        PROVINCE = #{record.province,jdbcType=VARCHAR},
+      </if>
+      <if test="record.language != null">
+        LANGUAGE = #{record.language,jdbcType=VARCHAR},
+      </if>
+      <if test="record.headimgurl != null">
+        HEADIMGURL = #{record.headimgurl,jdbcType=VARCHAR},
+      </if>
+      <if test="record.subscribeTime != null">
+        SUBSCRIBE_TIME = #{record.subscribeTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.unsubscribeTime != null">
+        UNSUBSCRIBE_TIME = #{record.unsubscribeTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.groupid != null">
+        GROUPID = #{record.groupid,jdbcType=INTEGER},
+      </if>
+      <if test="record.remark != null">
+        REMARK = #{record.remark,jdbcType=VARCHAR},
+      </if>
+      <if test="record.createDt != null">
+        CREATE_DT = #{record.createDt,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.updateDt != null">
+        UPDATE_DT = #{record.updateDt,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update wx_user
+    set OPENID = #{record.openid,jdbcType=VARCHAR},
+    SYS_ID = #{record.sysId,jdbcType=VARCHAR},
+    UNIONID = #{record.unionid,jdbcType=VARCHAR},
+    NICKNAME = #{record.nickname,jdbcType=VARCHAR},
+    SEX = #{record.sex,jdbcType=CHAR},
+    SUBSCRIBE = #{record.subscribe,jdbcType=TINYINT},
+    IS_FIRST_SUBSCRIBE = #{record.isFirstSubscribe,jdbcType=CHAR},
+    CITY = #{record.city,jdbcType=VARCHAR},
+    COUNTRY = #{record.country,jdbcType=VARCHAR},
+    PROVINCE = #{record.province,jdbcType=VARCHAR},
+    LANGUAGE = #{record.language,jdbcType=VARCHAR},
+    HEADIMGURL = #{record.headimgurl,jdbcType=VARCHAR},
+    SUBSCRIBE_TIME = #{record.subscribeTime,jdbcType=TIMESTAMP},
+    UNSUBSCRIBE_TIME = #{record.unsubscribeTime,jdbcType=TIMESTAMP},
+    GROUPID = #{record.groupid,jdbcType=INTEGER},
+    REMARK = #{record.remark,jdbcType=VARCHAR},
+    CREATE_DT = #{record.createDt,jdbcType=TIMESTAMP},
+    UPDATE_DT = #{record.updateDt,jdbcType=TIMESTAMP}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.basoft.service.entity.customer.wxUser.WxUser">
+    update wx_user
+    <set>
+      <if test="sysId != null">
+        SYS_ID = #{sysId,jdbcType=VARCHAR},
+      </if>
+      <if test="unionid != null">
+        UNIONID = #{unionid,jdbcType=VARCHAR},
+      </if>
+      <if test="nickname != null">
+        NICKNAME = #{nickname,jdbcType=VARCHAR},
+      </if>
+      <if test="sex != null">
+        SEX = #{sex,jdbcType=CHAR},
+      </if>
+      <if test="subscribe != null">
+        SUBSCRIBE = #{subscribe,jdbcType=TINYINT},
+      </if>
+      <if test="isFirstSubscribe != null">
+        IS_FIRST_SUBSCRIBE = #{isFirstSubscribe,jdbcType=CHAR},
+      </if>
+      <if test="city != null">
+        CITY = #{city,jdbcType=VARCHAR},
+      </if>
+      <if test="country != null">
+        COUNTRY = #{country,jdbcType=VARCHAR},
+      </if>
+      <if test="province != null">
+        PROVINCE = #{province,jdbcType=VARCHAR},
+      </if>
+      <if test="language != null">
+        LANGUAGE = #{language,jdbcType=VARCHAR},
+      </if>
+      <if test="headimgurl != null">
+        HEADIMGURL = #{headimgurl,jdbcType=VARCHAR},
+      </if>
+      <if test="subscribeTime != null">
+        SUBSCRIBE_TIME = #{subscribeTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="unsubscribeTime != null">
+        UNSUBSCRIBE_TIME = #{unsubscribeTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="groupid != null">
+        GROUPID = #{groupid,jdbcType=INTEGER},
+      </if>
+      <if test="remark != null">
+        REMARK = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="createDt != null">
+        CREATE_DT = #{createDt,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateDt != null">
+        UPDATE_DT = #{updateDt,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where OPENID = #{openid,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.basoft.service.entity.customer.wxUser.WxUser">
+    update wx_user
+    set SYS_ID = #{sysId,jdbcType=VARCHAR},
+    UNIONID = #{unionid,jdbcType=VARCHAR},
+    NICKNAME = #{nickname,jdbcType=VARCHAR},
+    SEX = #{sex,jdbcType=CHAR},
+    SUBSCRIBE = #{subscribe,jdbcType=TINYINT},
+    IS_FIRST_SUBSCRIBE = #{isFirstSubscribe,jdbcType=CHAR},
+    CITY = #{city,jdbcType=VARCHAR},
+    COUNTRY = #{country,jdbcType=VARCHAR},
+    PROVINCE = #{province,jdbcType=VARCHAR},
+    LANGUAGE = #{language,jdbcType=VARCHAR},
+    HEADIMGURL = #{headimgurl,jdbcType=VARCHAR},
+    SUBSCRIBE_TIME = #{subscribeTime,jdbcType=TIMESTAMP},
+    UNSUBSCRIBE_TIME = #{unsubscribeTime,jdbcType=TIMESTAMP},
+    GROUPID = #{groupid,jdbcType=INTEGER},
+    REMARK = #{remark,jdbcType=VARCHAR},
+    CREATE_DT = #{createDt,jdbcType=TIMESTAMP},
+    UPDATE_DT = #{updateDt,jdbcType=TIMESTAMP}
+    where OPENID = #{openid,jdbcType=VARCHAR}
+  </update>
+</mapper>

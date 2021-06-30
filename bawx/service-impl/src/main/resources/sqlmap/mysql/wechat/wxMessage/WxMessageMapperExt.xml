@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.basoft.service.dao.wechat.wxMessage.WxMessageMapper" >
+
+
+  <select id="finCustChatContent" resultType="com.basoft.service.dto.wechat.WxMessageDto">
+    SELECT
+    TT1.SHOP_ID
+    , TT1.CUST_SYS_ID
+    ,TT1.GRADE_NM			AS GRADE_NM
+    ,TT1.CUST_NICK_NM		AS CUST_NICK_NM
+    ,TT1.WX_IF_HEADIMGURL	AS WX_IF_HEADIMGURL
+    ,TT1.WX_IF_OPENID_P		AS WX_IF_OPENID_P
+    , TT2.MSG_ID			AS CUST_MSG_ID
+    , TT2.MSG_TYPE			AS CUST_MSG_TYPE
+    , DATE_FORMAT(TT2.RECEIVE_DT,'%Y-%m-%d')AS CUST_RECEIVE_DT
+    , TT2.CONTENT			AS CUST_CONTENT
+    , TT2.MEDIA_ID			AS CUST_MEDIA_ID
+    , TT2.PIC_URL			AS CUST_PIC_URL
+    , TT2.FORMAT			AS CUST_FORMAT
+    , TT2.THUMB_MEDIA_ID	AS CUST_THUMB_MEDIA_ID
+    , TT2.LOCATION_X		AS CUST_LOCATION_X
+    , TT2.LOCATION_Y		AS CUST_LOCATION_Y
+    , TT2.SCALE				AS CUST_SCALE
+    , TT2.LABEL				AS CUST_LABEL
+    , TT2.LINK_TITLE		AS CUST_LINK_TITLE
+    , TT2.LINK_DES			AS CUST_LINK_DES
+    , TT2.LINK_URL			AS CUST_LINK_URL
+
+    , TT3.MSG_ID			AS SHOP_MSG_ID
+    , TT3.MSG_TYPE			AS SHOP_MSG_TYPE
+    ,DATE_FORMAT(TT3.RECEIVE_DT,'%Y-%m-%d')AS SHOP_RECEIVE_DT
+    , TT3.CONTENT			AS SHOP_CONTENT
+    , TT3.MEDIA_ID			AS SHOP_MEDIA_ID
+    , TT3.PIC_URL			AS SHOP_PIC_URL
+    , TT3.FORMAT			AS SHOP_FORMAT
+    , TT3.THUMB_MEDIA_ID	AS SHOP_THUMB_MEDIA_ID
+    , TT3.LOCATION_X		AS SHOP_LOCATION_X
+    , TT3.LOCATION_Y		AS SHOP_LOCATION_Y
+    , TT3.SCALE				AS SHOP_SCALE
+    , TT3.LABEL				AS SHOP_LABEL
+    , TT3.LINK_TITLE		AS SHOP_LINK_TITLE
+    , TT3.LINK_DES			AS SHOP_LINK_DES
+    , TT3.LINK_URL			AS SHOP_LINK_URL
+    , TT4.FULL_URL
+    FROM	(
+    SELECT
+    T2.SHOP_ID
+    , T3.CUST_SYS_ID
+    , MAX(T5.GRADE_NM)				AS GRADE_NM
+    , MAX(T3.CUST_NICK_NM)			AS CUST_NICK_NM
+    , MAX(T3.WX_IF_NICK_UNEMOJI)	AS WX_IF_NICK_UNEMOJI
+    , MAX(T3.WX_IF_HEADIMGURL)		AS WX_IF_HEADIMGURL
+    , MAX(
+    CASE
+    WHEN T1.FROM_TYPE = 1
+    THEN T1.ID
+    ELSE NULL
+    END
+    ) AS CUST_MSG_ID
+    , MAX(
+    CASE
+    WHEN T1.FROM_TYPE = 2
+    THEN T1.ID
+    ELSE NULL
+    END
+    ) AS SHOP_MSG_ID
+    ,T3.WX_IF_OPENID_P
+    FROM	WX_MESSAGE T1
+    INNER JOIN	WX_APP_INFO T2
+    ON	T1.SYS_ID = T2.SYS_ID
+    INNER JOIN	CUST T3
+    ON	T1.FROM_USER = T3.WX_IF_OPENID_P
+    LEFT JOIN  CUST_SHOP T4
+    ON	T4.CUST_SYS_ID=T3.CUST_SYS_ID
+    LEFT JOIN	GRADE_MST T5
+    ON	T5.SHOP_ID=T4.SHOP_ID
+    AND T5.GRADE_ID=T4.GRADE_ID
+    WHERE	T2.SHOP_ID = #{shopId}
+    <if test="startTime != null and startTime!='' and endTime != null and endTime!='' " >
+      AND		T1.RECEIVE_DT >= #{startTime}
+      AND		T1.RECEIVE_DT &lt;=#{endTime}
+    </if>
+    GROUP BY
+    T1.MSG_ID
+    /*T2.SHOP_ID
+    , T3.CUST_SYS_ID
+    ,T3.WX_IF_OPENID_P*/
+
+    ) TT1
+    INNER JOIN	WX_MESSAGE TT2
+    ON	TT1.CUST_MSG_ID = TT2.ID
+    LEFT JOIN	WX_MESSAGE TT3
+    ON	TT1.SHOP_MSG_ID = TT3.ID
+    LEFT JOIN SHOP_WX_FILE_MST TT4
+    ON	TT2.FILE_ID = TT4.WFILE_ID
+    where 1=1
+    <if test="param != null and param!=''" >
+      and WX_IF_NICK_UNEMOJI like  concat('%',#{param},'%')
+      or TT2.CONTENT like concat('%',#{param},'%')
+    </if>
+
+
+    ORDER BY TT2.RECEIVE_DT DESC
+
+  </select>
+</mapper>

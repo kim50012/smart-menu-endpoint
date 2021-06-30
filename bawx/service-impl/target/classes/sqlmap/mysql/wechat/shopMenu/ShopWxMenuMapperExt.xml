@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.basoft.service.dao.wechat.shopMenu.ShopWxMenuMapper" >
+
+  <resultMap id="ResultWxMenu" type="com.basoft.service.dto.wechat.shopMenu.ShopWxMenuDto" extends="BaseResultMap">
+    <result column="MENU_OP_COM" property="menuOpCom" jdbcType="LONGVARCHAR" />
+    <result column="MENU_OP_WX_ID" property="menuOpWxId" jdbcType="LONGVARCHAR" />
+  </resultMap>
+
+
+  <select id="findAllShopWxMenu" resultMap="ResultWxMenu" >
+    select
+    <include refid="Base_Column_List" />,
+    <include refid="Blob_Column_List" />,MENU_OP_WX_ID,
+    getCode('shop_wx_menu','MENU_STS',MENU_STS)menuStsStr,
+    /*getCode('shop_wx_menu','MENU_OP_TYPE',MENU_OP_TYPE)menuOpTypeStr,*/
+    getCode('shop_wx_news_item','NEWS_TYPE',MENU_MSG_TYPE)menuMsgTypeStr
+    from shop_wx_menu
+
+    WHERE 1=1 and SHOP_ID = #{shopId}
+    <if test="menuParentId != null">
+      and MENU_PARENT_ID =#{menuParentId}
+    </if>
+    order BY SORT_NO asc
+  </select>
+
+  <insert id="insertShopWxMenu" keyProperty="id" parameterType="java.util.List">
+    insert into shop_wx_menu (SHOP_ID, MENU_ID, MENU_NM,
+    MENU_PARENT_ID, MENU_OP_TYPE,MENU_MSG_TYPE, MENU_OP_ID,MENU_OP_WX_ID,
+    MENU_OP_TITLE, MENU_STS, SORT_NO,
+    CREATE_ID, CREATE_DT,
+    MENU_OP_COM) VALUES
+
+    <if test="list.size() > 0">
+      <foreach collection="list" item="item" index="index" separator="," >
+          (#{item.shopId},#{item.menuId},#{item.menuNm},#{item.menuParentId},#{item.menuOpType},
+           #{item.menuMsgType},#{item.menuOpId},#{item.menuOpWxId},#{item.menuOpTitle},#{item.menuSts},#{item.sortNo},
+           #{item.createId},#{item.createDt},#{item.menuOpCom})
+      </foreach>
+    </if>
+  </insert>
+
+  <insert id="inserTwoShopMenu" keyProperty="id" parameterType="java.util.List">
+    insert into shop_wx_menu (SHOP_ID, MENU_ID, MENU_NM,
+    MENU_PARENT_ID, MENU_OP_TYPE,MENU_MSG_TYPE, MENU_OP_ID,MENU_OP_WX_ID,
+    MENU_OP_TITLE, MENU_STS, SORT_NO,
+    CREATE_ID, CREATE_DT,
+    MENU_OP_COM) VALUES
+
+    <if test="list.size() > 0">
+      <foreach collection="list" item="item" index="index" separator="," >
+        (#{item.shopId},#{item.menuId},#{item.menuNm},#{item.menuParentId},#{item.menuOpType},
+        #{item.menuMsgType},#{item.menuOpId},#{item.menuOpWxId},#{item.menuOpTitle},#{item.menuSts},#{item.sortNo},
+        #{item.createId},#{item.createDt},#{item.menuOpCom})
+      </foreach>
+    </if>
+  </insert>
+
+  <delete id="deleteAllShopWxMenu">
+    DELETE  FROM  shop_wx_menu WHERE SHOP_ID = #{shopId}
+  </delete>
+
+	<!-- 微信自定义菜单-发布-检查 -->
+	<select id="checkMenu" parameterType="java.lang.Long" resultMap="BaseResultMap" statementType="CALLABLE">
+	    <![CDATA[
+		 	{CALL WX_MENU_PUBLISH_CHECK(@SHOP_ID = #{shopId,jdbcType=BIGINT})}
+		]]>
+	</select>
+	
+	<!-- 微信自定义菜单-发布-留档 -->
+	<insert id="insertPublisMenu" parameterType="java.lang.Long" statementType="CALLABLE">
+	    <![CDATA[
+		 	{CALL WX_MENU_PUBLISH_INSERT(#{shopId,jdbcType=BIGINT})}
+		]]>
+	</insert>
+
+	<!-- 微信自定义菜单-发布-留档（返回留档数量） -->
+	<select id="insertPublisMenuWithCount" parameterType="java.util.Map" statementType="CALLABLE">
+	    <![CDATA[
+		 	{CALL WX_MENU_PUBLISH_INSERT_COUNT(#{shopId,jdbcType=BIGINT,mode=IN},#{insertCount,jdbcType=BIGINT,mode=OUT} )}
+		]]>
+	</select>
+	
+	<!-- 微信自定义菜单-发布-查询一级菜单 -->
+	<select id="selectMenuLevel1" parameterType="java.lang.Long" statementType="CALLABLE" resultType="java.util.Map">
+		{CALL WX_MENU_PUBLISH_SELECT(#{shopId,jdbcType=BIGINT,mode=IN},NULL )}
+	</select>
+
+    <!-- 微信自定义菜单-发布-查询一级菜单 -->
+	<select id="selectMenuLevel1ByShop" parameterType="java.lang.Long"  resultType="java.util.Map">
+		SELECT A.MENU_ID,
+		MENU_NM,
+		MENU_OP_ID,
+		MENU_OP_WX_ID,
+		MENU_OP_COM,
+		MENU_OP_TYPE,
+		MENU_MSG_TYPE,
+		(SELECT
+				CASE
+				WHEN COUNT(*) = 0 THEN 'Y'
+				ELSE 'N' END
+			FROM SHOP_WX_MENU_PUBLISH B
+			WHERE B.MENU_PARENT_ID = A.MENU_ID
+				AND B.MENU_STS = 1
+				AND B.MENU_OP_TYPE IN ('view','click','scancode_push','scancode_waitmsg')
+				AND B.MENU_OP_COM IS NOT NULL) AS
+		IS_LEAF,
+		A.SORT_NO
+	FROM SHOP_WX_MENU_PUBLISH A
+	WHERE SHOP_ID = #{shopId}
+	AND MENU_STS = 1
+	AND MENU_PARENT_ID = 0;
+	</select>
+	
+	<!-- 微信自定义菜单-发布-查询二级菜单 -->
+	<select id="selectMenuLevel2" parameterType="java.lang.Long" statementType="CALLABLE" resultType="java.util.Map">
+        <!--{CALL WX_MENU_PUBLISH_SELECT(#{shopId,jdbcType=BIGINT,mode=IN},#{menuId,jdbcType=BIGINT,mode=IN} )} -->
+
+        SELECT MENU_ID,
+                      MENU_NM,
+                      MENU_OP_TYPE,
+                      MENU_MSG_TYPE,
+                      MENU_OP_ID,
+                      MENU_OP_WX_ID,
+                      MENU_OP_COM
+        FROM SHOP_WX_MENU_PUBLISH A
+        WHERE SHOP_ID = #{shopId}
+            AND MENU_STS = 1
+            AND MENU_PARENT_ID = #{menuId}
+        ORDER BY A.SORT_NO, A.MENU_ID
+        LIMIT 5;
+    </select>
+</mapper>

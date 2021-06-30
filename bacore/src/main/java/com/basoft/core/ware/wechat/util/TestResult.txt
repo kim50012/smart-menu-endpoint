@@ -1,0 +1,941 @@
+/************************************************/
+获取图文群发每日数据（getarticlesummary）
+/************************************************/
+{
+    "list": [
+        {
+            "ref_date": "2015-04-27",
+            "user_source": 0,
+            "msgid": "204537701_1",
+            "title": "泡菜都辣？！No！！新品泡菜让餐桌别有味道",
+            "int_page_read_user": 5,
+            "int_page_read_count": 6,
+            "ori_page_read_user": 0,
+            "ori_page_read_count": 0,
+            "share_user": 1,
+            "share_count": 1,
+            "add_to_fav_user": 0,
+            "add_to_fav_count": 0
+        },
+        {
+            "ref_date": "2015-04-27",
+            "user_source": 0,
+            "msgid": "204537701_3",
+            "title": "【宝贝成长密码】看，麻麻的爱心便当",
+            "int_page_read_user": 3,
+            "int_page_read_count": 3,
+            "ori_page_read_user": 0,
+            "ori_page_read_count": 0,
+            "share_user": 0,
+            "share_count": 0,
+            "add_to_fav_user": 0,
+            "add_to_fav_count": 0
+        }
+    ]
+}
+
+/************************************************/
+获取图文群发总数据（getarticletotal）
+/************************************************/
+{
+    "list": [
+        {
+            "ref_date": "2015-04-29",
+            "msgid": "204944313_1",
+            "title": "五一那么美 泡面要加水",
+            "user_source": 0,
+            "details": [
+                {
+                    "stat_date": "2015-04-29",
+                    "target_user": 548,
+                    "int_page_read_user": 73,
+                    "int_page_read_count": 100,
+                    "ori_page_read_user": 4,
+                    "ori_page_read_count": 6,
+                    "share_user": 3,
+                    "share_count": 3,
+                    "add_to_fav_user": 0,
+                    "add_to_fav_count": 0
+                },
+                {
+                    "stat_date": "2015-04-30",
+                    "target_user": 548,
+                    "int_page_read_user": 105,
+                    "int_page_read_count": 148,
+                    "ori_page_read_user": 6,
+                    "ori_page_read_count": 8,
+                    "share_user": 5,
+                    "share_count": 6,
+                    "add_to_fav_user": 0,
+                    "add_to_fav_count": 0
+                },
+                {
+                    "stat_date": "2015-05-01",
+                    "target_user": 548,
+                    "int_page_read_user": 110,
+                    "int_page_read_count": 156,
+                    "ori_page_read_user": 7,
+                    "ori_page_read_count": 9,
+                    "share_user": 5,
+                    "share_count": 6,
+                    "add_to_fav_user": 0,
+                    "add_to_fav_count": 0
+                },
+                {
+                    "stat_date": "2015-05-02",
+                    "target_user": 548,
+                    "int_page_read_user": 110,
+                    "int_page_read_count": 157,
+                    "ori_page_read_user": 7,
+                    "ori_page_read_count": 9,
+                    "share_user": 5,
+                    "share_count": 6,
+                    "add_to_fav_user": 0,
+                    "add_to_fav_count": 0
+                },
+                {
+                    "stat_date": "2015-05-03",
+                    "target_user": 548,
+                    "int_page_read_user": 111,
+                    "int_page_read_count": 159,
+                    "ori_page_read_user": 7,
+                    "ori_page_read_count": 9,
+                    "share_user": 5,
+                    "share_count": 6,
+                    "add_to_fav_user": 0,
+                    "add_to_fav_count": 0
+                }
+            ]
+        },
+        {
+            "ref_date": "2015-04-29",
+            "msgid": "204944313_2",
+            "title": "商城送豪礼 跟小圃过个蜜糖般的劳动节",
+            "user_source": 0,
+            "details": [
+                {
+                    "stat_date": "2015-04-29",
+                    "target_user": 548,
+                    "int_page_read_user": 18,
+                    "int_page_read_count": 24,
+                    "ori_page_read_user": 0,
+                    "ori_page_read_count": 0,
+                    "share_user": 0,
+                    "share_count": 0,
+                    "add_to_fav_user": 0,
+                    "add_to_fav_count": 0
+                },
+                {
+                    "stat_date": "2015-04-30",
+                    "target_user": 548,
+                    "int_page_read_user": 23,
+                    "int_page_read_count": 31,
+                    "ori_page_read_user": 1,
+                    "ori_page_read_count": 1,
+                    "share_user": 0,
+                    "share_count": 0,
+                    "add_to_fav_user": 0,
+                    "add_to_fav_count": 0
+                },
+                {
+                    "stat_date": "2015-05-01",
+                    "target_user": 548,
+                    "int_page_read_user": 24,
+                    "int_page_read_count": 32,
+                    "ori_page_read_user": 2,
+                    "ori_page_read_count": 2,
+                    "share_user": 0,
+                    "share_count": 0,
+                    "add_to_fav_user": 0,
+                    "add_to_fav_count": 0
+                },
+                {
+                    "stat_date": "2015-05-02",
+                    "target_user": 548,
+                    "int_page_read_user": 24,
+                    "int_page_read_count": 32,
+                    "ori_page_read_user": 2,
+                    "ori_page_read_count": 2,
+                    "share_user": 0,
+                    "share_count": 0,
+                    "add_to_fav_user": 0,
+                    "add_to_fav_count": 0
+                },
+                {
+                    "stat_date": "2015-05-03",
+                    "target_user": 548,
+                    "int_page_read_user": 25,
+                    "int_page_read_count": 33,
+                    "ori_page_read_user": 2,
+                    "ori_page_read_count": 2,
+                    "share_user": 0,
+                    "share_count": 0,
+                    "add_to_fav_user": 0,
+                    "add_to_fav_count": 0
+                }
+            ]
+        },
+        {
+            "ref_date": "2015-04-29",
+            "msgid": "204944313_3",
+            "title": "内谁，你妈喊你吃PIZZA了",
+            "user_source": 0,
+            "details": [
+                {
+                    "stat_date": "2015-04-29",
+                    "target_user": 548,
+                    "int_page_read_user": 21,
+                    "int_page_read_count": 27,
+                    "ori_page_read_user": 0,
+                    "ori_page_read_count": 0,
+                    "share_user": 0,
+                    "share_count": 0,
+                    "add_to_fav_user": 0,
+                    "add_to_fav_count": 0
+                },
+                {
+                    "stat_date": "2015-04-30",
+                    "target_user": 548,
+                    "int_page_read_user": 23,
+                    "int_page_read_count": 29,
+                    "ori_page_read_user": 0,
+                    "ori_page_read_count": 0,
+                    "share_user": 0,
+                    "share_count": 0,
+                    "add_to_fav_user": 0,
+                    "add_to_fav_count": 0
+                },
+                {
+                    "stat_date": "2015-05-01",
+                    "target_user": 548,
+                    "int_page_read_user": 23,
+                    "int_page_read_count": 29,
+                    "ori_page_read_user": 0,
+                    "ori_page_read_count": 0,
+                    "share_user": 0,
+                    "share_count": 0,
+                    "add_to_fav_user": 0,
+                    "add_to_fav_count": 0
+                },
+                {
+                    "stat_date": "2015-05-02",
+                    "target_user": 548,
+                    "int_page_read_user": 23,
+                    "int_page_read_count": 29,
+                    "ori_page_read_user": 0,
+                    "ori_page_read_count": 0,
+                    "share_user": 0,
+                    "share_count": 0,
+                    "add_to_fav_user": 0,
+                    "add_to_fav_count": 0
+                },
+                {
+                    "stat_date": "2015-05-03",
+                    "target_user": 548,
+                    "int_page_read_user": 24,
+                    "int_page_read_count": 30,
+                    "ori_page_read_user": 0,
+                    "ori_page_read_count": 0,
+                    "share_user": 0,
+                    "share_count": 0,
+                    "add_to_fav_user": 0,
+                    "add_to_fav_count": 0
+                }
+            ]
+        },
+        {
+            "ref_date": "2015-04-29",
+            "msgid": "204944313_4",
+            "title": "【老公必爱】系列之：“面”对“面”",
+            "user_source": 0,
+            "details": [
+                {
+                    "stat_date": "2015-04-29",
+                    "target_user": 548,
+                    "int_page_read_user": 20,
+                    "int_page_read_count": 25,
+                    "ori_page_read_user": 0,
+                    "ori_page_read_count": 0,
+                    "share_user": 0,
+                    "share_count": 0,
+                    "add_to_fav_user": 0,
+                    "add_to_fav_count": 0
+                },
+                {
+                    "stat_date": "2015-04-30",
+                    "target_user": 548,
+                    "int_page_read_user": 23,
+                    "int_page_read_count": 28,
+                    "ori_page_read_user": 0,
+                    "ori_page_read_count": 0,
+                    "share_user": 0,
+                    "share_count": 0,
+                    "add_to_fav_user": 0,
+                    "add_to_fav_count": 0
+                },
+                {
+                    "stat_date": "2015-05-01",
+                    "target_user": 548,
+                    "int_page_read_user": 23,
+                    "int_page_read_count": 28,
+                    "ori_page_read_user": 0,
+                    "ori_page_read_count": 0,
+                    "share_user": 0,
+                    "share_count": 0,
+                    "add_to_fav_user": 0,
+                    "add_to_fav_count": 0
+                },
+                {
+                    "stat_date": "2015-05-02",
+                    "target_user": 548,
+                    "int_page_read_user": 23,
+                    "int_page_read_count": 28,
+                    "ori_page_read_user": 0,
+                    "ori_page_read_count": 0,
+                    "share_user": 0,
+                    "share_count": 0,
+                    "add_to_fav_user": 0,
+                    "add_to_fav_count": 0
+                },
+                {
+                    "stat_date": "2015-05-03",
+                    "target_user": 548,
+                    "int_page_read_user": 24,
+                    "int_page_read_count": 29,
+                    "ori_page_read_user": 0,
+                    "ori_page_read_count": 0,
+                    "share_user": 0,
+                    "share_count": 0,
+                    "add_to_fav_user": 0,
+                    "add_to_fav_count": 0
+                }
+            ]
+        }
+    ]
+}
+
+/************************************************/
+获取图文统计数据（getuserread）
+/************************************************/
+{
+    "list": [
+        {
+            "ref_date": "2015-04-29",
+            "user_source": 0,
+            "int_page_read_user": 66,
+            "int_page_read_count": 219,
+            "ori_page_read_user": 6,
+            "ori_page_read_count": 10,
+            "share_user": 5,
+            "share_count": 7,
+            "add_to_fav_user": 0,
+            "add_to_fav_count": 0
+        },
+        {
+            "ref_date": "2015-04-29",
+            "user_source": 1,
+            "int_page_read_user": 9,
+            "int_page_read_count": 28,
+            "ori_page_read_user": 0,
+            "ori_page_read_count": 0,
+            "share_user": 0,
+            "share_count": 0,
+            "add_to_fav_user": 0,
+            "add_to_fav_count": 0
+        },
+        {
+            "ref_date": "2015-04-29",
+            "user_source": 2,
+            "int_page_read_user": 15,
+            "int_page_read_count": 17,
+            "ori_page_read_user": 0,
+            "ori_page_read_count": 0,
+            "share_user": 0,
+            "share_count": 0,
+            "add_to_fav_user": 0,
+            "add_to_fav_count": 0
+        },
+        {
+            "ref_date": "2015-04-29",
+            "user_source": 4,
+            "int_page_read_user": 2,
+            "int_page_read_count": 9,
+            "ori_page_read_user": 0,
+            "ori_page_read_count": 0,
+            "share_user": 0,
+            "share_count": 0,
+            "add_to_fav_user": 0,
+            "add_to_fav_count": 0
+        },
+        {
+            "ref_date": "2015-04-30",
+            "user_source": 0,
+            "int_page_read_user": 21,
+            "int_page_read_count": 35,
+            "ori_page_read_user": 3,
+            "ori_page_read_count": 3,
+            "share_user": 2,
+            "share_count": 3,
+            "add_to_fav_user": 0,
+            "add_to_fav_count": 0
+        },
+        {
+            "ref_date": "2015-04-30",
+            "user_source": 1,
+            "int_page_read_user": 2,
+            "int_page_read_count": 3,
+            "ori_page_read_user": 0,
+            "ori_page_read_count": 0,
+            "share_user": 0,
+            "share_count": 0,
+            "add_to_fav_user": 0,
+            "add_to_fav_count": 0
+        },
+        {
+            "ref_date": "2015-04-30",
+            "user_source": 2,
+            "int_page_read_user": 18,
+            "int_page_read_count": 21,
+            "ori_page_read_user": 0,
+            "ori_page_read_count": 0,
+            "share_user": 0,
+            "share_count": 0,
+            "add_to_fav_user": 0,
+            "add_to_fav_count": 0
+        },
+        {
+            "ref_date": "2015-04-30",
+            "user_source": 4,
+            "int_page_read_user": 3,
+            "int_page_read_count": 9,
+            "ori_page_read_user": 0,
+            "ori_page_read_count": 0,
+            "share_user": 0,
+            "share_count": 0,
+            "add_to_fav_user": 0,
+            "add_to_fav_count": 0
+        },
+        {
+            "ref_date": "2015-05-01",
+            "user_source": 0,
+            "int_page_read_user": 8,
+            "int_page_read_count": 8,
+            "ori_page_read_user": 2,
+            "ori_page_read_count": 2,
+            "share_user": 0,
+            "share_count": 0,
+            "add_to_fav_user": 0,
+            "add_to_fav_count": 0
+        },
+        {
+            "ref_date": "2015-05-01",
+            "user_source": 2,
+            "int_page_read_user": 2,
+            "int_page_read_count": 3,
+            "ori_page_read_user": 0,
+            "ori_page_read_count": 0,
+            "share_user": 0,
+            "share_count": 0,
+            "add_to_fav_user": 0,
+            "add_to_fav_count": 0
+        },
+        {
+            "ref_date": "2015-05-01",
+            "user_source": 4,
+            "int_page_read_user": 1,
+            "int_page_read_count": 1,
+            "ori_page_read_user": 0,
+            "ori_page_read_count": 0,
+            "share_user": 0,
+            "share_count": 0,
+            "add_to_fav_user": 0,
+            "add_to_fav_count": 0
+        }
+    ]
+}
+/************************************************/
+获取图文统计分时数据（getuserreadhour）
+/************************************************/
+{
+    "list": [
+        {
+            "ref_date": "2015-04-30",
+            "ref_hour": 0,
+            "user_source": 0,
+            "int_page_read_user": 1,
+            "int_page_read_count": 4,
+            "ori_page_read_user": 0,
+            "ori_page_read_count": 0,
+            "share_user": 0,
+            "share_count": 0,
+            "add_to_fav_user": 0,
+            "add_to_fav_count": 0,
+            "total_online_time": 0
+        },
+        {
+            "ref_date": "2015-04-30",
+            "ref_hour": 300,
+            "user_source": 0,
+            "int_page_read_user": 1,
+            "int_page_read_count": 1,
+            "ori_page_read_user": 0,
+            "ori_page_read_count": 0,
+            "share_user": 0,
+            "share_count": 0,
+            "add_to_fav_user": 0,
+            "add_to_fav_count": 0,
+            "total_online_time": 0
+        },
+        {
+            "ref_date": "2015-04-30",
+            "ref_hour": 600,
+            "user_source": 0,
+            "int_page_read_user": 3,
+            "int_page_read_count": 5,
+            "ori_page_read_user": 0,
+            "ori_page_read_count": 0,
+            "share_user": 0,
+            "share_count": 0,
+            "add_to_fav_user": 0,
+            "add_to_fav_count": 0,
+            "total_online_time": 0
+        },
+        {
+            "ref_date": "2015-04-30",
+            "ref_hour": 700,
+            "user_source": 0,
+            "int_page_read_user": 2,
+            "int_page_read_count": 2,
+            "ori_page_read_user": 0,
+            "ori_page_read_count": 0,
+            "share_user": 0,
+            "share_count": 0,
+            "add_to_fav_user": 0,
+            "add_to_fav_count": 0,
+            "total_online_time": 0
+        },
+        {
+            "ref_date": "2015-04-30",
+            "ref_hour": 800,
+            "user_source": 0,
+            "int_page_read_user": 1,
+            "int_page_read_count": 1,
+            "ori_page_read_user": 0,
+            "ori_page_read_count": 0,
+            "share_user": 0,
+            "share_count": 0,
+            "add_to_fav_user": 0,
+            "add_to_fav_count": 0,
+            "total_online_time": 0
+        },
+        {
+            "ref_date": "2015-04-30",
+            "ref_hour": 800,
+            "user_source": 2,
+            "int_page_read_user": 1,
+            "int_page_read_count": 2,
+            "ori_page_read_user": 0,
+            "ori_page_read_count": 0,
+            "share_user": 0,
+            "share_count": 0,
+            "add_to_fav_user": 0,
+            "add_to_fav_count": 0,
+            "total_online_time": 0
+        },
+        {
+            "ref_date": "2015-04-30",
+            "ref_hour": 900,
+            "user_source": 0,
+            "int_page_read_user": 0,
+            "int_page_read_count": 0,
+            "ori_page_read_user": 0,
+            "ori_page_read_count": 0,
+            "share_user": 1,
+            "share_count": 2,
+            "add_to_fav_user": 0,
+            "add_to_fav_count": 0,
+            "total_online_time": 0
+        },
+        {
+            "ref_date": "2015-04-30",
+            "ref_hour": 900,
+            "user_source": 1,
+            "int_page_read_user": 1,
+            "int_page_read_count": 1,
+            "ori_page_read_user": 0,
+            "ori_page_read_count": 0,
+            "share_user": 0,
+            "share_count": 0,
+            "add_to_fav_user": 0,
+            "add_to_fav_count": 0,
+            "total_online_time": 0
+        },
+        {
+            "ref_date": "2015-04-30",
+            "ref_hour": 900,
+            "user_source": 2,
+            "int_page_read_user": 11,
+            "int_page_read_count": 11,
+            "ori_page_read_user": 0,
+            "ori_page_read_count": 0,
+            "share_user": 0,
+            "share_count": 0,
+            "add_to_fav_user": 0,
+            "add_to_fav_count": 0,
+            "total_online_time": 0
+        },
+        {
+            "ref_date": "2015-04-30",
+            "ref_hour": 900,
+            "user_source": 4,
+            "int_page_read_user": 1,
+            "int_page_read_count": 2,
+            "ori_page_read_user": 0,
+            "ori_page_read_count": 0,
+            "share_user": 0,
+            "share_count": 0,
+            "add_to_fav_user": 0,
+            "add_to_fav_count": 0,
+            "total_online_time": 0
+        },
+        {
+            "ref_date": "2015-04-30",
+            "ref_hour": 1000,
+            "user_source": 0,
+            "int_page_read_user": 2,
+            "int_page_read_count": 2,
+            "ori_page_read_user": 0,
+            "ori_page_read_count": 0,
+            "share_user": 1,
+            "share_count": 1,
+            "add_to_fav_user": 0,
+            "add_to_fav_count": 0,
+            "total_online_time": 0
+        },
+        {
+            "ref_date": "2015-04-30",
+            "ref_hour": 1000,
+            "user_source": 1,
+            "int_page_read_user": 1,
+            "int_page_read_count": 2,
+            "ori_page_read_user": 0,
+            "ori_page_read_count": 0,
+            "share_user": 0,
+            "share_count": 0,
+            "add_to_fav_user": 0,
+            "add_to_fav_count": 0,
+            "total_online_time": 0
+        },
+        {
+            "ref_date": "2015-04-30",
+            "ref_hour": 1000,
+            "user_source": 2,
+            "int_page_read_user": 1,
+            "int_page_read_count": 1,
+            "ori_page_read_user": 0,
+            "ori_page_read_count": 0,
+            "share_user": 0,
+            "share_count": 0,
+            "add_to_fav_user": 0,
+            "add_to_fav_count": 0,
+            "total_online_time": 0
+        },
+        {
+            "ref_date": "2015-04-30",
+            "ref_hour": 1100,
+            "user_source": 0,
+            "int_page_read_user": 1,
+            "int_page_read_count": 1,
+            "ori_page_read_user": 0,
+            "ori_page_read_count": 0,
+            "share_user": 0,
+            "share_count": 0,
+            "add_to_fav_user": 0,
+            "add_to_fav_count": 0,
+            "total_online_time": 0
+        },
+        {
+            "ref_date": "2015-04-30",
+            "ref_hour": 1100,
+            "user_source": 2,
+            "int_page_read_user": 2,
+            "int_page_read_count": 3,
+            "ori_page_read_user": 0,
+            "ori_page_read_count": 0,
+            "share_user": 0,
+            "share_count": 0,
+            "add_to_fav_user": 0,
+            "add_to_fav_count": 0,
+            "total_online_time": 0
+        },
+        {
+            "ref_date": "2015-04-30",
+            "ref_hour": 1300,
+            "user_source": 0,
+            "int_page_read_user": 2,
+            "int_page_read_count": 2,
+            "ori_page_read_user": 2,
+            "ori_page_read_count": 2,
+            "share_user": 0,
+            "share_count": 0,
+            "add_to_fav_user": 0,
+            "add_to_fav_count": 0,
+            "total_online_time": 0
+        },
+        {
+            "ref_date": "2015-04-30",
+            "ref_hour": 1300,
+            "user_source": 2,
+            "int_page_read_user": 2,
+            "int_page_read_count": 2,
+            "ori_page_read_user": 0,
+            "ori_page_read_count": 0,
+            "share_user": 0,
+            "share_count": 0,
+            "add_to_fav_user": 0,
+            "add_to_fav_count": 0,
+            "total_online_time": 0
+        },
+        {
+            "ref_date": "2015-04-30",
+            "ref_hour": 1400,
+            "user_source": 0,
+            "int_page_read_user": 1,
+            "int_page_read_count": 2,
+            "ori_page_read_user": 0,
+            "ori_page_read_count": 0,
+            "share_user": 0,
+            "share_count": 0,
+            "add_to_fav_user": 0,
+            "add_to_fav_count": 0,
+            "total_online_time": 0
+        },
+        {
+            "ref_date": "2015-04-30",
+            "ref_hour": 1400,
+            "user_source": 2,
+            "int_page_read_user": 1,
+            "int_page_read_count": 1,
+            "ori_page_read_user": 0,
+            "ori_page_read_count": 0,
+            "share_user": 0,
+            "share_count": 0,
+            "add_to_fav_user": 0,
+            "add_to_fav_count": 0,
+            "total_online_time": 0
+        },
+        {
+            "ref_date": "2015-04-30",
+            "ref_hour": 1500,
+            "user_source": 0,
+            "int_page_read_user": 2,
+            "int_page_read_count": 2,
+            "ori_page_read_user": 0,
+            "ori_page_read_count": 0,
+            "share_user": 0,
+            "share_count": 0,
+            "add_to_fav_user": 0,
+            "add_to_fav_count": 0,
+            "total_online_time": 0
+        },
+        {
+            "ref_date": "2015-04-30",
+            "ref_hour": 1500,
+            "user_source": 4,
+            "int_page_read_user": 1,
+            "int_page_read_count": 2,
+            "ori_page_read_user": 0,
+            "ori_page_read_count": 0,
+            "share_user": 0,
+            "share_count": 0,
+            "add_to_fav_user": 0,
+            "add_to_fav_count": 0,
+            "total_online_time": 0
+        },
+        {
+            "ref_date": "2015-04-30",
+            "ref_hour": 1600,
+            "user_source": 0,
+            "int_page_read_user": 1,
+            "int_page_read_count": 1,
+            "ori_page_read_user": 0,
+            "ori_page_read_count": 0,
+            "share_user": 0,
+            "share_count": 0,
+            "add_to_fav_user": 0,
+            "add_to_fav_count": 0,
+            "total_online_time": 0
+        },
+        {
+            "ref_date": "2015-04-30",
+            "ref_hour": 1700,
+            "user_source": 0,
+            "int_page_read_user": 3,
+            "int_page_read_count": 8,
+            "ori_page_read_user": 1,
+            "ori_page_read_count": 1,
+            "share_user": 0,
+            "share_count": 0,
+            "add_to_fav_user": 0,
+            "add_to_fav_count": 0,
+            "total_online_time": 0
+        },
+        {
+            "ref_date": "2015-04-30",
+            "ref_hour": 1700,
+            "user_source": 2,
+            "int_page_read_user": 1,
+            "int_page_read_count": 1,
+            "ori_page_read_user": 0,
+            "ori_page_read_count": 0,
+            "share_user": 0,
+            "share_count": 0,
+            "add_to_fav_user": 0,
+            "add_to_fav_count": 0,
+            "total_online_time": 0
+        },
+        {
+            "ref_date": "2015-04-30",
+            "ref_hour": 1700,
+            "user_source": 4,
+            "int_page_read_user": 1,
+            "int_page_read_count": 1,
+            "ori_page_read_user": 0,
+            "ori_page_read_count": 0,
+            "share_user": 0,
+            "share_count": 0,
+            "add_to_fav_user": 0,
+            "add_to_fav_count": 0,
+            "total_online_time": 0
+        },
+        {
+            "ref_date": "2015-04-30",
+            "ref_hour": 1800,
+            "user_source": 0,
+            "int_page_read_user": 2,
+            "int_page_read_count": 2,
+            "ori_page_read_user": 0,
+            "ori_page_read_count": 0,
+            "share_user": 0,
+            "share_count": 0,
+            "add_to_fav_user": 0,
+            "add_to_fav_count": 0,
+            "total_online_time": 0
+        },
+        {
+            "ref_date": "2015-04-30",
+            "ref_hour": 1800,
+            "user_source": 4,
+            "int_page_read_user": 1,
+            "int_page_read_count": 4,
+            "ori_page_read_user": 0,
+            "ori_page_read_count": 0,
+            "share_user": 0,
+            "share_count": 0,
+            "add_to_fav_user": 0,
+            "add_to_fav_count": 0,
+            "total_online_time": 0
+        },
+        {
+            "ref_date": "2015-04-30",
+            "ref_hour": 2200,
+            "user_source": 0,
+            "int_page_read_user": 1,
+            "int_page_read_count": 1,
+            "ori_page_read_user": 0,
+            "ori_page_read_count": 0,
+            "share_user": 0,
+            "share_count": 0,
+            "add_to_fav_user": 0,
+            "add_to_fav_count": 0,
+            "total_online_time": 0
+        },
+        {
+            "ref_date": "2015-04-30",
+            "ref_hour": 2300,
+            "user_source": 0,
+            "int_page_read_user": 1,
+            "int_page_read_count": 1,
+            "ori_page_read_user": 0,
+            "ori_page_read_count": 0,
+            "share_user": 0,
+            "share_count": 0,
+            "add_to_fav_user": 0,
+            "add_to_fav_count": 0,
+            "total_online_time": 0
+        }
+    ]
+}
+/************************************************/
+获取图文分享转发数据（getusershare）
+/************************************************/
+{
+    "list": [
+        {
+            "ref_date": "2015-04-27",
+            "user_source": 0,
+            "share_scene": 1,
+            "share_count": 1,
+            "share_user": 1
+        },
+        {
+            "ref_date": "2015-04-28",
+            "user_source": 0,
+            "share_scene": 1,
+            "share_count": 1,
+            "share_user": 1
+        },
+        {
+            "ref_date": "2015-04-29",
+            "user_source": 0,
+            "share_scene": 1,
+            "share_count": 5,
+            "share_user": 3
+        },
+        {
+            "ref_date": "2015-04-29",
+            "user_source": 0,
+            "share_scene": 2,
+            "share_count": 2,
+            "share_user": 2
+        },
+        {
+            "ref_date": "2015-04-30",
+            "user_source": 0,
+            "share_scene": 1,
+            "share_count": 1,
+            "share_user": 1
+        },
+        {
+            "ref_date": "2015-04-30",
+            "user_source": 0,
+            "share_scene": 2,
+            "share_count": 2,
+            "share_user": 1
+        }
+    ]
+}
+
+/************************************************/
+获取图文分享转发分时数据（getusersharehour）
+/************************************************/
+{
+    "list": [
+        {
+            "ref_date": "2015-04-30",
+            "ref_hour": 900,
+            "user_source": 0,
+            "share_scene": 2,
+            "share_count": 2,
+            "share_user": 1
+        },
+        {
+            "ref_date": "2015-04-30",
+            "ref_hour": 1000,
+            "user_source": 0,
+            "share_scene": 1,
+            "share_count": 1,
+            "share_user": 1
+        }
+    ]
+}

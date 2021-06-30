@@ -1,0 +1,1079 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.basoft.service.dao.wechatPay.alliexTrans.WechatPayAlliexTransMapper">
+
+    <!-- 실행중인 Batch 작업이 있는지 확인 batch_header -->
+    <select id="selectBatchid_batch_header" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        <![CDATA[
+		update  bawechat.batch_header
+		set     status = 9
+		where   created < date_add(CURRENT_DATE(), interval -2 hour)
+		and     status = 1
+		;
+        
+		select
+		        ifnull(max(batch_id), 0) as batch_id
+		from    bawechat.batch_header a
+		where   a.status = #{status,jdbcType=INTEGER}
+		and		a.batch_type = #{batch_type,jdbcType=VARCHAR}
+		;
+		]]>
+    </select>
+    
+    <!-- Batch job 실행을 위한 id 생성 -->
+    <select id="insertSelect_batch_header" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        <![CDATA[
+		insert into bawechat.batch_header
+		(
+		        #batch_id
+		        batch_type
+		        , created
+		        , updated
+		        , start_cnt
+		        , end_cnt
+		        , status
+		)
+		values
+		(
+		        #batch_id	#Batch id
+		        #{batch_type,jdbcType=VARCHAR} #batch_type	#Batch 유형
+		        , sysdate() #created	#시작시간
+		        , null  #updated	#종료시간
+		        , 1 #start_cnt	#I/F 대상 데이터 건수
+		        , 0 #end_cnt	#I/F 처리 데이터 건수
+		        , 1 #status	#I/F 상태
+		)
+		;
+		select last_insert_id() as batch_id
+		;
+		]]>
+    </select>
+    
+    <!-- Batch 작업 결과 저장 -->
+    <update id="updateBatchResult_batch_header" parameterType="java.util.HashMap">
+        <![CDATA[
+		update  bawechat.batch_header
+		set     status = #{status,jdbcType=INTEGER}
+		        , updated = sysdate()
+		        , end_cnt = case 
+		                        when batch_type = 'order_pay_trans' then
+		                            (select count(*) from eorder.order_pay_trans where batch_id = #{batch_id,jdbcType=BIGINT} and status = 2)
+		                        when batch_type = 'order_pay_trans_cancel' then
+		                            (select count(*) from eorder.order_pay_trans_cancel where batch_id = #{batch_id,jdbcType=BIGINT} and status = 2)
+		                        when batch_type = 'order_pay_trans_search' then
+		                            (select count(*) from eorder.order_pay_trans_search where batch_id = #{batch_id,jdbcType=BIGINT} and status = 2)
+		                        when batch_type = 'order_pay_trans_closing' then
+		                            (select count(*) from eorder.order_pay_trans_closing where batch_id = #{batch_id,jdbcType=BIGINT} and status = 2)
+		                        else
+		                            0
+		                    end
+		where   batch_id = #{batch_id,jdbcType=BIGINT}
+		;
+		]]>	
+    </update>
+    
+    <!-- 알리엑스로 I/F 되는 대상 선 저장 order_pay_trans -->
+    <insert id="insertBatchInitial_order_pay_trans" parameterType="java.util.HashMap">
+        <![CDATA[
+		insert into eorder.order_pay_trans
+		(
+		        #trans_id
+		        pay_id
+		        , order_id
+		        , created
+		        , updated
+		        , try_cnt
+		        , status
+		        , batch_id
+		        , transdate
+		        , version
+		        , processtype
+		        , merchantid
+		        , transtype
+		        , goodsname
+		        , merchanttransid
+		        , transid
+		        , merchantcurrcd
+		        , merchantamount
+		        , merchantdefine
+		        , wechatcurrcd
+		        , wechatamount
+		        , wechatfxrate
+		        , connectip
+		        , transstate
+		        , reqdt
+		        , resdt
+		        , wechattransdt
+		        , wechattransid
+		        , cashcurrcd
+		        , cashamount
+		        , cashbanktype
+		        , usertag
+		        , prepayid
+		        , codeurl
+		        , ostype
+		        , mobiletype
+		        , payeremail
+		        , payermemberid
+		        , secretvalue
+		)
+		select
+		        b.pay_id	#지불id 支付id
+		        , a.id as order_id    #오더번호
+		        , current_timestamp as created	#생성일
+		        , current_timestamp as updated	#수정일
+		        , 0 as try_cnt	#I/F 시도 횟수
+		        , b.status as status	#I/F 상태 (0:대기, 1:전송중, 2:정상, 9:오류)
+        		, null as batch_id #BATCH ID
+		        , date_format(b.pay_dts, '%Y%m%d') as transdate	#거래일자 (전일자) #结算完成时间 결재완료시간
+		        , '0100' version	#버전
+		        , 'PAYMENT' as processtype	#처리구분 (PAYMENT)
+		        , d.merchant_id as merchantid	#가맹점 ID
+		        , '1' as transtype  #거래구분-1:승인, 2:취소
+		        , d.merchant_nm as goodsname	#가맹점 영문명 표기
+		        , a.id as merchanttransid	#가맹점 거래ID #微信支付id 위쳇결재id
+		        , b.out_trade_no as transid	#알리엑스 거래ID
+		        , 'KRW' as merchantcurrcd	#가맹점 통화코드 -USD, KRW
+		        , a.amount as merchantamount	#가맹점 금액 #支付金额 지불금액
+		        , b.pay_id as merchantdefine	#가맹점 고유정보
+		        , b.fee_type as wechatcurrcd	#위챗 통화코드    #结算货币类型（公司） 결재화페종류(고객사)
+		        , (b.total_fee / 100) as wechatamount	#위챗 금액  #结算金额（公司） 결재금액（고객사） 
+		        , a.krw_usd_rate as wechatfxrate	#위쳇 환율 -KRW일 경우 USD환율   #汇率 환율
+			    , a.spbill_create_ip as connectip	#접속IP    #支持IPV4和IPV6两种格式的IP地址。调用微信支付API的机器IP 
+			    , 'SUCCESS' as transstate	#거래상태 -SUCCESS, REFUND
+		        , date_format(a.created, '%Y%m%d%H%i%s') as reqdt #요청시간 YYYYMMDDHH24MISS 
+		        , date_format(a.updated, '%Y%m%d%H%i%s') as resdt	#응답시간 YYYYMMDDHH24MISS 
+		        , date_format(b.pay_dts, '%Y%m%d%H%i%s') as wechattransdt	#위챗 거래시간(중국시간) #结算完成时间 결재완료시간 
+		        , b.transaction_id as wechattransid	#위챗 거래ID	 #支付编号  결재번호
+		        , b.cash_fee_type as cashcurrcd #고객청구 통화코드	#结算货币类型 결재화페종류 
+		        , (b.cash_fee / 100) as cashamount	#고객청구 금액	#结算金额（客户） 결재금액(고객)
+		        , b.bank_type as cashbanktype	#고객지불은행	#结算银行 결재은행
+		        , b.open_id as usertag	#고객식별번호	#wechat cust open id
+		        , ifnull(a.prepay_id, '') as prepayid	#Advance Transaction ID (정상일경우) 
+		        , '' as codeurl	#QR Code URL
+		        , 'MOBILE' as ostype	#Os Type - PC, MOBILE
+		        , 'AW' as mobiletype #Mobile Type - IW:IOS, AW:ANDROID ★★★★★★★★★★★★★★
+		        , '' as payeremail	#결제자 이메일
+		        , '' as payermemberid	#결제자 회원ID
+		        , '' as secretvalue #거래 검증 요청 값 
+		from    eorder.order a
+		        inner join eorder.order_pay b
+		                on a.id = b.order_id
+		        left outer join eorder.order_pay_trans c
+		                on a.id = c.order_id
+		                and b.pay_id = c.pay_id
+                left outer join eorder.store d
+                        on a.store_id = d.id
+		where   a.status in (4,5,6,7,8,9,10,11)
+		and     b.pay_status = '1' #微信支付状态 위챗지불상태 SUCCESS(1, "支付成功"),REFUND(2, "转入退款"),NOTPAY(3,"未支付"),CLOSED(4, "已关闭"),REVOKED(5, "已撤销(刷卡支付)"),USERPAYING(6, "用户支付中"),PAYERROR(7, "支付失败(其他原因，如银行返回失败)")
+		and     c.trans_id is null
+		;
+		]]>
+    </insert>
+    
+    <!-- 알리엑스로 I/F 되는 대상 대기 상태로 업데이트 order_pay_trans -->
+    <update id="updateTargetWait_order_pay_trans" parameterType="java.util.HashMap">
+        <![CDATA[
+		update  eorder.order_pay_trans a
+		        , (
+		            select 
+		                    e.trans_id
+		                    , s.transid_type
+		            from    eorder.order_pay_trans e
+		            		inner join eorder.order o
+		            				on e.order_id = o.id
+		            		inner join eorder.store s
+		            				on o.store_id = s.id
+		            where   e.status in (0, 1, 9, 6)	#오류 데이터, 대기상태 데이터 처리, 배치중에러나서 멈춘 데이터, (6:수작업 전송 상태)
+		            and     e.try_cnt < 3   #I/F 시도 횟수
+		            limit 100
+		        ) b
+		set     a.status = 1  #I/F 상태 (0:대기, 1:전송중, 2:정상, 9:오류)
+				, a.batch_id = #{batch_id,jdbcType=BIGINT}
+				-- , transid = concat(b.transid_type, (a.trans_id))
+		where   a.trans_id = b.trans_id
+		;
+		
+		update  bawechat.batch_header
+		set     start_cnt = (select count(*) from eorder.order_pay_trans where batch_id = #{batch_id,jdbcType=BIGINT})
+		where   batch_id = #{batch_id,jdbcType=BIGINT}
+		;
+		]]>
+    </update>
+    
+    <!-- 알리엑스로 I/F 되는 대상 조회 order_pay_trans -->
+    <select id="selectTargetList_order_pay_trans" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        <![CDATA[
+		select
+		        a.trans_id    #알리엑스 전송 ID
+		        , a.pay_id    #위챗 지불 ID
+		        , a.order_id    #오더 ID
+		        , a.created    #생성일
+		        , a.updated    #수정일
+		        , a.try_cnt    #I/F 시도 횟수
+		        , a.status    #I/F 상태 (0:대기, 1:전송중, 2:정상, 9:오류)
+		        , a.version    #버전
+		        , a.processtype    #처리구분 (PAYMENT)
+		        , a.merchantid    #가맹점 ID
+		        , a.transtype    #거래구분-1:승인, 2:취소
+		        , a.goodsname    #가맹점 영문명 표기
+		        , a.merchanttransid    #가맹점 거래ID
+		        , a.transid    #알리엑스 거래ID
+		        , a.merchantcurrcd    #가맹점 통화코드 -USD, KRW
+		        , round(a.merchantamount) as merchantamount    #가맹점 금액
+		        , a.merchantdefine    #가맹점 고유정보
+		        , a.wechatcurrcd    #위챗 통화코드
+		        , a.wechatamount    #위챗 금액
+		        , a.wechatfxrate    #위쳇 환율 -KRW일 경우 USD환율
+		        , a.connectip    #접속IP
+		        , a.transstate    #거래상태 -SUCCESS, REFUND
+		        , a.reqdt    #요청시간 YYYYMMDDHH24MISS
+		        , a.resdt    #응답시간 YYYYMMDDHH24MISS
+		        , a.wechattransdt    #위챗 거래시간(중국시간)
+		        , a.wechattransid    #위챗 거래ID
+		        , a.cashcurrcd    #고객청구 통화코드
+		        , a.cashamount    #고객청구 금액
+		        , a.cashbanktype    #고객지불은행
+		        , a.usertag    #고객식별번호
+		        , a.prepayid    #Advance Transaction ID
+		        , a.codeurl    #QR Code URL
+		        , a.ostype    #Os Type - PC, MOBILE
+		        , a.mobiletype    #Mobile Type - IW:IOS, AW:ANDROID
+		        , a.payeremail    #결제자 이메일
+		        , a.payermemberid    #결제자 회원ID
+		        , a.secretvalue    #거래 검증 요청 값
+		        , a.r_version    #버전
+		        , a.r_processtype    #처리구분
+		        , a.r_merchantid    #가맹점 ID
+		        , a.r_merchanttransid    #가맹점 거래ID
+		        , a.r_merchantcurrcd    #가맹점 통화코드 -USD, KRW
+		        , a.r_merchantamount    #가맹점 금액
+		        , a.r_transid    #알리엑스 거래ID
+		        , a.r_responsecode    #응답 코드 0000 = 성공
+		        , a.r_responsemsg    #응답 메시지
+		        , a.r_secretvalue    #거래 검증 응답 값
+                , c.merchant_id #Alliex Merchant ID
+                , c.merchant_nm #Alliex Merchant Name
+                , c.gateway_pw  #Alliex Gateway Password
+                , c.payment_method  #Alliex Payment Method
+                , c.currency    #Alliex Currency
+                , c.transid_type
+		from    eorder.order_pay_trans a
+                left outer join eorder.`order` b
+                        on a.order_id = b.id
+                left outer join eorder.store c
+                        on b.store_id = c.id
+		where   a.status = 1    #I/F 상태 (0:대기, 1:전송중, 2:정상, 9:오류)
+		and		a.batch_id = #{batch_id,jdbcType=BIGINT}
+		;
+		]]>
+    </select>
+    
+    <!-- 알리엑스로 I/F 결과 저장 order_pay_trans -->
+    <update id="updateBatchResult_order_pay_trans" parameterType="java.util.HashMap">
+        <![CDATA[
+		update  eorder.order_pay_trans
+		set     status = #{status,jdbcType=INTEGER}  						#I/F 상태 (0:대기, 1:전송중, 2:정상, 9:오류)
+		        , try_cnt = try_cnt + 1 									#I/F 시도 횟수
+		        , secretvalue = #{secretvalue,jdbcType=VARCHAR}  			#거래 검증 요청 값
+		        , r_version = #{r_version,jdbcType=VARCHAR}					#버전
+		        , r_processtype = #{r_processtype,jdbcType=VARCHAR}			#처리구분
+		        , r_merchantid = #{r_merchantid,jdbcType=VARCHAR}			#가맹점 ID
+		        , r_merchanttransid = #{r_merchanttransid,jdbcType=VARCHAR}	#가맹점 거래ID
+		        , r_merchantcurrcd = #{r_merchantcurrcd,jdbcType=VARCHAR}	#가맹점 통화코드 -USD, KRW
+		        , r_merchantamount = #{r_merchantamount,jdbcType=DECIMAL}	#가맹점 금액
+		        , r_transid = #{r_transid,jdbcType=VARCHAR}					#알리엑스 거래ID
+		        , r_responsecode = #{r_responsecode,jdbcType=VARCHAR}		#응답 코드 0000 = 성공
+		        , r_responsemsg = #{r_responsemsg,jdbcType=VARCHAR}			#응답 메시지
+		        , r_secretvalue = #{r_secretvalue,jdbcType=VARCHAR}			#거래 검증 응답 값
+		        , result = #{result,jdbcType=VARCHAR}			#거래 검증 응답 값
+		where   trans_id = #{trans_id,jdbcType=BIGINT}
+		;
+		]]>
+    </update>
+    
+    <!-- 알리엑스로 I/F 되는 대상 선 저장 order_pay_trans_closing -->
+    <insert id="insertBatchInitial_order_pay_trans_closing" parameterType="java.util.HashMap">
+        <![CDATA[
+		insert into eorder.order_pay_trans_closing
+		(
+		        #, closing_id    #거래대사 id
+		        trans_id    #알리엑스 전송 ID - 정상거래
+		        , cancel_id    #알리엑스 전송 ID - 취소거래
+		        , pay_id    #위챗 지불 ID
+		        , order_id    #오더 ID
+		        , created    #생성일
+		        , updated    #수정일
+		        , try_cnt    #I/F 시도 횟수
+		        , status    #I/F 상태
+		        , transdate    #거래일자 (전일자)
+		        , transid    #알리엑스 채번 거래ID (승인,취소결과에 전송한 거래ID)
+		        , merchantid    #가맹점 ID -알리엑스 채번 가맹점ID
+		        , transtype    #거래구분 -1:승인, 2:취소
+		        , goodsname    #상품이름 -가맹점 영문명 표기
+		        , merchanttransid    #가맹점 거래ID -가맹점 고유거래ID
+		        , omerchanttransid    #가맹점 원거래ID (취소시)
+		        , otransid    #알리엑스 채번 원거래ID(취소시)
+		        , merchantcurrcd    #가맹점 통화코드 -USD, KRW
+		        , merchantamount    #가맹점 금액 
+		        , merchantdefine    #가맹점 정의필드 -가맹점 고유정보
+		        , wechatcurrcd    #위챗 통화코드
+		        , wechatamount    #위챗 금액
+		        , wechatfxrate    #위쳇 환율
+		        , connectip    #접속IP
+		        , transstate    #거래상태 -SUCCESS, REFUND
+		        , reqdt    #요청시간 YYYYMMDDHH24MISS
+		        , resdt    #응답시간 YYYYMMDDHH24MISS
+		        , wechattransdt    #위챗 거래시간(중국시간)
+		        , wechattransid    #위챗 거래ID
+		        , cashcurrcd    #고객청구 통화코드
+		        , cashamount    #고객청구 금액
+		        , cashbanktype    #고객지불은행
+		        , usertag    #고객식별번호
+		        , prepayid    #Advance Transaction ID
+		        , codeurl    #QR Code URL
+		        , ostype    #Os Type - PC, MOBILE
+		        , mobiletype    #Mobile Type - IW:IOS, AW:ANDROID
+		        , payeremail    #결제자 이메일
+		        , payermemberid    #결제자 회원ID
+		        , canceltype    #취소구분 -01:전체취소, 02:부분취소
+		        , refundreason    #환불사유
+		)
+		select
+		        a.trans_id    #알리엑스 전송 ID
+		        , null as cancel_id	#알리엑스 전송 ID - 취소거래
+		        , a.pay_id    #위챗 지불 ID
+		        , a.order_id    #오더 ID
+		        , current_timestamp as created  #생성일
+		        , current_timestamp as updated  #수정일
+		        , 0 try_cnt    #I/F 시도 횟수
+		        , 0 status    #I/F 상태 (0:대기, 1:전송중, 2:정상, 9:오류)
+		        , a.transdate	#거래일자 (전일자)
+		        , a.transid    #알리엑스 거래ID
+		        , a.merchantid    #가맹점 ID
+		        , a.transtype    #거래구분-1:승인, 2:취소
+		        , a.goodsname    #가맹점 영문명 표기
+		        , a.merchanttransid    #가맹점 거래ID
+		        , '' as omerchanttransid    #가맹점 원거래ID (취소시)
+		        , '' as otransid    #알리엑스 채번 원거래ID(취소시)
+		        , a.merchantcurrcd    #가맹점 통화코드 -USD, KRW
+		        , round(a.merchantamount) as merchantamount    #가맹점 금액
+		        , a.merchantdefine    #가맹점 고유정보
+		        , a.wechatcurrcd    #위챗 통화코드
+		        , a.wechatamount    #위챗 금액
+		        , a.wechatfxrate    #위쳇 환율 -KRW일 경우 USD환율
+		        , a.connectip    #접속IP
+		        , a.transstate    #거래상태 -SUCCESS, REFUND
+		        , a.reqdt    #요청시간 YYYYMMDDHH24MISS
+		        , a.resdt    #응답시간 YYYYMMDDHH24MISS
+		        , a.wechattransdt    #위챗 거래시간(중국시간)
+		        , a.wechattransid    #위챗 거래ID
+		        , a.cashcurrcd    #고객청구 통화코드
+		        , a.cashamount    #고객청구 금액
+		        , a.cashbanktype    #고객지불은행
+		        , a.usertag    #고객식별번호
+		        , a.prepayid    #Advance Transaction ID
+		        , a.codeurl    #QR Code URL
+		        , a.ostype    #Os Type - PC, MOBILE
+		        , a.mobiletype    #Mobile Type - IW:IOS, AW:ANDROID
+		        , a.payeremail    #결제자 이메일
+		        , a.payermemberid    #결제자 회원ID
+		        , '' as canceltype  #취소구분 -01:전체취소, 02:부분취소
+		        , '' as refundreason	#환불사유
+		from    eorder.order_pay_trans a
+		where   a.transdate = date_format(adddate(sysdate(), -1), '%Y%m%d')
+		-- and     a.status = 2
+        union all
+		select
+		        a.trans_id    #알리엑스 전송 ID
+		        , a.cancel_id	#알리엑스 전송 ID - 취소거래
+		        , a.pay_id    #위챗 지불 ID
+		        , a.order_id    #오더 ID
+		        , current_timestamp as created  #생성일
+		        , current_timestamp as updated  #수정일
+		        , 0 try_cnt    #I/F 시도 횟수
+		        , 0 status    #I/F 상태 (0:대기, 1:전송중, 2:정상, 9:오류)
+		        , a.transdate	#거래일자 (전일자)
+		        , a.transid    #알리엑스 거래ID
+		        , a.merchantid    #가맹점 ID
+		        , a.transtype    #거래구분-1:승인, 2:취소
+		        , '' as goodsname    #가맹점 영문명 표기
+		        , a.merchanttransid    #가맹점 거래ID
+		        , a.omerchanttransid    #가맹점 원거래ID (취소시)
+		        , a.otransid    #알리엑스 채번 원거래ID(취소시)
+		        , a.merchantcurrcd    #가맹점 통화코드 -USD, KRW
+		        , round(a.merchantamount) as merchantamount    #가맹점 금액
+		        , a.merchantdefine    #가맹점 고유정보
+		        , a.wechatcurrcd    #위챗 통화코드
+		        , a.wechatamount    #위챗 금액
+		        , a.wechatfxrate    #위쳇 환율 -KRW일 경우 USD환율
+		        , a.connectip    #접속IP
+		        , 'REFUND' as transstate    #거래상태 -SUCCESS, REFUND
+		        , a.reqdt    #요청시간 YYYYMMDDHH24MISS
+		        , a.resdt    #응답시간 YYYYMMDDHH24MISS
+		        , a.wechattransdt    #위챗 거래시간(중국시간)
+		        , a.wechattransid    #위챗 거래ID
+		        , a.cashcurrcd    #고객청구 통화코드
+		        , a.cashamount    #고객청구 금액
+		        , a.cashbanktype    #고객지불은행
+		        , a.usertag    #고객식별번호
+		        , '' as prepayid    #Advance Transaction ID
+		        , '' as codeurl    #QR Code URL
+		        , '' as ostype    #Os Type - PC, MOBILE
+		        , '' as mobiletype    #Mobile Type - IW:IOS, AW:ANDROID
+		        , '' as payeremail    #결제자 이메일
+		        , '' as payermemberid    #결제자 회원ID
+		        , a.canceltype  #취소구분 -01:전체취소, 02:부분취소
+		        , a.refundreason	#환불사유
+		from    eorder.order_pay_trans_cancel a
+		where   a.transdate = date_format(adddate(sysdate(), -1), '%Y%m%d')
+		-- and     a.status = 2
+		;
+		]]>
+    </insert>
+    
+    <!-- 알리엑스로 I/F 되는 대상 대기 상태로 업데이트 order_pay_trans_closing -->
+    <update id="updateTargetWait_order_pay_trans_closing" parameterType="java.util.HashMap">
+        <![CDATA[
+		update  eorder.order_pay_trans_closing
+		set     status = 1  #I/F 상태 (0:대기, 1:전송중, 2:정상, 9:오류)
+		        , batch_id = #{batch_id,jdbcType=BIGINT}
+		where   status = 0
+		and     transdate = date_format(adddate(sysdate(), -1), '%Y%m%d')
+		;
+		
+		update  bawechat.batch_header
+		set     start_cnt = (select count(*) from eorder.order_pay_trans_closing where batch_id = #{batch_id,jdbcType=BIGINT})
+		where   batch_id = #{batch_id,jdbcType=BIGINT}
+		;
+		]]>
+    </update>
+    
+
+    <!-- 알리엑스로 I/F 되는 대상 조회 order_pay_trans_closing -->
+    <select id="selectTargetList_order_pay_trans_closing" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        <![CDATA[
+		set sql_mode = 'PAD_CHAR_TO_FULL_LENGTH';
+		select
+		        ifnull(concat(
+		            a.transdate    #거래일자 (전일자)
+		            , a.transid    #알리엑스 채번 거래ID (승인,취소결과에 전송한 거래ID)
+		            , a.merchantid    #가맹점 ID -알리엑스 채번 가맹점ID
+		            , a.transtype    #거래구분 -1:승인, 2:취소
+		            , a.goodsname    #상품이름 -가맹점 영문명 표기
+		            , a.merchanttransid    #가맹점 거래ID -가맹점 고유거래ID
+		            , a.omerchanttransid    #가맹점 원거래ID (취소시)
+		            , a.otransid    #알리엑스 채번 원거래ID(취소시)
+		            , a.merchantcurrcd    #가맹점 통화코드 -USD, KRW
+		            , a.merchantamount    #가맹점 금액 
+		            , a.merchantdefine    #가맹점 정의필드 -가맹점 고유정보
+		            , a.wechatcurrcd    #위챗 통화코드
+		            , a.wechatamount    #위챗 금액
+		            , a.wechatfxrate    #위쳇 환율
+		            , a.connectip    #접속IP
+		            , a.transstate    #거래상태 -SUCCESS, REFUND
+		            , a.reqdt    #요청시간 YYYYMMDDHH24MISS
+		            , a.resdt    #응답시간 YYYYMMDDHH24MISS
+		            , a.wechattransdt    #위챗 거래시간(중국시간)
+		            , a.wechattransid    #위챗 거래ID
+		            , a.cashcurrcd    #고객청구 통화코드
+		            , a.cashamount    #고객청구 금액
+		            , a.cashbanktype    #고객지불은행
+		            , a.usertag    #고객식별번호
+		            , a.prepayid    #Advance Transaction ID
+		            , a.codeurl    #QR Code URL
+		            , a.ostype    #Os Type - PC, MOBILE
+		            , a.mobiletype    #Mobile Type - IW:IOS, AW:ANDROID
+		            , a.payeremail    #결제자 이메일
+		            , a.payermemberid    #결제자 회원ID
+		            , a.canceltype    #취소구분 -01:전체취소, 02:부분취소
+		            , a.refundreason    #환불사유
+		        ), '') as closing_data
+		        , ifnull(a.transdate, date_format(date_add(CURRENT_DATE(), interval -1 day), '%Y%m%d')) as transdate
+		        , b.sfpt_id
+		        , b.sftp_pw
+		        , b.sftp_directory_home
+		        , b.sftp_directory
+		        , b.sftp_ip
+		        , b.sftp_port
+		from    eorder.alliex_ftp_info b
+				left outer join eorder.order_pay_trans_closing a
+						on a.batch_id = #{batch_id,jdbcType=BIGINT}
+		where   b.merchant_id = 'KR19030001'
+		;
+		]]>
+    </select>
+    
+    <!-- 알리엑스로 I/F 결과 저장 order_pay_trans_closing -->
+    <update id="updateBatchResult_order_pay_trans_closing" parameterType="java.util.HashMap">
+        <![CDATA[
+		update  eorder.order_pay_trans_closing
+		set     status = #{status,jdbcType=INTEGER}  #I/F 상태 (0:대기, 1:전송중, 2:정상, 9:오류)
+		        , try_cnt = try_cnt + 1 #I/F 시도 횟수
+		        , result = #{result,jdbcType=VARCHAR}			#거래 검증 응답 값
+		where   batch_id = #{batch_id,jdbcType=BIGINT}
+		;
+		]]>
+    </update>    
+    
+    
+    <!-- 알리엑스로 I/F 되는 대상 조회 (환율) exchange_rate_if -->
+    <select id="selectTargetList_exchange_rate_if" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        <![CDATA[
+		select
+		        '0100' as version	#버전
+		        , 'EXCHANGERATE' as processtype   #처리구분 - EXCHANGERATE
+		        , a.merchant_id as merchantid	#가맹점 ID
+		        , date_format(adddate(sysdate(), 0), '%Y%m%d') as querydate    #조회일시(YYYYYMMDD)
+                , a.merchant_id #Alliex Merchant Name
+                , a.merchant_nm #Alliex Merchant ID
+                , a.gateway_pw  #Alliex Gateway Password
+                , a.payment_method  #Alliex Payment Method
+                , a.currency    #Alliex Currency
+                , a.transid_type
+		from    eorder.store a
+		where   a.merchant_id = 'KR19030001'
+		limit 1
+		;
+		]]>
+    </select>
+    
+    <!-- 알리엑스로 I/F 결과 저장 (환율) exchange_rate_if -->
+    <insert id="insertBatchResult_exchange_rate_if" parameterType="java.util.HashMap">
+        <![CDATA[
+		insert into eorder.exchange_rate_if
+		(
+		        created    #생성일
+		        , updated    #수정일
+		        , try_cnt    #I/F 시도 횟수
+		        , status    #I/F 상태
+		        , version    #버전
+		        , processtype    #처리구분
+		        , merchantid    #가맹점 ID
+		        , querydate    #조회일시(YYYYYMMDD)
+		        , r_version    #버전
+		        , r_processtype    #처리구분
+		        , r_merchantid    #가맹점 ID
+		        , r_querydate    #조회일시(YYYYYMMDD)
+		        , r_responsecode    #응답 코드
+		        , r_responsemsg    #응답 메시지
+		        , r_conversionrate    #가맹점 통화코드 대비 CNY 환율
+		        , r_invertedrate    #역 환율(CNY 대비 가맹점 통화코드 환율)
+		        , r_usdfxrate    #가맹점 통화코드 대비 USD 환율
+		)
+		values
+		(
+		        current_timestamp    #생성일
+		        , current_timestamp    #수정일
+		        , 1    #I/F 시도 횟수
+		        , #{status,jdbcType=INTEGER}    #I/F 상태
+		        , #{version,jdbcType=VARCHAR}    #버전
+		        , #{processtype,jdbcType=VARCHAR}    #처리구분
+		        , #{merchantid,jdbcType=VARCHAR}    #가맹점 ID
+		        , #{querydate,jdbcType=VARCHAR}    #조회일시(YYYYYMMDD)
+		        , #{r_version,jdbcType=VARCHAR}    #버전
+		        , #{r_processtype,jdbcType=VARCHAR}    #처리구분
+		        , #{r_merchantid,jdbcType=VARCHAR}    #가맹점 ID
+		        , #{r_querydate,jdbcType=VARCHAR}    #조회일시(YYYYYMMDD)
+		        , #{r_responsecode,jdbcType=VARCHAR}    #응답 코드
+		        , #{r_responsemsg,jdbcType=VARCHAR}    #응답 메시지
+		        , #{r_conversionrate,jdbcType=DECIMAL}    #가맹점 통화코드 대비 CNY 환율
+		        , #{r_invertedrate,jdbcType=DECIMAL}    #역 환율(CNY 대비 가맹점 통화코드 환율)
+		        , #{r_usdfxrate,jdbcType=DECIMAL}    #가맹점 통화코드 대비 USD 환율
+		)
+		;
+		]]>
+    </insert>
+    
+    <!-- 알리엑스 환욜 결과 받영 exchange_rate -->
+    <insert id="insertBatchResult_exchange_rate" parameterType="java.util.HashMap">
+        <![CDATA[
+		insert into eorder.exchange_rate
+		(
+		        start_dt
+		        , end_dt
+		        , usd_cny_rate
+		        , usd_krw_rate
+		        , krw_cny_rate
+                , krw_usd_rate
+		        , create_dts
+		        , update_dts
+		)
+		select 
+		        curdate()
+		        , adddate(curdate(), 1)
+                , 1
+                , 1
+		        , r_conversionrate  #가맹점 통화코드 대비 CNY 환율
+		        , r_usdfxrate   #가맹점 통화코드 대비 USD 환율
+		        , current_timestamp
+		        , current_timestamp
+		from    eorder.exchange_rate_if a
+		where   a.conversion_id = (select max(e.conversion_id) from  eorder.exchange_rate_if e where status=2 and e.r_conversionrate is not null)
+		;
+		]]>
+    </insert>
+	
+
+    <!-- 알리엑스로 I/F 되는 대상 선 저장 order_pay_trans_search -->
+    <insert id="insertBatchInitial_order_pay_trans_search" parameterType="java.util.HashMap">
+        <![CDATA[
+		insert into eorder.order_pay_trans_search
+		(
+		        #search_id    #거래전송데이터 조회
+		        trans_id    #알리엑스 전송 ID - 정상거래
+		        , cancel_id    #알리엑스 전송 ID - 취소거래
+		        , pay_id    #위챗 지불 ID
+		        , order_id    #오더 ID
+		        , created    #생성일
+		        , updated    #수정일
+		        , try_cnt    #I/F 시도 횟수
+		        , status    #I/F 상태 (0:대기, 1:전송중, 2:정상, 9:오류)
+		        , batch_id    #Batch id
+		        , version    #버전
+		        , processtype    #처리구분 - QUERY
+		        , merchantid    #가맹점 ID
+		        , merchanttransid    #가맹점 거래ID
+		        , merchantcurrcd    #가맹점 통화코드 -USD, KRW
+		        , merchantamount    #가맹점 금액
+		        , secretvalue    #거래 검증 요청 값
+		)
+		select
+		        a.trans_id    #알리엑스 전송 ID - 정상거래
+		        , null as cancel_id
+		        , a.pay_id    #위챗 지불 ID
+		        , a.order_id    #오더 ID
+		        , a.created    #생성일
+		        , a.updated    #수정일
+		        , a.try_cnt    #I/F 시도 횟수
+		        , 0 #a.status    #I/F 상태 (0:대기, 1:전송중, 2:정상, 9:오류)
+		        , #{batch_id,jdbcType=BIGINT} as batch_id    #Batch id
+		        , a.version    #버전
+		        , 'QUERY'	#a.processtype    #처리구분 - QUERY
+		        , a.merchantid    #가맹점 ID
+		        , a.merchanttransid    #가맹점 거래ID
+		        , a.merchantcurrcd    #가맹점 통화코드 -USD, KRW
+		        , a.merchantamount    #가맹점 금액
+		        , a.secretvalue    #거래 검증 요청 값
+		from    eorder.order_pay_trans a
+		        inner join bawechat.batch_header b
+		                on a.batch_id = b.batch_id
+		where   a.status = 9
+		and     a.transdate > date_format(adddate(sysdate(), -1), '%Y%m%d')     #2일 전 데이터까지만 처리
+		and     b.status in (2, 9)  #batch job 실행중인 것이 없을 경우에만 실행
+		and		a.try_cnt < 7
+		;
+		]]>
+    </insert>
+    
+    <!-- 알리엑스로 I/F 되는 대상 대기 상태로 업데이트 order_pay_trans_search -->
+    <update id="updateTargetWait_order_pay_trans_search" parameterType="java.util.HashMap">
+        <![CDATA[
+		update  eorder.order_pay_trans_search a
+		        , (
+		            select 
+		                    e.trans_id
+		            from    eorder.order_pay_trans_search e
+		            where   e.status in (0, 1)	#오류 데이터, 대기상태 데이터 처리, 배치중에러나서 멈춘 데이터
+		            and     e.try_cnt < 7   #I/F 시도 횟수
+		            limit 100
+		        ) b
+		set     a.status = 1  #I/F 상태 (0:대기, 1:전송중, 2:정상, 9:오류)
+				, a.batch_id = #{batch_id,jdbcType=BIGINT}
+		where   a.trans_id = b.trans_id
+		;
+		
+		update  bawechat.batch_header
+		set     start_cnt = (select count(*) from eorder.order_pay_trans_search where batch_id = #{batch_id,jdbcType=BIGINT})
+		where   batch_id = #{batch_id,jdbcType=BIGINT}
+		;
+		]]>
+    </update>
+    
+
+    <!-- 알리엑스로 I/F 되는 대상 조회 order_pay_trans_search -->
+    <select id="selectTargetList_order_pay_trans_search" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        <![CDATA[
+		select
+        		a.search_id	#거래전송데이터 조회
+		        , a.trans_id    #알리엑스 전송 ID - 정상거래
+		        , null as cancel_id
+		        , a.pay_id    #위챗 지불 ID
+		        , a.order_id    #오더 ID
+		        , a.created    #생성일
+		        , a.updated    #수정일
+		        , a.try_cnt    #I/F 시도 횟수
+		        , a.status    #I/F 상태 (0:대기, 1:전송중, 2:정상, 9:오류)
+		        , a.batch_id    #Batch id
+		        , a.version    #버전
+		        , a.processtype    #처리구분 - QUERY
+		        , a.merchantid    #가맹점 ID
+		        , a.merchanttransid    #가맹점 거래ID
+		        , a.merchantcurrcd    #가맹점 통화코드 -USD, KRW
+		        , round(a.merchantamount) as merchantamount    #가맹점 금액
+		        , a.secretvalue    #거래 검증 요청 값
+                , c.merchant_id #Alliex Merchant Name
+                , c.merchant_nm #Alliex Merchant ID
+                , c.gateway_pw  #Alliex Gateway Password
+                , c.payment_method  #Alliex Payment Method
+                , c.currency    #Alliex Currency
+                , c.transid_type
+		from    eorder.order_pay_trans_search a
+                left outer join eorder.`order` b
+                        on a.order_id = b.id
+                left outer join eorder.store c
+                        on b.store_id = c.id
+		where   a.batch_id = #{batch_id,jdbcType=BIGINT}
+		;
+		]]>
+    </select>
+    
+    <!-- 알리엑스로 I/F 결과 저장 order_pay_trans_search -->
+    <update id="updateBatchResult_order_pay_trans_search" parameterType="java.util.HashMap">
+        <![CDATA[
+		update  eorder.order_pay_trans
+		set     status = #{status,jdbcType=INTEGER}  						#I/F 상태 (0:대기, 1:전송중, 2:정상, 9:오류)
+		        , try_cnt = try_cnt + 1 									#I/F 시도 횟수
+		        , secretvalue = #{secretvalue,jdbcType=VARCHAR}  			#거래 검증 요청 값
+		        , r_version = #{r_version,jdbcType=VARCHAR}					#버전
+		        , r_processtype = #{r_processtype,jdbcType=VARCHAR}			#처리구분
+		        , r_merchantid = #{r_merchantid,jdbcType=VARCHAR}			#가맹점 ID
+		        , r_merchanttransid = #{r_merchanttransid,jdbcType=VARCHAR}	#가맹점 거래ID
+		        , r_merchantcurrcd = #{r_merchantcurrcd,jdbcType=VARCHAR}	#가맹점 통화코드 -USD, KRW
+		        , r_merchantamount = #{r_merchantamount,jdbcType=DECIMAL}	#가맹점 금액
+		        , r_transid = #{r_transid,jdbcType=VARCHAR}					#알리엑스 거래ID
+		        , r_responsecode = #{r_responsecode,jdbcType=VARCHAR}		#응답 코드 0000 = 성공
+		        , r_responsemsg = #{r_responsemsg,jdbcType=VARCHAR}			#응답 메시지
+		        , r_secretvalue = #{r_secretvalue,jdbcType=VARCHAR}			#거래 검증 응답 값
+		        , result = #{result,jdbcType=VARCHAR}			#거래 검증 응답 값
+		where   trans_id = #{trans_id,jdbcType=BIGINT}
+		;
+		update  eorder.order_pay_trans_search
+		set     status = #{status,jdbcType=INTEGER}  						#I/F 상태 (0:대기, 1:전송중, 2:정상, 9:오류)
+		        , try_cnt = try_cnt + 1 									#I/F 시도 횟수
+		        , secretvalue = #{secretvalue,jdbcType=VARCHAR}  			#거래 검증 요청 값
+		        , r_version = #{r_version,jdbcType=VARCHAR}					#버전
+		        , r_processtype = #{r_processtype,jdbcType=VARCHAR}			#처리구분
+		        , r_merchantid = #{r_merchantid,jdbcType=VARCHAR}			#가맹점 ID
+		        , r_merchanttransid = #{r_merchanttransid,jdbcType=VARCHAR}	#가맹점 거래ID
+		        , r_merchantcurrcd = #{r_merchantcurrcd,jdbcType=VARCHAR}	#가맹점 통화코드 -USD, KRW
+		        , r_merchantamount = #{r_merchantamount,jdbcType=DECIMAL}	#가맹점 금액
+		        , r_transid = #{r_transid,jdbcType=VARCHAR}					#알리엑스 거래ID
+		        , r_responsecode = #{r_responsecode,jdbcType=VARCHAR}		#응답 코드 0000 = 성공
+		        , r_responsemsg = #{r_responsemsg,jdbcType=VARCHAR}			#응답 메시지
+		        , r_secretvalue = #{r_secretvalue,jdbcType=VARCHAR}			#거래 검증 응답 값
+		        , result = #{result,jdbcType=VARCHAR}			#거래 검증 응답 값
+		where   search_id = #{search_id,jdbcType=BIGINT}
+		;
+		]]>
+    </update>   
+    
+    <!-- 알리엑스로 I/F 되는 대상 선 저장 order_pay_trans -->
+    <insert id="insertBatchInitial_order_pay_trans_cancel" parameterType="java.util.HashMap">
+        <![CDATA[
+		insert into eorder.order_pay_trans_cancel
+		(
+		        trans_id
+		        , pay_id
+		        , order_id
+		        , created
+		        , updated
+		        , try_cnt
+		        , status
+		        , batch_id
+		        , transdate
+		        , version
+		        , processtype
+		        , merchantid
+		        , transtype
+                , omerchanttransid
+                , otransid
+		        -- , goodsname
+		        , merchanttransid
+		        , transid
+		        , merchantcurrcd
+		        , merchantamount
+		        , merchantdefine
+		        , wechatcurrcd
+		        , wechatamount
+		        , wechatfxrate
+		        , connectip
+		        , transstate
+		        , reqdt
+		        , resdt
+		        , wechattransdt
+		        , wechattransid
+		        , cashcurrcd
+		        , cashamount
+		        , cashbanktype
+		        , usertag
+                , canceltype
+		        , refundreason
+		        , secretvalue
+		)
+		select
+		        c.trans_id
+		        , c.pay_id
+		        , c.order_id
+		        , now() as created
+		        , now() as updated
+		        , 0 as try_cnt
+		        , b.status as status
+		        , null as batch_id
+		        , date_format(date_add(d.createdt, interval -1 hour), '%Y%m%d') as transdate
+		        , c.version
+		        , 'REFUND' as processtype
+		        , c.merchantid
+		        , '2' as transtype
+                , c.merchanttransid as omerchanttransid
+                , c.transid as otransid
+		        -- , goodsname
+		        , d.cancel_id as merchanttransid
+		        , d.out_refund_no as transid
+		        , c.merchantcurrcd
+		        , c.merchantamount
+		        , c.merchantdefine
+		        , c.wechatcurrcd
+		        , c.wechatamount
+		        , c.wechatfxrate
+		        , c.connectip
+		        , 'REFUND' as transstate
+		        , date_format(d.createdt, '%Y%m%d%H%i%s') as reqdt
+		        , date_format(d.createdt, '%Y%m%d%H%i%s') as resdt
+		        , date_format(date_add(d.createdt, interval -1 hour), '%Y%m%d%H%i%s') as wechattransdt
+		        , d.refund_id as wechattransid
+		        , d.cash_fee_type as cashcurrcd
+		        , d.cash_fee / 100 as cashamount
+		        , c.cashbanktype
+		        , c.usertag
+                , '01' as canceltype    -- 취소구분- 01:전체취소, 02:부분취소
+		        , 'CUSTOMER CANCEL' as refundreason
+		        , '' as secretvalue
+		from    eorder.order a
+		        inner join eorder.order_pay b
+		                on a.id = b.order_id
+		        inner join eorder.order_pay_trans c
+		                on a.id = c.order_id
+		                and b.pay_id = c.pay_id
+                inner join eorder.order_pay_cancel d
+                        on a.id = d.order_id
+		        left outer join eorder.order_pay_trans_cancel e
+		                on a.id = e.order_id
+		                and b.pay_id = e.pay_id
+                        and c.trans_id = e.trans_id
+		where   a.status in (7)
+        and     c.status = 2
+		and     e.trans_id is null
+		;
+		]]>
+    </insert>
+    
+    <!-- 알리엑스로 I/F 되는 대상 대기 상태로 업데이트 order_pay_trans -->
+    <update id="updateTargetWait_order_pay_trans_cancel" parameterType="java.util.HashMap">
+        <![CDATA[
+		update  eorder.order_pay_trans_cancel a
+		        , (
+		            select 
+		                    e.cancel_id
+		                    , s.transid_type
+		            from    eorder.order_pay_trans_cancel e
+		            		inner join eorder.order o
+		            				on e.order_id = o.id
+		            		inner join eorder.store s
+		            				on o.store_id = s.id
+		            where   e.status in (0, 1, 9, 6)	#오류 데이터, 대기상태 데이터 처리, 배치중에러나서 멈춘 데이터
+		            and     e.try_cnt < 3   #I/F 시도 횟수
+		            limit 100
+		        ) b
+		set     a.status = 1  #I/F 상태 (0:대기, 1:전송중, 2:정상, 9:오류)
+				, a.batch_id = #{batch_id,jdbcType=BIGINT}
+				-- , a.transid = concat(b.transid_type, (a.cancel_id))
+		where   a.cancel_id = b.cancel_id
+		;
+		
+		update  bawechat.batch_header
+		set     start_cnt = (select count(*) from eorder.order_pay_trans_cancel where batch_id = #{batch_id,jdbcType=BIGINT})
+		where   batch_id = #{batch_id,jdbcType=BIGINT}
+		;
+		]]>
+    </update>
+    
+    <!-- 알리엑스로 I/F 되는 대상 조회 order_pay_trans -->
+    <select id="selectTargetList_order_pay_trans_cancel" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        <![CDATA[
+		select
+		        a.cancel_id
+				, a.trans_id
+				, a.pay_id
+				, a.order_id
+				, a.created
+				, a.updated
+				, a.try_cnt
+				, a.status
+				, a.batch_id
+				, a.transdate
+				, a.version
+				, a.processtype
+				, a.merchantid
+				, a.transtype
+				, a.omerchanttransid
+				, a.otransid
+				, a.cancel_id as merchanttransid
+				, a.transid
+				, a.merchantcurrcd
+				, round(a.merchantamount) as merchantamount
+				, a.merchantdefine
+				, a.wechatcurrcd
+				, a.wechatamount
+				, a.wechatfxrate
+				, a.connectip
+				, a.transstate
+				, a.reqdt
+				, a.resdt
+				, a.wechattransdt
+				, a.wechattransid
+				, a.cashcurrcd
+				, a.cashamount
+				, a.cashbanktype
+				, a.usertag
+				, a.canceltype
+				, a.refundreason
+                , c.merchant_id #Alliex Merchant Name
+                , c.merchant_nm #Alliex Merchant ID
+                , c.gateway_pw  #Alliex Gateway Password
+                , c.payment_method  #Alliex Payment Method
+                , c.currency    #Alliex Currency
+                , c.transid_type
+		from    eorder.order_pay_trans_cancel a
+                left outer join eorder.`order` b
+                        on a.order_id = b.id
+                left outer join eorder.store c
+                        on b.store_id = c.id
+		where   a.status = 1    #I/F 상태 (0:대기, 1:전송중, 2:정상, 9:오류)
+		and		a.batch_id = #{batch_id,jdbcType=BIGINT}
+		;
+		]]>
+    </select>
+    
+    <!-- 알리엑스로 I/F 결과 저장 order_pay_trans -->
+    <update id="updateBatchResult_order_pay_trans_cancel" parameterType="java.util.HashMap">
+        <![CDATA[
+		update  eorder.order_pay_trans_cancel
+		set     status = #{status,jdbcType=INTEGER}  						#I/F 상태 (0:대기, 1:전송중, 2:정상, 9:오류)
+		        , try_cnt = try_cnt + 1 									#I/F 시도 횟수
+		        , secretvalue = #{secretvalue,jdbcType=VARCHAR}  			#거래 검증 요청 값
+		        , r_version = #{r_version,jdbcType=VARCHAR}					#버전
+		        , r_processtype = #{r_processtype,jdbcType=VARCHAR}			#처리구분
+		        , r_merchantid = #{r_merchantid,jdbcType=VARCHAR}			#가맹점 ID
+		        , r_merchanttransid = #{r_merchanttransid,jdbcType=VARCHAR}	#가맹점 거래ID
+		        , r_merchantcurrcd = #{r_merchantcurrcd,jdbcType=VARCHAR}	#가맹점 통화코드 -USD, KRW
+		        , r_merchantamount = #{r_merchantamount,jdbcType=DECIMAL}	#가맹점 금액
+		        , r_transid = #{r_transid,jdbcType=VARCHAR}					#알리엑스 거래ID
+		        , r_responsecode = #{r_responsecode,jdbcType=VARCHAR}		#응답 코드 0000 = 성공
+		        , r_responsemsg = #{r_responsemsg,jdbcType=VARCHAR}			#응답 메시지
+		        , r_secretvalue = #{r_secretvalue,jdbcType=VARCHAR}			#거래 검증 응답 값
+		        , result = #{result,jdbcType=VARCHAR}			#거래 검증 응답 값
+		where   cancel_id = #{cancel_id,jdbcType=BIGINT}
+		;
+		]]>
+    </update>
+    
+    <!-- 테스트 서버 Order Check 실행 여부 확인 -->
+    <select id="selectServerCheckFlag" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        <![CDATA[
+		select
+		        pay_msg_send_flag
+		from    bawechat.sys_pay_check
+		where   server_type = #{server_type,jdbcType=VARCHAR}
+		;
+		]]>
+    </select>
+    
+    <!-- 테스트 서버 Check Order List 조회 -->
+    <select id="selectServerCheckOrderList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        <![CDATA[
+		select 
+		        b.out_trade_no
+		        , b.transaction_id
+		        , a.status
+		        , b.result_code
+		        , (select u.NICK_UNEMOJI from bawechat.wx_user u where u.openid = a.open_id) as nick
+		        , a.open_id
+		        , a.pay_amt_usd
+		        , c.return_code as cancel_return_code
+		        , c.result_code as cancel_result_code
+		        , d.template_msg_id
+		        , d.openid1
+		        , d.openid2
+		        , d.openid3
+		        , d.openid4
+		        , d.openid5
+		        , a.created
+				, date_format(a.created, '%Y-%m-%d %H:%i') as orderdt
+		from	eorder.`order` a
+		        inner join eorder.order_pay b
+		                on a.id = b.order_id
+		        left outer join eorder.order_pay_cancel c
+		                on a.id = c.order_id
+		        inner join bawechat.sys_pay_check d
+		                on d.server_type = 'TEST_SERVER'
+		where   a.created >= date_add(CURRENT_DATE(), interval -1 day)
+		and     b.result_code = 'SUCCESS'
+		and     (c.return_code is null or c.result_code <> 'SUCCESS')
+		;
+		]]>
+    </select>
+    
+    <!-- 테스트 서버 Check Order List 조회 -->
+    <select id="selectBookingOrderSendMsgList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        <![CDATA[
+			select
+			        t1.id as orderId
+        			, t1.open_id as openId
+			        , t2.name as name
+			        , t2.store_type as storeType
+			        , t3.cust_nm as custNm
+			        , ifnull(t3.reseve_dt_from, '') as reseveDtfrom
+			        , ifnull(t3.reseve_dt_to, '') as reseveDtto
+			        , ifnull(t3.confirm_time, '') as confirmTime
+			        , (
+			    		select
+			            	ifnull(max(c.name_chn), '')
+			    		from    eorder.order_item a 
+			            		inner join eorder.product_sku b 
+			                    		on a.sku_id = b.id 
+			            		inner join eorder.product c 
+			                    		on b.product_id = c.id 
+			    		where   a.order_id = t1.id 
+			          ) as productNm
+			        , t1.pay_amt_cny as payAmtCny
+			        , t1.amount as payAmtKrw
+			        , t3.shipping_type as shippingType
+			        , ifnull(t3.shipping_dt, '') as shippingDt
+			        , ifnull((select a.ship_point_nm from eorder.ship_point a where a.ship_point_id = t3.shipping_addr), '') shippingAddrNm
+			        , t1.status
+			        , (
+			            select 
+			            		max(a.wx_tmpl_id)
+			            from	bawechat.wx_tmpl_msg_shop_mst a
+			            where   a.sys_id = '1'
+			            and     a.wx_tmpl_no_short = case 
+			                                            when t2.store_type = 2 then 'clinic_booking_confirm'
+			                                            when t2.store_type = 3 then 'shopping_order_confirm'
+			                                            when t2.store_type = 4 then 'hotel_booking_confirm'
+			                                            else ''
+			                                          end
+			          ) as tmpMsgId
+			from    eorder.order t1
+			        inner join eorder.store t2
+			                on t1.store_id = t2.id
+			        inner join eorder.order_info t3
+			                on t1.id = t3.order_id
+			where   t2.store_type in(2,4)       -- 店铺类型(1:餐厅 2:医院 3:购物)
+			and     t1.status in (5,6,8,9,10,11,12)
+			and     t3.reseve_dt_from = date_format(DATE_ADD(sysdate(), INTERVAL 1 day), '%Y-%m-%d')
+			;
+		]]>
+    </select>
+    
+</mapper>

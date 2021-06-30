@@ -1,0 +1,7 @@
+com\basoft\file\FileTransformTest.class
+com\basoft\file\InnerSpringApplicationBoot.class
+com\basoft\file\AwsS3FileServiceTest.class
+com\basoft\file\FileServiceTest$1.class
+com\basoft\file\FileServiceTest.class
+com\basoft\file\DevAppBootstrap.class
+com\basoft\file\TestEnvAppBootstrap.class
