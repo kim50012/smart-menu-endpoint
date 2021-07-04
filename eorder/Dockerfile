@@ -1,14 +1,14 @@
-FROM base-env-eorder:0.0.1
-MAINTAINER basoft
+FROM  base-env:0.0.7
+MAINTAINER Orderking
 
 
 # charset
 RUN apt-get install -y locales
 
-RUN locale-gen zh_CN.UTF-8
-ENV LANG zh_CN.UTF-8
-ENV LANGUAGE zh_CN:zh
-ENV LC_ALL zh_CN.UTF-8
+#RUN locale-gen zh_CN.UTF-8
+#ENV LANG zh_CN.UTF-8
+#ENV LANGUAGE zh_CN:zh
+#ENV LC_ALL zh_CN.UTF-8
 
 
 RUN echo $JAVA_HOME

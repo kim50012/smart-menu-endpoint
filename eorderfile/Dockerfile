@@ -1,6 +1,6 @@
 #FROM 366101287582.dkr.ecr.ap-northeast-2.amazonaws.com/basoft-eorder:maven-3.6
 FROM base-env:0.0.2
-MAINTAINER woonill@aliyun.com
+MAINTAINER kim50012@naver.com
 
 # charset
 RUN apt-get install -y locales

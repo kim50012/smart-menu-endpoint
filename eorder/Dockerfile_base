@@ -1,6 +1,6 @@
 #FROM 366101287582.dkr.ecr.ap-northeast-2.amazonaws.com/basoft-eorder:maven-3.6
 FROM 554447705817.dkr.ecr.ap-northeast-2.amazonaws.com/eorder-test:maven-3.6
-MAINTAINER woonill@aliyun.com
+MAINTAINER kim50012@naver.com
 
 RUN mv /etc/apt/sources.list /etc/apt/sources.list.bak && \
     echo "deb-src http://archive.ubuntu.com/ubuntu xenial main restricted" >/etc/apt/sources.list && \
