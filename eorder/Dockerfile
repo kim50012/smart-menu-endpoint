@@ -1,4 +1,4 @@
-FROM  base-env:0.0.7
+FROM  base-env-0.0.7:latest
 MAINTAINER Orderking
 
 
