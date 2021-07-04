@@ -3,12 +3,11 @@ MAINTAINER Orderking
 
 
 # charset
-RUN apt-get install -y locales
-
-RUN locale-gen vi_VN.UTF-8
-ENV LANG vi_VN.UTF-8
-ENV LANGUAGE vi_VN:vi
-ENV LC_ALL vi_VN.UTF-8
+#RUN apt-get install -y locales
+#RUN locale-gen vi_VN.UTF-8
+#ENV LANG vi_VN.UTF-8
+#ENV LANGUAGE vi_VN:vi
+#ENV LC_ALL vi_VN.UTF-8
 
 
 RUN echo $JAVA_HOME
