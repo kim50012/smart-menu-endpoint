@@ -1,0 +1,14 @@
+## Redisson���Ӳ���
+spring.redis.host=srredis.s02sgk.0001.apse1.cache.amazonaws.com
+spring.redis.port=6379
+spring.redis.instanceId=crs-9tyiamgg
+spring.redis.password=kdi5006
+spring.redis.pool.max-active=100
+spring.redis.pool.max-wait=10000
+spring.redis.pool.max-idle=100
+spring.redis.pool.min-idle=1
+spring.redis.timeout=10000
+
+# spring jdbc template sql���
+logging.level.org.springframework.jdbc.core.JdbcTemplate=DEBUG
+logging.level.org.springframework.jdbc.core.StatementCreatorUtils=TRACE
