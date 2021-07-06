@@ -286,20 +286,24 @@ public class SpringEOrderApplicationBoot {
 
         //String redisServer = "192.168.0.81";
         //String redisServer = "bawechat-redis-srv.dxve9i.0001.apn2.cache.amazonaws.com";
-        JedisShardInfo jsi = new JedisShardInfo(redisServer, port);
+//        JedisShardInfo jsi = new JedisShardInfo(redisServer, port);
 //        jsi.setPassword(instanceId+":"+password);
 //        jsi.setPassword(password);
 //        jsi.setConnectionTimeout(timeOut);
 
-        JedisPoolConfig config = new JedisPoolConfig();
+//        JedisPoolConfig config = new JedisPoolConfig();
 //        config.setMaxIdle(maxIdle);
 //        config.setMinIdle(minIdle);
         //config.setMaxTotal();
 //        config.setMaxWaitMillis(maxWait);
 
+//        JedisConnectionFactory jcf = new JedisConnectionFactory(jsi);
+//        jcf.setPoolConfig(config);
+//        jcf.setPort(port);
+
+        JedisShardInfo jsi = new JedisShardInfo(redisServer, port);
         JedisConnectionFactory jcf = new JedisConnectionFactory(jsi);
-        jcf.setPoolConfig(config);
-        jcf.setPort(port);
+        
         
         return jcf;
     }

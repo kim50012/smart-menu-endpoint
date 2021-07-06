@@ -1,8 +1,8 @@
 {
-  "uploadFileRemoteServer":"http://www.bacommerce.co.kr/file/api/v1/upload",
-  "wechatRootUrl":"http://www.bacommerce.co.kr/public/wechat/#",
-  "wechatNotifyUrl":"http://www.bacommerce.co.kr/eorder/wechat/api/v1/order_pay",
-  "menuRedirectRoot":"/public/wechat/#",
+  "uploadFileRemoteServer":"http://file.orderking.best/file/api/v1/upload",
+  "wechatRootUrl":"http://res.orderking.best/public/res/#/",
+  "wechatNotifyUrl":"http://res.orderking.best/eorder/res/api/v1/order_pay",
+  "menuRedirectRoot":"/public/res/#",
   "wechatCertPath":"PROD",
   "jpushConfig":{
     "appKey":"96a4e078fc06a27c63cfcd7d",
@@ -15,9 +15,9 @@
       "queueCapacity":100
   },
   "redis-config":{
-    "server":"127.0.0.1",
+    "server":"srredis.s02sgk.0001.apse1.cache.amazonaws.com",
     "port":6379,
-    "password":"kdi5006",
+    "password":"dimy5006",
     "instanceId": "crs-2lzkj5jo",
     "pool.max-idle":5000,
     "pool.min-idle":1,
@@ -25,9 +25,9 @@
     "pool.max-wait":5000
   },
   "mysqlDataSource-config":{
-    "url":"jdbc:mysql://127.0.0.1:3306/eorder?useUnicode=true&characterEncoding=utf-8&allowMultiQueries=true&useSSL=false",
+    "url":"jdbc:mysql://prod-db.csptpnylhznw.ap-southeast-1.rds.amazonaws.com:3306/eorder?useUnicode=true&characterEncoding=utf-8&allowMultiQueries=true&useSSL=false",
     "user":"root",
-    "password":"kdi5006",
+    "password":"dimy5006",
     "useSsl":"true"
   },
   "wxPay-config": {
@@ -36,7 +36,7 @@
     "store-qr-cnt":50
   },
   "wechatAppId": "wx5b1147ac766db6db",
-  "wechatDomain":"www.bacommerce.co.kr",
+  "wechatDomain":"res.orderking.best",
   "template-msg-config": {
     "hotel_booking_confirm":"QYEMzOjx7fyXf7RxE8gtIRzR1hjezJamsHXy9k6lvaA",
     "clinic_booking_confirm":"i5vauE3IPqlRQzl5GXgTH0CWT3gY8NIZNdQz2zhxTWs",

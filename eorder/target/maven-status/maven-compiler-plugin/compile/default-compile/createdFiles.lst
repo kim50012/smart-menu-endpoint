@@ -400,7 +400,6 @@ com\basoft\eorder\application\framework\DefaultCommandHandler.class
 com\basoft\eorder\domain\model\store\StoreChargeInfoRecord.class
 com\basoft\eorder\batch\job\threads\SendEamilSettleThread.class
 com\basoft\eorder\interfaces\command\order\retail\SaveRetailOrder.class
-com\basoft\eorder\SpringEOrderApplicationBoot$InnerSpringBootServletInitializer.class
 com\basoft\eorder\interfaces\query\SettleQuery.class
 com\basoft\eorder\interfaces\command\AcceptOrder.class
 com\basoft\eorder\interfaces\query\inventory\hotel\InventoryHotelDTO$FailMsg.class
@@ -754,7 +753,6 @@ com\basoft\eorder\interfaces\query\ghraphql\AdminGraphQLObjects.class
 com\basoft\eorder\domain\model\order\StoreDailySettlement.class
 com\basoft\eorder\foundation\jdbc\query\JdbcOrderQueryImpl$2.class
 com\basoft\eorder\interfaces\command\agent\AgentCommandHandler.class
-com\basoft\eorder\SpringEOrderApplicationBoot.class
 com\basoft\eorder\foundation\jdbc\repo\JdbcOrderRepoImpl$8.class
 com\basoft\eorder\domain\model\TnuResult.class
 com\basoft\eorder\interfaces\controller\h5\restaurant\SpringRestaurantController.class
