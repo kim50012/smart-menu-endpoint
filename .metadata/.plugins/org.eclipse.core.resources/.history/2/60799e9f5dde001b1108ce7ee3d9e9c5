@@ -1,0 +1,172 @@
+package com.basoft.eorder.batch.job;
+
+import com.basoft.eorder.batch.lock.RedissonUtil;
+import com.basoft.eorder.cache.loading.activity.thread.CacheRetailStoreActivityProductData4MINIThread;
+import com.basoft.eorder.cache.loading.retail.thread.CacheRetailStoreProductDataThread;
+import com.basoft.eorder.common.CommonConstants;
+import com.basoft.eorder.domain.StoreRepository;
+import com.basoft.eorder.domain.model.Store;
+import com.basoft.eorder.domain.model.activity.discount.Discount;
+import com.basoft.eorder.interfaces.query.OrderQuery;
+import com.basoft.eorder.interfaces.query.activity.discount.DiscountQuery;
+import com.basoft.eorder.interfaces.query.retail.api.RetailProductQuery;
+import com.basoft.eorder.interfaces.query.storecategory.StoreCategoryQuery;
+import com.basoft.eorder.util.CollectionUtil;
+import com.basoft.eorder.util.RedisUtil;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
+import org.redisson.api.RLock;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.stereotype.Component;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
+
+/**
+ * EOrder购物定时任务
+ *
+ * @author Mentor
+ * @version 1.0
+ * @since 20190826
+ */
+@Slf4j
+@Component
+public class EOrderRetailBatchJob {
+    @Autowired
+    private DiscountQuery discountQuery;
+
+    @Autowired
+    private StoreRepository storeRepository;
+
+    @Autowired
+    private RedissonUtil redissonUtil;
+
+    @Autowired
+    private RedisUtil redisUtil;
+
+    @Autowired
+    RetailProductQuery retailProductQuery;
+
+    @Autowired
+    private StoreCategoryQuery storeCategoryQuery;
+
+    @Autowired
+    private OrderQuery orderQuery;
+
+    /**
+     * 【刷新购物商户产品活动价格缓存】
+     *
+     * 检查购物商户活动有效状态是否变化，如果有变化需要更新购物商户的产品缓存信息（默认sku的活动价格信息）
+     * 特别说明：只能检测活动的过期和上架。无法检测到活动Detail的变化，活动Detail的变化需要人为的进行缓存刷新！！！
+     *
+     * <p>
+     * 每个小时的第一分钟和第31分钟都执行一次 ！！！@@@@@@强烈要求活动的开始时间和结束时间要么整点，要么整半点@@@@@@！！！
+     */
+    @Scheduled(cron = "0 1,31 * * * ?")
+   	// @Scheduled(cron = "0 31 12 * * ?")
+    public void refreshRetailStoreActivityCache() {
+        log.info("<><><><><><><><><>><><><><>【刷新购物商户产品活动价格缓存】定时任务启动<><><><><><><><><>><><><><>");
+        String batchKey = "STORE_RETAIL_ACTIVITY_REFRESH_CACHE";
+        RLock lock = redissonUtil.getRLock(batchKey);
+        boolean getLock = false;
+        try {
+            // 1、零等待取锁，加锁120秒
+            if (getLock = lock.tryLock(0, 120, TimeUnit.SECONDS)) {
+
+                /******************************************一、本定时任务原有的定时目的-start*****************************/
+                // 2、查询非关闭(状态不为3)且需要缓存（is_cache为1）的商户
+                List<Store> cacheRetailStoreList = storeRepository.getCacheRetailStoreList();
+                if (cacheRetailStoreList != null && cacheRetailStoreList.size() > 0) {
+                    log.info("【刷新购物商户产品活动价格缓存】待缓存刷新的商户数量为：" + cacheRetailStoreList.size());
+                    List<Long> storeIdList = cacheRetailStoreList.stream().map(Store::id).collect(Collectors.toList());
+                    String storeIds = StringUtils.join(storeIdList.toArray(), ",");
+
+                    // 3、[数据库]根据商户ID查询活动列表
+                    List<Discount> discounts = discountQuery.getDiscountListByStoreIds(storeIds);
+                    // [数据库]根据商户列表将活动分组
+                    Map<Long, List<Discount>> discountMaps = discounts.stream().collect(Collectors.groupingBy(Discount::getStoreId));
+
+                    // 4、[redis]获取缓存的有效活动
+                    String retailActivityCacheKey = CommonConstants.STORE_RETAIL_ACTIVITY_CACHE_KEY;
+                    Map<Object, Object> discountIdsStringMap = redisUtil.hmget(retailActivityCacheKey);
+
+                    // 5、一个一个商户循环：比对数据库和redis的有效活动ID是否一致，比对不一致则刷新换新（启动刷新线程）并更新该商户有效活动缓存。
+                    for (Map.Entry<Long, List<Discount>> entry : discountMaps.entrySet()) {
+                        Long storeId = entry.getKey();
+                        // 5-1、[数据库]数据库的有效活动ID列表
+                        List<Long> discIdList = entry.getValue().stream().map(Discount::getDiscId).collect(Collectors.toList());
+
+                        // 5-2、[redis]redis中该商户的有效活动ID字符串
+                        String cacheDiscIds = discountIdsStringMap == null ? "" : (String) discountIdsStringMap.get(String.valueOf(storeId));
+                        List<Long> cacheDiscIdList = Arrays.asList(cacheDiscIds.split(","))
+                                .stream().map(s -> Long.parseLong(s.trim())).collect(Collectors.toList());
+
+                        // 5-3比对
+                        boolean isSame = CollectionUtil.compareList(discIdList, cacheDiscIdList);
+
+                        // 5-4 检测到活动的变化，启动缓存刷新线程。启动的是全量数据刷新线程CacheRetailStoreProductDataThread
+                        if (!isSame) {
+                            Store store = storeRepository.getStore(storeId);
+                            try {
+                                Thread thread = new Thread(new CacheRetailStoreProductDataThread(store
+                                        , retailProductQuery, redisUtil, storeCategoryQuery, orderQuery));
+                                thread.start();
+                            } catch (Exception e) {
+                                log.error("【商户数据全量刷新】商户数据全量刷新线程异常，[商户ID]=" + store.id() + "，异常信息为：" + e.getMessage(), e);
+                            }
+
+                            // 5-5 更新该商户有效活动缓存
+                            String toBeDiscIdsString = StringUtils.join(discIdList.toArray(), ",");
+                            redisUtil.hset(retailActivityCacheKey, String.valueOf(storeId), toBeDiscIdsString);
+                        }
+                    }
+                }
+                /******************************************一、本定时任务原有的定时目的-end*****************************/
+
+
+
+                /******************************************二、本定时任务20201118新增的定时目的-start*****************************/
+                log.info("【缓存商户的活动商品】【缓存折扣店小程序主页活动商品信息】-缓存折扣店小程序主页活动商品信息-开始！");
+                if (cacheRetailStoreList != null && cacheRetailStoreList.size() > 0) {
+                    for (Store store : cacheRetailStoreList) {
+                        try {
+                            Thread thread = new Thread(new CacheRetailStoreActivityProductData4MINIThread(store
+                                    , retailProductQuery, redisUtil));
+                            thread.start();
+                        } catch (Exception e) {
+                            log.error("【缓存商户的活动商品】缓存商户的活动商品的线程异常，[商户ID]=" + store.id() + "，异常信息为：" + e.getMessage(), e);
+                        }
+                    }
+                }
+                log.info("【缓存商户的活动商品】【缓存折扣店小程序主页活动商品信息】-缓存折扣店小程序主页活动商品信息-结束！");
+                /******************************************二、本定时任务20201118新增的定时目的-end*****************************/
+
+            } else {
+                log.info("【刷新购物商户产品活动价格缓存】没有获取到定时任务执行锁:{},ThreadName :{}", batchKey, Thread.currentThread().getName());
+            }
+        } catch (InterruptedException e) {
+            log.error("【刷新购物商户产品活动价格缓存】获取分布式锁异常：" + e.getMessage(), e);
+        } finally {
+            // 无锁返回
+            if (!getLock) {
+                return;
+            }
+
+            // 有锁进行释放，并进行延时40秒释放
+            try {
+                Thread.sleep(40000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+                log.error("【刷新购物商户产品活动价格缓存】延时释放执行锁异常：" + e.getMessage(), e);
+            }
+
+            lock.unlock();
+            log.info("【刷新购物商户产品活动价格缓存】释放锁完成，锁名称：{},当前线程名称ThreadName :{}", batchKey, Thread.currentThread().getName());
+        }
+        log.info("<><><><><><><><><>><><><><>【刷新购物商户产品活动价格缓存】定时任务主线程执行结束<><><><><><><><><>><><><><>");
+    }
+}

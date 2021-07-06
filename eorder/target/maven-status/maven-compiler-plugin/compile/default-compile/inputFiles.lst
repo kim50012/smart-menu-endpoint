@@ -2,7 +2,6 @@ D:\workspace\QR_Order\smart-menu-endpoint\eorder\src\main\java\com\basoft\eorder
 D:\workspace\QR_Order\smart-menu-endpoint\eorder\src\main\java\com\basoft\eorder\foundation\jdbc\repo\order\retail\JdbcRetailOrderEventRepoImpl.java
 D:\workspace\QR_Order\smart-menu-endpoint\eorder\src\main\java\com\basoft\eorder\interfaces\query\order\retail\RetailOrderQuery.java
 D:\workspace\QR_Order\smart-menu-endpoint\eorder\src\main\java\com\basoft\eorder\interfaces\controller\manager\SpringManagerController.java
-D:\workspace\QR_Order\smart-menu-endpoint\eorder\src\main\java\com\basoft\eorder\batch\job\threads\RetailCompleteOrderThread.java
 D:\workspace\QR_Order\smart-menu-endpoint\eorder\src\main\java\com\basoft\eorder\interfaces\query\agent\AgentSettlementDetailDTO.java
 D:\workspace\QR_Order\smart-menu-endpoint\eorder\src\main\java\com\basoft\eorder\interfaces\query\restaurant\RestaurantStoreQuery.java
 D:\workspace\QR_Order\smart-menu-endpoint\eorder\src\main\java\com\basoft\eorder\interfaces\controller\CQRSAbstractController.java
@@ -33,7 +32,6 @@ D:\workspace\QR_Order\smart-menu-endpoint\eorder\src\main\java\com\basoft\eorder
 D:\workspace\QR_Order\smart-menu-endpoint\eorder\src\main\java\com\basoft\eorder\util\MD5.java
 D:\workspace\QR_Order\smart-menu-endpoint\eorder\src\main\java\com\basoft\eorder\domain\model\OrderPayCancel.java
 D:\workspace\QR_Order\smart-menu-endpoint\eorder\src\main\java\com\basoft\eorder\foundation\jdbc\query\postStoreSet\JdbcPostStoreSetQueryImpl.java
-D:\workspace\QR_Order\smart-menu-endpoint\eorder\src\main\java\com\basoft\eorder\batch\lock\BatchJobUtil.java
 D:\workspace\QR_Order\smart-menu-endpoint\eorder\src\main\java\com\basoft\eorder\application\wx\model\TemplateMessageReturn.java
 D:\workspace\QR_Order\smart-menu-endpoint\eorder\src\main\java\com\basoft\eorder\interfaces\query\inventory\hotel\InventoryHotelDTO.java
 D:\workspace\QR_Order\smart-menu-endpoint\eorder\src\main\java\com\basoft\eorder\interfaces\query\StoreCategoryDTO.java
@@ -91,7 +89,6 @@ D:\workspace\QR_Order\smart-menu-endpoint\eorder\src\main\java\com\basoft\eorder
 D:\workspace\QR_Order\smart-menu-endpoint\eorder\src\main\java\com\basoft\eorder\interfaces\command\BatchUpAdviceStatus.java
 D:\workspace\QR_Order\smart-menu-endpoint\eorder\src\main\java\com\basoft\eorder\interfaces\command\advice\AdviceCommandHandler.java
 D:\workspace\QR_Order\smart-menu-endpoint\eorder\src\main\java\com\basoft\eorder\domain\model\StoreTableBatch.java
-D:\workspace\QR_Order\smart-menu-endpoint\eorder\src\main\java\com\basoft\eorder\batch\job\threads\MonthUpdateStoreChargeInfoThread.java
 D:\workspace\QR_Order\smart-menu-endpoint\eorder\src\main\java\com\basoft\eorder\interfaces\command\agent\SaveAgent.java
 D:\workspace\QR_Order\smart-menu-endpoint\eorder\src\main\java\com\basoft\eorder\application\framework\spring\SpringCommandHandleEngineConfigure.java
 D:\workspace\QR_Order\smart-menu-endpoint\eorder\src\main\java\com\basoft\eorder\application\wx\model\WxPayRefundResult.java
@@ -118,12 +115,10 @@ D:\workspace\QR_Order\smart-menu-endpoint\eorder\src\main\java\com\basoft\eorder
 D:\workspace\QR_Order\smart-menu-endpoint\eorder\src\main\java\com\basoft\eorder\interfaces\query\ghraphql\BaSettleGraphqlQuery.java
 D:\workspace\QR_Order\smart-menu-endpoint\eorder\src\main\java\com\basoft\eorder\interfaces\command\StoreCommandHandler.java
 D:\workspace\QR_Order\smart-menu-endpoint\eorder\src\main\java\com\basoft\eorder\domain\StoreRepository.java
-D:\workspace\QR_Order\smart-menu-endpoint\eorder\src\main\java\com\basoft\eorder\batch\job\service\impl\AgentBatchServiceImpl.java
 D:\workspace\QR_Order\smart-menu-endpoint\eorder\src\main\java\com\basoft\eorder\interfaces\command\UpdateProductStatus.java
 D:\workspace\QR_Order\smart-menu-endpoint\eorder\src\main\java\com\basoft\eorder\domain\model\Menu.java
 D:\workspace\QR_Order\smart-menu-endpoint\eorder\src\main\java\com\basoft\eorder\interfaces\command\order\retail\package-info.java
 D:\workspace\QR_Order\smart-menu-endpoint\eorder\src\main\java\com\basoft\eorder\interfaces\query\postStoreSet\PostStoreSetQuery.java
-D:\workspace\QR_Order\smart-menu-endpoint\eorder\src\main\java\com\basoft\eorder\batch\config\RedissonConfig.java
 D:\workspace\QR_Order\smart-menu-endpoint\eorder\src\main\java\com\basoft\eorder\batch\job\service\IStoreBatchService.java
 D:\workspace\QR_Order\smart-menu-endpoint\eorder\src\main\java\com\basoft\eorder\interfaces\command\UpdateProSkuStatus.java
 D:\workspace\QR_Order\smart-menu-endpoint\eorder\src\main\java\com\basoft\eorder\application\wx\http\HttpClientUtils.java
@@ -155,7 +150,6 @@ D:\workspace\QR_Order\smart-menu-endpoint\eorder\src\main\java\com\basoft\eorder
 D:\workspace\QR_Order\smart-menu-endpoint\eorder\src\main\java\com\basoft\eorder\interfaces\query\ReviewQuery.java
 D:\workspace\QR_Order\smart-menu-endpoint\eorder\src\main\java\com\basoft\eorder\interfaces\command\TranslateCommandHandler.java
 D:\workspace\QR_Order\smart-menu-endpoint\eorder\src\main\java\com\basoft\eorder\interfaces\query\StoreExtendDTO.java
-D:\workspace\QR_Order\smart-menu-endpoint\eorder\src\main\java\com\basoft\eorder\batch\job\threads\HotelPriceThread.java
 D:\workspace\QR_Order\smart-menu-endpoint\eorder\src\main\java\com\basoft\eorder\foundation\jdbc\query\retail\cms\JdbcRetailOrderServiceQueryImpl.java
 D:\workspace\QR_Order\smart-menu-endpoint\eorder\src\main\java\com\basoft\eorder\foundation\jdbc\repo\JdbcHolidayRepoImpl.java
 D:\workspace\QR_Order\smart-menu-endpoint\eorder\src\main\java\com\basoft\eorder\interfaces\controller\interceptor\WechatInterceptor.java
@@ -174,13 +168,11 @@ D:\workspace\QR_Order\smart-menu-endpoint\eorder\src\main\java\com\basoft\eorder
 D:\workspace\QR_Order\smart-menu-endpoint\eorder\src\main\java\com\basoft\eorder\application\wx\model\wxuser\WXUser.java
 D:\workspace\QR_Order\smart-menu-endpoint\eorder\src\main\java\com\basoft\eorder\interfaces\query\AreaQuery.java
 D:\workspace\QR_Order\smart-menu-endpoint\eorder\src\main\java\com\basoft\eorder\interfaces\query\MenuItemDTO.java
-D:\workspace\QR_Order\smart-menu-endpoint\eorder\src\main\java\com\basoft\eorder\batch\job\threads\AgentCADailySettlementThread.java
 D:\workspace\QR_Order\smart-menu-endpoint\eorder\src\main\java\com\basoft\eorder\domain\PaymentService.java
 D:\workspace\QR_Order\smart-menu-endpoint\eorder\src\main\java\com\basoft\eorder\interfaces\command\advert\BatchUpStatusAdvert.java
 D:\workspace\QR_Order\smart-menu-endpoint\eorder\src\main\java\com\basoft\eorder\interfaces\query\post\CustPostAddressQuery.java
 D:\workspace\QR_Order\smart-menu-endpoint\eorder\src\main\java\com\basoft\eorder\application\BizException.java
 D:\workspace\QR_Order\smart-menu-endpoint\eorder\src\main\java\com\basoft\eorder\foundation\jdbc\repo\JdbcProductRepoImpl.java
-D:\workspace\QR_Order\smart-menu-endpoint\eorder\src\main\java\com\basoft\eorder\batch\job\threads\AgentCAMonthSettlementThread.java
 D:\workspace\QR_Order\smart-menu-endpoint\eorder\src\main\java\com\basoft\eorder\interfaces\query\StoreTableQuery.java
 D:\workspace\QR_Order\smart-menu-endpoint\eorder\src\main\java\com\basoft\eorder\domain\UserRepository.java
 D:\workspace\QR_Order\smart-menu-endpoint\eorder\src\main\java\com\basoft\eorder\application\wx\http\HttpClientException.java
@@ -209,17 +201,14 @@ D:\workspace\QR_Order\smart-menu-endpoint\eorder\src\main\java\com\basoft\eorder
 D:\workspace\QR_Order\smart-menu-endpoint\eorder\src\main\java\com\basoft\eorder\interfaces\command\SaveTranslate.java
 D:\workspace\QR_Order\smart-menu-endpoint\eorder\src\main\java\com\basoft\eorder\interfaces\query\ghraphql\BaseGraphql.java
 D:\workspace\QR_Order\smart-menu-endpoint\eorder\src\main\java\com\basoft\eorder\application\wx\model\WeixinReturn.java
-D:\workspace\QR_Order\smart-menu-endpoint\eorder\src\main\java\com\basoft\eorder\batch\job\threads\AgentSAMonthSettlementThread.java
 D:\workspace\QR_Order\smart-menu-endpoint\eorder\src\main\java\com\basoft\eorder\application\config\CrosConfig.java
 D:\workspace\QR_Order\smart-menu-endpoint\eorder\src\main\java\com\basoft\eorder\foundation\jdbc\repo\JdbcStoreRepository.java
 D:\workspace\QR_Order\smart-menu-endpoint\eorder\src\main\java\com\basoft\eorder\util\IntegerUtils.java
 D:\workspace\QR_Order\smart-menu-endpoint\eorder\src\main\java\com\basoft\eorder\interfaces\query\plAgt\PlAgtFeeDTO.java
-D:\workspace\QR_Order\smart-menu-endpoint\eorder\src\main\java\com\basoft\eorder\batch\job\threads\AgentSADailySettlementThread.java
 D:\workspace\QR_Order\smart-menu-endpoint\eorder\src\main\java\com\basoft\eorder\interfaces\command\BachUpdateProductName.java
 D:\workspace\QR_Order\smart-menu-endpoint\eorder\src\main\java\com\basoft\eorder\interfaces\query\ghraphql\AdminGraphQLObjects.java
 D:\workspace\QR_Order\smart-menu-endpoint\eorder\src\main\java\com\basoft\eorder\interfaces\command\agent\AgentCommandHandler.java
 D:\workspace\QR_Order\smart-menu-endpoint\eorder\src\main\java\com\basoft\eorder\interfaces\command\order\package-info.java
-D:\workspace\QR_Order\smart-menu-endpoint\eorder\src\main\java\com\basoft\eorder\batch\job\EOrderSendEmailJob.java
 D:\workspace\QR_Order\smart-menu-endpoint\eorder\src\main\java\com\basoft\eorder\util\TnuUtil.java
 D:\workspace\QR_Order\smart-menu-endpoint\eorder\src\main\java\com\basoft\eorder\interfaces\query\retail\cms\RetailOrderStatusDTO.java
 D:\workspace\QR_Order\smart-menu-endpoint\eorder\src\main\java\com\basoft\eorder\interfaces\query\retail\cms\InventoryRetailQuery.java
@@ -264,13 +253,11 @@ D:\workspace\QR_Order\smart-menu-endpoint\eorder\src\main\java\com\basoft\eorder
 D:\workspace\QR_Order\smart-menu-endpoint\eorder\src\main\java\com\basoft\eorder\batch\job\model\agent\AgentDailySettlement.java
 D:\workspace\QR_Order\smart-menu-endpoint\eorder\src\main\java\com\basoft\eorder\domain\StoreOptionRepository.java
 D:\workspace\QR_Order\smart-menu-endpoint\eorder\src\main\java\com\basoft\eorder\interfaces\query\order\HotelOrderDTO.java
-D:\workspace\QR_Order\smart-menu-endpoint\eorder\src\main\java\com\basoft\eorder\batch\job\service\impl\StoreBatchServiceImpl.java
 D:\workspace\QR_Order\smart-menu-endpoint\eorder\src\main\java\com\basoft\eorder\interfaces\command\postStoreSet\PostStoreSetCommandHandler.java
 D:\workspace\QR_Order\smart-menu-endpoint\eorder\src\main\java\com\basoft\eorder\cache\refresh\SpringAdminCacheController.java
 D:\workspace\QR_Order\smart-menu-endpoint\eorder\src\main\java\com\basoft\eorder\domain\model\retail\order\RetailOrderEvent.java
 D:\workspace\QR_Order\smart-menu-endpoint\eorder\src\main\java\com\basoft\eorder\interfaces\command\UpProductGroupAdm.java
 D:\workspace\QR_Order\smart-menu-endpoint\eorder\src\main\java\com\basoft\eorder\interfaces\query\retail\cms\RetailQuery.java
-D:\workspace\QR_Order\smart-menu-endpoint\eorder\src\main\java\com\basoft\eorder\batch\job\threads\HotelOrderRecoverThread.java
 D:\workspace\QR_Order\smart-menu-endpoint\eorder\src\main\java\com\basoft\eorder\application\wx\model\DataItem.java
 D:\workspace\QR_Order\smart-menu-endpoint\eorder\src\main\java\com\basoft\eorder\domain\model\StoreOption.java
 D:\workspace\QR_Order\smart-menu-endpoint\eorder\src\main\java\com\basoft\eorder\interfaces\controller\Echo.java
@@ -297,7 +284,6 @@ D:\workspace\QR_Order\smart-menu-endpoint\eorder\src\main\java\com\basoft\eorder
 D:\workspace\QR_Order\smart-menu-endpoint\eorder\src\main\java\com\basoft\eorder\interfaces\command\inventory\hotel\InventoryHotelCommandHandler.java
 D:\workspace\QR_Order\smart-menu-endpoint\eorder\src\main\java\com\basoft\eorder\interfaces\command\UpdateUserStatus.java
 D:\workspace\QR_Order\smart-menu-endpoint\eorder\src\main\java\com\basoft\eorder\interfaces\command\SaveProduct.java
-D:\workspace\QR_Order\smart-menu-endpoint\eorder\src\main\java\com\basoft\eorder\batch\job\EOrderAgentBatchJob.java
 D:\workspace\QR_Order\smart-menu-endpoint\eorder\src\main\java\com\basoft\eorder\batch\job\model\agent\AgentSettlement.java
 D:\workspace\QR_Order\smart-menu-endpoint\eorder\src\main\java\com\basoft\eorder\interfaces\query\excel\StoreSettleDtlExcel.java
 D:\workspace\QR_Order\smart-menu-endpoint\eorder\src\main\java\com\basoft\eorder\application\wx\model\WxPayCloseResp.java
@@ -331,7 +317,6 @@ D:\workspace\QR_Order\smart-menu-endpoint\eorder\src\main\java\com\basoft\eorder
 D:\workspace\QR_Order\smart-menu-endpoint\eorder\src\main\java\com\basoft\eorder\application\framework\CommandHandleEngine.java
 D:\workspace\QR_Order\smart-menu-endpoint\eorder\src\main\java\com\basoft\eorder\domain\model\QRCode.java
 D:\workspace\QR_Order\smart-menu-endpoint\eorder\src\main\java\com\basoft\eorder\application\base\Option.java
-D:\workspace\QR_Order\smart-menu-endpoint\eorder\src\main\java\com\basoft\eorder\batch\job\threads\StoreDailyGradeThread.java
 D:\workspace\QR_Order\smart-menu-endpoint\eorder\src\main\java\com\basoft\eorder\domain\model\WxAppInfoTable.java
 D:\workspace\QR_Order\smart-menu-endpoint\eorder\src\main\java\com\basoft\eorder\application\ErrorCode.java
 D:\workspace\QR_Order\smart-menu-endpoint\eorder\src\main\java\com\basoft\eorder\interfaces\query\agent\AgentPagingDTO.java
@@ -367,7 +352,6 @@ D:\workspace\QR_Order\smart-menu-endpoint\eorder\src\main\java\com\basoft\eorder
 D:\workspace\QR_Order\smart-menu-endpoint\eorder\src\main\java\com\basoft\eorder\interfaces\query\SkuStandardMapDTO.java
 D:\workspace\QR_Order\smart-menu-endpoint\eorder\src\main\java\com\basoft\eorder\util\TranslateUtil.java
 D:\workspace\QR_Order\smart-menu-endpoint\eorder\src\main\java\com\basoft\eorder\interfaces\command\BaseTopicCommandHandler.java
-D:\workspace\QR_Order\smart-menu-endpoint\eorder\src\main\java\com\basoft\eorder\batch\job\StoreOrderStatusJob.java
 D:\workspace\QR_Order\smart-menu-endpoint\eorder\src\main\java\com\basoft\eorder\application\wx\model\WxPayJsResp.java
 D:\workspace\QR_Order\smart-menu-endpoint\eorder\src\main\java\com\basoft\eorder\interfaces\query\UserOrderDTO.java
 D:\workspace\QR_Order\smart-menu-endpoint\eorder\src\main\java\com\basoft\eorder\interfaces\query\OrderQuery.java
@@ -401,7 +385,6 @@ D:\workspace\QR_Order\smart-menu-endpoint\eorder\src\main\java\com\basoft\eorder
 D:\workspace\QR_Order\smart-menu-endpoint\eorder\src\main\java\com\basoft\eorder\application\QRCodeGenerateRequest.java
 D:\workspace\QR_Order\smart-menu-endpoint\eorder\src\main\java\com\basoft\eorder\interfaces\command\review\BatchUpRevImgStatus.java
 D:\workspace\QR_Order\smart-menu-endpoint\eorder\src\main\java\com\basoft\eorder\interfaces\command\admin\SaveOption.java
-D:\workspace\QR_Order\smart-menu-endpoint\eorder\src\main\java\com\basoft\eorder\batch\lock\RedissonUtil.java
 D:\workspace\QR_Order\smart-menu-endpoint\eorder\src\main\java\com\basoft\eorder\interfaces\command\StoresTest.java
 D:\workspace\QR_Order\smart-menu-endpoint\eorder\src\main\java\com\basoft\eorder\interfaces\query\OrderSumStatsDTO.java
 D:\workspace\QR_Order\smart-menu-endpoint\eorder\src\main\java\com\basoft\eorder\interfaces\command\review\UpdateReview.java
@@ -458,7 +441,6 @@ D:\workspace\QR_Order\smart-menu-endpoint\eorder\src\main\java\com\basoft\eorder
 D:\workspace\QR_Order\smart-menu-endpoint\eorder\src\main\java\com\basoft\eorder\foundation\jdbc\repo\post\JdbcCustPostAddressRepoImpl.java
 D:\workspace\QR_Order\smart-menu-endpoint\eorder\src\main\java\com\basoft\eorder\interfaces\command\advice\BatchUpAdvImgStatus.java
 D:\workspace\QR_Order\smart-menu-endpoint\eorder\src\main\java\com\basoft\eorder\util\BeanUtil.java
-D:\workspace\QR_Order\smart-menu-endpoint\eorder\src\main\java\com\basoft\eorder\batch\job\threads\UpdateOrderStatusThread.java
 D:\workspace\QR_Order\smart-menu-endpoint\eorder\src\main\java\com\basoft\eorder\interfaces\query\plAgt\PlAgtAmountDTO.java
 D:\workspace\QR_Order\smart-menu-endpoint\eorder\src\main\java\com\basoft\eorder\application\framework\MultiCommandHandler.java
 D:\workspace\QR_Order\smart-menu-endpoint\eorder\src\main\java\com\basoft\eorder\domain\model\post\CustPostAddress.java
@@ -475,7 +457,6 @@ D:\workspace\QR_Order\smart-menu-endpoint\eorder\src\main\java\com\basoft\eorder
 D:\workspace\QR_Order\smart-menu-endpoint\eorder\src\main\java\com\basoft\eorder\domain\model\OrderPay.java
 D:\workspace\QR_Order\smart-menu-endpoint\eorder\src\main\java\com\basoft\eorder\application\framework\CommandHandleException.java
 D:\workspace\QR_Order\smart-menu-endpoint\eorder\src\main\java\com\basoft\eorder\application\wx\http\WechatErrorCode.java
-D:\workspace\QR_Order\smart-menu-endpoint\eorder\src\main\java\com\basoft\eorder\batch\job\EOrderStoreBatchJob.java
 D:\workspace\QR_Order\smart-menu-endpoint\eorder\src\main\java\com\basoft\eorder\foundation\jdbc\query\retail\cms\JdbcRetailTemplateQueryImpl.java
 D:\workspace\QR_Order\smart-menu-endpoint\eorder\src\main\java\com\basoft\eorder\domain\model\StoreExtend.java
 D:\workspace\QR_Order\smart-menu-endpoint\eorder\src\main\java\com\basoft\eorder\foundation\jdbc\repo\retail\JdbcRetailOrderRepoImpl.java
@@ -534,10 +515,8 @@ D:\workspace\QR_Order\smart-menu-endpoint\eorder\src\main\java\com\basoft\eorder
 D:\workspace\QR_Order\smart-menu-endpoint\eorder\src\main\java\com\basoft\eorder\interfaces\controller\interceptor\CmsAdminInterceptor.java
 D:\workspace\QR_Order\smart-menu-endpoint\eorder\src\main\java\com\basoft\eorder\interfaces\query\retail\cms\RetailOrderExcel.java
 D:\workspace\QR_Order\smart-menu-endpoint\eorder\src\main\java\com\basoft\eorder\application\config\SpringEOrderCommandConfigure.java
-D:\workspace\QR_Order\smart-menu-endpoint\eorder\src\main\java\com\basoft\eorder\batch\job\threads\SendEamilSettleThread.java
 D:\workspace\QR_Order\smart-menu-endpoint\eorder\src\main\java\com\basoft\eorder\interfaces\command\UpdateProGroupStatus.java
 D:\workspace\QR_Order\smart-menu-endpoint\eorder\src\main\java\com\basoft\eorder\foundation\jdbc\query\agent\JdbcAgentQueryImpl.java
-D:\workspace\QR_Order\smart-menu-endpoint\eorder\src\main\java\com\basoft\eorder\batch\job\EOrderRecoverJob.java
 D:\workspace\QR_Order\smart-menu-endpoint\eorder\src\main\java\com\basoft\eorder\application\file\FileData.java
 D:\workspace\QR_Order\smart-menu-endpoint\eorder\src\main\java\com\basoft\eorder\util\SpringBeanUtil.java
 D:\workspace\QR_Order\smart-menu-endpoint\eorder\src\main\java\com\basoft\eorder\interfaces\query\ghraphql\GraphQLObjects.java

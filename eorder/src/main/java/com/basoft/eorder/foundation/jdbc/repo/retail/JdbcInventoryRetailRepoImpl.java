@@ -1,7 +1,7 @@
 package com.basoft.eorder.foundation.jdbc.repo.retail;
 
 import com.basoft.eorder.batch.job.model.retail.RetailToDoRecoverTempOrder;
-import com.basoft.eorder.batch.lock.RedissonUtil;
+//import com.basoft.eorder.batch.lock.RedissonUtil;
 import com.basoft.eorder.common.CommonConstants;
 import com.basoft.eorder.domain.model.retail.InventoryRetail;
 import com.basoft.eorder.domain.retail.InventoryRetailRepository;
@@ -33,8 +33,8 @@ public class JdbcInventoryRetailRepoImpl extends BaseRepository implements Inven
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
-    @Autowired
-    private RedissonUtil redissonUtil;
+//    @Autowired
+//    private RedissonUtil redissonUtil;
 
     @Override
     public Long insertInventoryRetail(InventoryRetail inventoryRetail) {
@@ -193,8 +193,8 @@ public class JdbcInventoryRetailRepoImpl extends BaseRepository implements Inven
 
         StringBuilder hotelLockKey = new StringBuilder(CommonConstants.RETAIL_INVENTORY_LOCK).append(storeId);
         // 获取库存恢复锁，并且防止死锁。60秒后自动释放。
-        RLock lock = redissonUtil.getFairLock(hotelLockKey.toString());
-        lock.lock(60, TimeUnit.SECONDS);
+//        RLock lock = redissonUtil.getFairLock(hotelLockKey.toString());
+//        lock.lock(60, TimeUnit.SECONDS);
 
         try {
             // 批量更新庫存
@@ -226,10 +226,10 @@ public class JdbcInventoryRetailRepoImpl extends BaseRepository implements Inven
             }
         } finally {
             // lock.unlock();
-            if (lock != null && lock.isLocked() && lock.isHeldByCurrentThread()) {
-                lock.unlock();
-                log.info("【零售业务产品库存恢复】【{}】恢复库存的锁释放完毕", transId);
-            }
+//            if (lock != null && lock.isLocked() && lock.isHeldByCurrentThread()) {
+//                lock.unlock();
+//                log.info("【零售业务产品库存恢复】【{}】恢复库存的锁释放完毕", transId);
+//            }
         }
     }
 }

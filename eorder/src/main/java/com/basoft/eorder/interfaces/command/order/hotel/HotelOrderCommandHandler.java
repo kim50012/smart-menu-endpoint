@@ -8,7 +8,7 @@ import com.basoft.eorder.application.WxSession;
 import com.basoft.eorder.application.framework.CommandHandler;
 import com.basoft.eorder.application.framework.CommandHandlerContext;
 import com.basoft.eorder.application.wx.model.WxPayJsResp;
-import com.basoft.eorder.batch.lock.RedissonUtil;
+//import com.basoft.eorder.batch.lock.RedissonUtil;
 import com.basoft.eorder.common.CommonConstants;
 import com.basoft.eorder.domain.OrderRepository;
 import com.basoft.eorder.domain.OrderService;
@@ -61,8 +61,8 @@ public class HotelOrderCommandHandler {
     @Autowired
     private InventoryHotelQuery inventoryHotelQuery;
 
-    @Autowired
-    private RedissonUtil redissonUtil;
+//    @Autowired
+//    private RedissonUtil redissonUtil;
 
     @Autowired
     private OrderRepository orderRepository;
@@ -328,10 +328,10 @@ public class HotelOrderCommandHandler {
                         // 具体到酒店商户锁
                         StringBuilder hotelLockKey = new StringBuilder(CommonConstants.HOTEL_INVENTORY_LOCK).append(store.id());
                         // RLock lock = redissonUtil.getRLock(hotelLockKey.toString());
-                        RLock lock = redissonUtil.getFairLock(hotelLockKey.toString());
+//                        RLock lock = redissonUtil.getFairLock(hotelLockKey.toString());
 
                         // 获取锁，并且防止死锁。60秒后自动释放。
-                        lock.lock(60, TimeUnit.SECONDS);
+//                        lock.lock(60, TimeUnit.SECONDS);
 
                         try {
                             log.info("<><><><><><><><><>><><><><>【酒店下单】获取到酒店下单验证削减锁<><><><><><><><><>><><><><>");
@@ -376,10 +376,10 @@ public class HotelOrderCommandHandler {
                             }
                         } finally {
                             // lock.unlock();
-                            if (lock != null && lock.isLocked() && lock.isHeldByCurrentThread()) {
-                                lock.unlock();
-                                log.info("【酒店下单】酒店下单核心逻辑已处理，库存锁释放，进入支付......");
-                            }
+//                            if (lock != null && lock.isLocked() && lock.isHeldByCurrentThread()) {
+//                                lock.unlock();
+//                                log.info("【酒店下单】酒店下单核心逻辑已处理，库存锁释放，进入支付......");
+//                            }
                         }
                     }
                     // 2func-2.非酒店业务和酒店业务押金产品

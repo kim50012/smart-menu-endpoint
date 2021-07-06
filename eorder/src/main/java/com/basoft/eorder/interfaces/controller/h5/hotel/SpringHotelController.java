@@ -6,7 +6,7 @@ import com.basoft.eorder.application.ErrorCode;
 import com.basoft.eorder.application.WxSession;
 import com.basoft.eorder.application.framework.CommandHandleEngine;
 import com.basoft.eorder.application.framework.QueryHandler;
-import com.basoft.eorder.batch.job.threads.HotelOrderRecoverThread;
+//import com.basoft.eorder.batch.job.threads.HotelOrderRecoverThread;
 import com.basoft.eorder.common.CommonConstants;
 import com.basoft.eorder.domain.InventoryHotelRepository;
 import com.basoft.eorder.interfaces.controller.CQRSAbstractController;
@@ -366,9 +366,9 @@ public class SpringHotelController extends CQRSAbstractController {
             // 启动各个库存恢复线程
             for (Map<String, Object> tempOrder : tempOrderList) {
                 try {
-                    Thread thread = new Thread(new HotelOrderRecoverThread(inventoryHotelRepository,
-                            tempOrder, CommonConstants.HOTEL_INVENTORY_RECOVER_AUTO, appConfigure));
-                    thread.start();
+//                    Thread thread = new Thread(new HotelOrderRecoverThread(inventoryHotelRepository,
+//                            tempOrder, CommonConstants.HOTEL_INVENTORY_RECOVER_AUTO, appConfigure));
+//                    thread.start();
                     return "success";
                 } catch (Exception e) {
                     log.error("【酒店预订下单未支付订单所占库存实时恢复】酒店库存恢复线程异常，异常信息为：" + e.getMessage(), e);

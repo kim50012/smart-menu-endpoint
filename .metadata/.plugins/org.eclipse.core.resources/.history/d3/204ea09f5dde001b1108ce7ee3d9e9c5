@@ -1,0 +1,275 @@
+package com.basoft.eorder.batch.job;
+
+import com.basoft.eorder.application.AppConfigure;
+import com.basoft.eorder.batch.job.model.retail.RetailToDoRecoverTempOrder;
+import com.basoft.eorder.batch.job.service.IStoreBatchService;
+import com.basoft.eorder.batch.job.threads.HotelOrderRecoverThread;
+import com.basoft.eorder.batch.job.threads.retail.RetailOrderRecoverThread;
+import com.basoft.eorder.batch.lock.RedissonUtil;
+import com.basoft.eorder.common.CommonConstants;
+import com.basoft.eorder.domain.InventoryHotelRepository;
+import com.basoft.eorder.domain.retail.InventoryRetailRepository;
+import com.basoft.eorder.interfaces.query.OrderQuery;
+import lombok.extern.slf4j.Slf4j;
+import org.redisson.api.RLock;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.stereotype.Component;
+
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
+
+/**
+ * EOrder定时任务
+ *
+ * @author Mentor
+ * @version 1.0
+ * @since 20190826
+ */
+@Slf4j
+@Component
+public class EOrderRecoverJob {
+    @Autowired
+    IStoreBatchService storeBatchService;
+
+    @Autowired
+    private RedissonUtil redissonUtil;
+
+    @Autowired
+    private OrderQuery orderQuery;
+
+    @Autowired
+    private InventoryHotelRepository inventoryHotelRepository;
+
+    @Autowired
+    private InventoryRetailRepository inventoryRetailRepository;
+
+    @Autowired
+    private AppConfigure appConfigure;
+
+    /**
+     * 酒店下单不支付类订单所占库存的释放
+     * <p>
+     * 每5分钟执行一次
+     */
+    @Scheduled(cron = "0 0/5 * * * ?")
+    public void hotelOrderRecover() {
+        log.info("<><><><><><><><><>><><><><>【酒店库存恢复】定时任务启动<><><><><><><><><>><><><><>");
+        String batchKey = "HOTEL_ORDER_RECOVER";
+        RLock lock = redissonUtil.getRLock(batchKey);
+        boolean getLock = false;
+        try {
+            // 零等待取锁，加锁120秒
+            if (getLock = lock.tryLock(0, 120, TimeUnit.SECONDS)) {
+                // 查询符合条件的临时订单
+                List<Map<String, Object>> tempOrderList = orderQuery.queryTempOrdersToRecover();
+                log.info("【酒店库存恢复】待恢复库存的临时酒店订单数量为：：：{}",
+                        tempOrderList == null ? 0 : tempOrderList.size());
+
+                // 启动各个库存恢复线程
+                for (Map<String, Object> tempOrder : tempOrderList) {
+                    try {
+                        Thread thread = new Thread(new HotelOrderRecoverThread(inventoryHotelRepository,
+                                tempOrder, CommonConstants.HOTEL_INVENTORY_RECOVER_AUTO, appConfigure));
+                        thread.start();
+                    } catch (Exception e) {
+                        log.error("【酒店库存恢复】酒店库存恢复线程异常，异常信息为：" + e.getMessage(), e);
+                    }
+                }
+            } else {
+                log.info("【酒店库存恢复】没有获取到定时任务执行锁:{},ThreadName :{}", batchKey, Thread.currentThread().getName());
+            }
+        } catch (InterruptedException e) {
+            log.error("【酒店库存恢复】获取分布式锁异常：" + e.getMessage(), e);
+        } finally {
+            // 无锁返回
+            if (!getLock) {
+                return;
+            }
+
+            // 有锁进行释放，并进行延时40秒释放
+            try {
+                Thread.sleep(40000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+                log.error("【酒店库存恢复】延时释放执行锁异常：" + e.getMessage(), e);
+            }
+
+            lock.unlock();
+            log.info("【酒店库存恢复】释放锁完成，锁名称：{},当前线程名称ThreadName :{}", batchKey, Thread.currentThread().getName());
+        }
+        log.info("<><><><><><><><><>><><><><>【酒店库存恢复】定时任务主线程执行结束<><><><><><><><><>><><><><>");
+    }
+
+    /**
+     * 【测试用】
+     * 测试Redisson，每格2分钟执行
+     */
+    // @Scheduled(cron = "0 0/2 * * * ?")
+    public void redissonLockCorrect() {
+        log.info("定时任务启动");
+        String batchKey = "REDISSON_LOCK_KEY_CORRECT";
+        RLock lock = redissonUtil.getRLock(batchKey);
+        boolean getLock = false;
+        try {
+            // 加锁时间一定要小于调度时间。此处零等待，加锁60秒。
+            if (getLock = lock.tryLock(0, 60, TimeUnit.SECONDS)) {
+                //执行的业务代码
+                log.info("===================================执行定时任务啦啦啦啦啦=====================================");
+            } else {
+                log.info("Redisson分布式锁没有获取到锁:{},ThreadName :{}", batchKey, Thread.currentThread().getName());
+            }
+        } catch (InterruptedException e) {
+            log.error("Redisson获取分布式锁异常", e);
+        } finally {
+            if (!getLock) {
+                return;
+            }
+
+            try {
+                // 休眠40秒再释放锁，防止另一台服务器因为某些原因（服务器时间差）得到锁而执行
+                Thread.sleep(40000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+
+            lock.unlock();
+            log.info("Redisson分布式锁释放锁:{},ThreadName :{}", batchKey, Thread.currentThread().getName());
+        }
+        log.info("定时任务结束");
+    }
+
+    /**
+     * 零售业务下单不支付类订单所占库存的释放
+     *
+     * 20200731-加盟店
+     * 加盟店订单不支持再次支付，也就是下单要么直接支付完成，要么该订单作废。
+     * 订单作废的库存恢复机制：即拉起微信支付后，不支付，直接关掉。此时前端调用了主动恢复库存接口；另外本定时任务也定时对这类订单进行库存恢复。
+     *
+     *
+     * 每8分钟执行一次
+     */
+    @Scheduled(cron = "0 0/8 * * * ?") //生产
+    // @Scheduled(cron = "0 25 12 * * ?") //开发调试
+    public void retail1OrderRecover() {
+        log.info("<><><><><><><><><>><><><><>【零售业务[###加盟店###]商户产品库存恢复】定时任务启动<><><><><><><><><>><><><><>");
+        String batchKey = "RETAIL1_ORDER_RECOVER";
+        RLock lock = redissonUtil.getRLock(batchKey);
+        boolean getLock = false;
+        try {
+            // 零等待取锁，加锁120秒
+            if (getLock = lock.tryLock(0, 120, TimeUnit.SECONDS)) {
+                // 查询符合条件的临时订单
+                List<RetailToDoRecoverTempOrder> tempOrderList = orderQuery.queryRetail1TempOrdersToRecover();
+
+                if (tempOrderList != null && tempOrderList.size() > 0) {
+                    Map<Long, List<RetailToDoRecoverTempOrder>> tempOrderMap = tempOrderList
+                            .stream().collect(Collectors.groupingBy(RetailToDoRecoverTempOrder::getTransId));
+
+                    log.info("【零售业务[###加盟店###]商户产品库存恢复】待恢复库存的临时订单数量为：：：{}",
+                            tempOrderMap == null ? 0 : tempOrderMap.size());
+
+                    // 启动各个库存恢复线程
+                    for (Long orderId : tempOrderMap.keySet()) {
+                        try {
+                            Thread thread = new Thread(new RetailOrderRecoverThread(inventoryRetailRepository,
+                                    tempOrderMap.get(orderId), CommonConstants.RETAIL_INVENTORY_RECOVER_AUTO));
+                            thread.start();
+                        } catch (Exception e) {
+                            log.error("【零售业务[###加盟店###]商户产品库存恢复】库存恢复线程异常，异常信息为：" + e.getMessage(), e);
+                        }
+                    }
+                }
+            } else {
+                log.info("【零售业务[###加盟店###]商户产品库存恢复】没有获取到定时任务执行锁:{},ThreadName :{}", batchKey, Thread.currentThread().getName());
+            }
+        } catch (InterruptedException e) {
+            log.error("【零售业务[###加盟店###]商户产品库存恢复】获取分布式锁异常：" + e.getMessage(), e);
+        } finally {
+            // 无锁返回
+            if (!getLock) {
+                return;
+            }
+
+            // 有锁进行释放，并进行延时40秒释放
+            try {
+                Thread.sleep(40000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+                log.error("【零售业务[###加盟店###]商户产品库存恢复】延时释放执行锁异常：" + e.getMessage(), e);
+            }
+
+            lock.unlock();
+            log.info("【零售业务[###加盟店###]商户产品库存恢复】释放锁完成，锁名称：{},当前线程名称ThreadName :{}", batchKey, Thread.currentThread().getName());
+        }
+        log.info("<><><><><><><><><>><><><><>【零售业务[###加盟店###]商户产品库存恢复】定时任务主线程执行结束<><><><><><><><><>><><><><>");
+    }
+
+    /**
+     * 零售业务下单不支付类订单所占库存的释放
+     *
+     * 20200731-折扣店/免税店
+     * 折扣店和免税店的支付进行了支付和再支付分离。也就是允许用户没有支付的情况下，在订单有效期内再次进行支付。
+     * 这样库存恢复机制有别于零售业务加盟店。
+     * 库存恢复机制：前端不能在没有支付订单的情况下调用库存恢复接口进行库存恢复；只有本定时任务对折扣店和免税店过期未支付订单进行
+     * 库存恢复
+     *
+     * 每2分钟执行一次
+     */
+    @Scheduled(cron = "0 0/2 * * * ?") //生产
+    public void retail2And3OrderRecover() {
+        log.info("<><><><><><><><><>><><><><>【零售业务[###折扣店/免税店###]商户产品库存恢复】定时任务启动<><><><><><><><><>><><><><>");
+        String batchKey = "RETAIL23_ORDER_RECOVER";
+        RLock lock = redissonUtil.getRLock(batchKey);
+        boolean getLock = false;
+        try {
+            // 零等待取锁，加锁30秒
+            if (getLock = lock.tryLock(0, 30, TimeUnit.SECONDS)) {
+                // 查询符合条件的临时订单
+                List<RetailToDoRecoverTempOrder> tempOrderList = orderQuery.queryRetail23TempOrdersToRecover();
+
+                if (tempOrderList != null && tempOrderList.size() > 0) {
+                    Map<Long, List<RetailToDoRecoverTempOrder>> tempOrderMap = tempOrderList
+                            .stream().collect(Collectors.groupingBy(RetailToDoRecoverTempOrder::getTransId));
+
+                    log.info("【零售业务[###折扣店/免税店###]商户产品库存恢复】待恢复库存的临时订单数量为：：：{}",
+                            tempOrderMap == null ? 0 : tempOrderMap.size());
+
+                    // 启动各个库存恢复线程
+                    for (Long orderId : tempOrderMap.keySet()) {
+                        try {
+                            Thread thread = new Thread(new RetailOrderRecoverThread(inventoryRetailRepository,
+                                    tempOrderMap.get(orderId), CommonConstants.RETAIL_INVENTORY_RECOVER_AUTO));
+                            thread.start();
+                        } catch (Exception e) {
+                            log.error("【零售业务[###折扣店/免税店###]商户产品库存恢复】库存恢复线程异常，异常信息为：" + e.getMessage(), e);
+                        }
+                    }
+                }
+            } else {
+                log.info("【零售业务[###折扣店/免税店###]商户产品库存恢复】没有获取到定时任务执行锁:{},ThreadName :{}", batchKey, Thread.currentThread().getName());
+            }
+        } catch (InterruptedException e) {
+            log.error("【零售业务[###折扣店/免税店###]商户产品库存恢复】获取分布式锁异常：" + e.getMessage(), e);
+        } finally {
+            // 无锁返回
+            if (!getLock) {
+                return;
+            }
+
+            // 有锁进行释放，并进行延时20秒释放
+            try {
+                Thread.sleep(20000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+                log.error("【零售业务[###折扣店/免税店###]商户产品库存恢复】延时释放执行锁异常：" + e.getMessage(), e);
+            }
+
+            lock.unlock();
+            log.info("【零售业务[###折扣店/免税店###]商户产品库存恢复】释放锁完成，锁名称：{},当前线程名称ThreadName :{}", batchKey, Thread.currentThread().getName());
+        }
+        log.info("<><><><><><><><><>><><><><>【零售业务[###折扣店/免税店###]商户产品库存恢复】定时任务主线程执行结束<><><><><><><><><>><><><><>");
+    }
+}

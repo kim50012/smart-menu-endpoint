@@ -1,0 +1,48 @@
+{
+  "uploadFileRemoteServer":"http://file.orderking.best/file/api/v1/upload",
+  "wechatRootUrl":"http://res.orderking.best/public/res/#/",
+  "wechatNotifyUrl":"http://res.orderking.best/eorder/res/api/v1/order_pay",
+  "menuRedirectRoot":"/public/res/#",
+  "wechatCertPath":"PROD",
+  "jpushConfig":{
+    "appKey":"96a4e078fc06a27c63cfcd7d",
+    "secretKey":"38b8a757964781ca42c62473"
+  },
+  "externThreadPool":{
+      "multipleOfCore":4,
+      "maxPoolOfCore":16,
+      "keepAliveSeconds":10,
+      "queueCapacity":100
+  },
+  "redis-config":{
+    "server":"srredis.s02sgk.0001.apse1.cache.amazonaws.com",
+    "port":6379,
+    "password":"dimy5006",
+    "instanceId": "crs-2lzkj5jo",
+    "pool.max-idle":5000,
+    "pool.min-idle":1,
+    "timeout":5000,
+    "pool.max-wait":5000
+  },
+  "mysqlDataSource-config":{
+    "url":"jdbc:mysql://prod-db.csptpnylhznw.ap-southeast-1.rds.amazonaws.com:3306/eorder?useUnicode=true&characterEncoding=utf-8&allowMultiQueries=true&useSSL=false",
+    "user":"root",
+    "password":"dimy5006",
+    "useSsl":"true"
+  },
+  "wxPay-config": {
+    "running-dev":"real",
+    "qr-time":2592000,
+    "store-qr-cnt":50
+  },
+  "wechatAppId": "wx5b1147ac766db6db",
+  "wechatDomain":"res.orderking.best",
+  "template-msg-config": {
+    "hotel_booking_confirm":"QYEMzOjx7fyXf7RxE8gtIRzR1hjezJamsHXy9k6lvaA",
+    "clinic_booking_confirm":"i5vauE3IPqlRQzl5GXgTH0CWT3gY8NIZNdQz2zhxTWs",
+    "shopping_order_confirm":"vDj9k0sgrVfuuuz_0LA3GhxvwfJ_J6UErCtVMcAy8lo",
+    "order_cancel":"xBtazCRrNPpw9oIAduiaUzZdOP4am3UmbNy4EH6bL5s",
+    "order_status_change":"B0VFM4hncMls9DLT7uR_GgNYgQSzdme_GcqKtNCu7ig"
+  },
+  "serverType":"prod"
+}

@@ -5,7 +5,7 @@ import com.basoft.eorder.application.base.BaseService;
 import com.basoft.eorder.application.base.Category;
 import com.basoft.eorder.application.framework.CommandHandler;
 import com.basoft.eorder.application.framework.CommandHandlerContext;
-import com.basoft.eorder.batch.job.threads.HotelPriceThread;
+//import com.basoft.eorder.batch.job.threads.HotelPriceThread;
 import com.basoft.eorder.common.CommonConstants;
 import com.basoft.eorder.domain.ProductRepository;
 import com.basoft.eorder.domain.StoreOptionRepository;
@@ -109,8 +109,8 @@ public class ProductCommandHandler {
                         .collect(toList());
         this.productRepository.saveProduct(product, productSkus);
         if (us.getStoreType() == CommonConstants.BIZ_HOTEL_INT) {
-            Thread thread = new Thread(new HotelPriceThread(us,storeRepository,inventoryHotelQuery));
-            thread.start();
+//            Thread thread = new Thread(new HotelPriceThread(us,storeRepository,inventoryHotelQuery));
+//            thread.start();
         }
         return product.id();
     }
@@ -176,8 +176,8 @@ public class ProductCommandHandler {
             }
         });
         productRepository.updateProduct(newProduct, newSkuList);
-        Thread thread = new Thread(new HotelPriceThread(us,storeRepository,inventoryHotelQuery));
-        thread.start();
+//        Thread thread = new Thread(new HotelPriceThread(us,storeRepository,inventoryHotelQuery));
+//        thread.start();
 
 
         return product.id();
@@ -212,8 +212,8 @@ public class ProductCommandHandler {
         Long storeId = us.getStoreId();
         int status = productRepository.updateProductStatus(productStatus,storeId);
 
-        Thread thread = new Thread(new HotelPriceThread(us,storeRepository,inventoryHotelQuery));
-        thread.start();
+//        Thread thread = new Thread(new HotelPriceThread(us,storeRepository,inventoryHotelQuery));
+//        thread.start();
 
         return status;
     }

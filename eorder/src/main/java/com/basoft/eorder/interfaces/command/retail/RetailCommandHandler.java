@@ -9,7 +9,7 @@ import com.basoft.eorder.application.base.Category;
 import com.basoft.eorder.application.framework.CommandHandler;
 import com.basoft.eorder.application.framework.CommandHandlerContext;
 import com.basoft.eorder.application.wx.model.WxPayRefundResult;
-import com.basoft.eorder.batch.lock.RedissonUtil;
+//import com.basoft.eorder.batch.lock.RedissonUtil;
 import com.basoft.eorder.common.CommonConstants;
 import com.basoft.eorder.domain.OrderService;
 import com.basoft.eorder.domain.ProductRepository;
@@ -70,8 +70,8 @@ public class RetailCommandHandler {
     @Autowired
     private UidGenerator uidGenerator;
 
-    @Autowired
-    private RedissonUtil redissonUtil;
+//    @Autowired
+//    private RedissonUtil redissonUtil;
 
     @Autowired
     private RetailOrderServiceRepository retailOrderServiceRepository;
@@ -306,18 +306,18 @@ public class RetailCommandHandler {
         log.info("<><><><><><><><><>><><><><>【cms店铺id->"+store.id()+"】【修改库存数量->{}】<><><><><><>><><><><>", saveInventory.getNum());
         // 3func-2.获取具体到零售商户的锁
         StringBuilder retailLockKey = new StringBuilder(CommonConstants.RETAIL_INVENTORY_LOCK).append(store.id());
-        RLock lock = redissonUtil.getFairLock(retailLockKey.toString());
-        // 获取锁，并且防止死锁。60秒后自动释放。
-        lock.lock(60, TimeUnit.SECONDS);
+//        RLock lock = redissonUtil.getFairLock(retailLockKey.toString());
+//        // 获取锁，并且防止死锁。60秒后自动释放。
+//        lock.lock(60, TimeUnit.SECONDS);
 
         try {
             log.info("<><><><><><><><><>><><><><>【cms店铺id->"+store.id()+"】【修改库存数量->{}】<><><><><><><><><>><><><><>", saveInventory.getNum());
            return inventoryRetailRepository.saveInventoryRetail(saveInventory);
         } finally {
-            if (lock != null && lock.isLocked() && lock.isHeldByCurrentThread()) {
-                lock.unlock();
-                log.info("<><><><><><><><><>><><><><>【cms店铺id->"+store.id()+"】【修改库存数量完毕->{}】<><><><><><><><><>><><><><>",saveInventory.getNum());
-            }
+//            if (lock != null && lock.isLocked() && lock.isHeldByCurrentThread()) {
+//                lock.unlock();
+//                log.info("<><><><><><><><><>><><><><>【cms店铺id->"+store.id()+"】【修改库存数量完毕->{}】<><><><><><><><><>><><><><>",saveInventory.getNum());
+//            }
         }
     }
 

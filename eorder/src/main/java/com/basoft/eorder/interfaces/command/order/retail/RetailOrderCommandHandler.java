@@ -12,7 +12,7 @@ import com.basoft.eorder.application.wx.model.WxPayJsResp;
 import com.basoft.eorder.application.wx.model.WxPayRefundResult;
 import com.basoft.eorder.batch.job.model.retail.RetailToDoRecoverTempOrder;
 import com.basoft.eorder.batch.job.threads.retail.RetailOrderRecoverThread;
-import com.basoft.eorder.batch.lock.RedissonUtil;
+//import com.basoft.eorder.batch.lock.RedissonUtil;
 import com.basoft.eorder.common.CommonConstants;
 import com.basoft.eorder.domain.OrderRepository;
 import com.basoft.eorder.domain.OrderService;
@@ -71,8 +71,8 @@ public class RetailOrderCommandHandler {
     @Autowired
     private ProductQuery productQuery;
 
-    @Autowired
-    private RedissonUtil redissonUtil;
+//    @Autowired
+//    private RedissonUtil redissonUtil;
 
     @Autowired
     private OrderRepository orderRepository;
@@ -359,9 +359,9 @@ public class RetailOrderCommandHandler {
                         // 3func-2.获取具体到零售商户的锁
                         StringBuilder retailLockKey = new StringBuilder(CommonConstants.RETAIL_INVENTORY_LOCK).append(store.id());
                         // RLock lock = redissonUtil.getRLock(hotelLockKey.toString());
-                        RLock lock = redissonUtil.getFairLock(retailLockKey.toString());
+//                        RLock lock = redissonUtil.getFairLock(retailLockKey.toString());
                         // 获取锁，并且防止死锁。60秒后自动释放。
-                        lock.lock(60, TimeUnit.SECONDS);
+//                        lock.lock(60, TimeUnit.SECONDS);
 
                         try {
                             log.info("<><><><><><><><><>><><><><>【零售业务下单】【商户ID-{}】获取到零售商户下单验证削减锁<><><><><><><><><>><><><><>", store.id());
@@ -392,10 +392,10 @@ public class RetailOrderCommandHandler {
                             retailOrderRepository.saveRetailOrderTempWithInventory(order, toCheckInvProdSkuIdList, toUpdateInvMap);
                         } finally {
                             // lock.unlock();
-                            if (lock != null && lock.isLocked() && lock.isHeldByCurrentThread()) {
-                                lock.unlock();
-                                log.info("【零售业务下单】【商户ID-{}】零售下单核心逻辑已处理，库存锁释放，进入支付......", store.id());
-                            }
+//                            if (lock != null && lock.isLocked() && lock.isHeldByCurrentThread()) {
+//                                lock.unlock();
+//                                log.info("【零售业务下单】【商户ID-{}】零售下单核心逻辑已处理，库存锁释放，进入支付......", store.id());
+//                            }
                         }
                     }
                     // 3func.下单库存管理-end

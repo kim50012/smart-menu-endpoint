@@ -3,8 +3,8 @@ package com.basoft.eorder.interfaces.controller.h5;
 import com.basoft.eorder.application.framework.CommandHandleEngine;
 import com.basoft.eorder.application.framework.QueryHandler;
 import com.basoft.eorder.batch.job.service.IStoreBatchService;
-import com.basoft.eorder.batch.job.threads.MonthUpdateStoreChargeInfoThread;
-import com.basoft.eorder.batch.job.threads.store.PGStoreMonthSettlementThreadManual;
+//import com.basoft.eorder.batch.job.threads.MonthUpdateStoreChargeInfoThread;
+//import com.basoft.eorder.batch.job.threads.store.PGStoreMonthSettlementThreadManual;
 import com.basoft.eorder.common.CommonConstants;
 import com.basoft.eorder.domain.StoreRepository;
 import com.basoft.eorder.domain.model.Store;
@@ -98,9 +98,9 @@ public class SpringManulController extends CQRSAbstractController {
 
                     // 启动月度结算线程
                     try {
-                        Thread thread = new Thread(new PGStoreMonthSettlementThreadManual(storeBatchService,
-                                store, lastYear, lastMonth, 0, 0, monthStartTime, monthEndTime, target));
-                        thread.start();
+//                        Thread thread = new Thread(new PGStoreMonthSettlementThreadManual(storeBatchService,
+//                                store, lastYear, lastMonth, 0, 0, monthStartTime, monthEndTime, target));
+//                        thread.start();
                     } catch (Exception e) {
                         log.error("【MANUAL】【PG交易类商户月度结算】商户月度结算线程异常，[商户ID]=" + store.id() + "，异常信息为：" + e.getMessage(), e);
                     }
@@ -169,9 +169,9 @@ public class SpringManulController extends CQRSAbstractController {
 
                     for (Store store : storeList) {
                         try {
-                            Thread thread = new Thread(new MonthUpdateStoreChargeInfoThread(storeBatchService,
-                                    store, lastYear, lastMonth, year, month));
-                            thread.start();
+//                            Thread thread = new Thread(new MonthUpdateStoreChargeInfoThread(storeBatchService,
+//                                    store, lastYear, lastMonth, year, month));
+//                            thread.start();
                         } catch (Exception e) {
                             log.error("【MANUAL】【商户月度结算费率计算】商户月度结算信息计算线程异常，[商户ID]=" + store.id() + "，异常信息为：" + e.getMessage(), e);
                         }
@@ -252,9 +252,9 @@ public class SpringManulController extends CQRSAbstractController {
 
                     for (Store store : storeList) {
                         try {
-                            Thread thread = new Thread(new PGStoreMonthSettlementThreadManual(storeBatchService,
-                                    store, lastYear, lastMonth, 0, 0, monthStartTime, monthEndTime, target));
-                            thread.start();
+//                            Thread thread = new Thread(new PGStoreMonthSettlementThreadManual(storeBatchService,
+//                                    store, lastYear, lastMonth, 0, 0, monthStartTime, monthEndTime, target));
+//                            thread.start();
                         } catch (Exception e) {
                             log.error("【MANUAL】【手工PG交易类商户月度结算】商户月度结算线程异常，[商户ID]=" + store.id() + "，异常信息为：" + e.getMessage(), e);
                         }

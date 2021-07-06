@@ -6,7 +6,7 @@ import com.basoft.eorder.application.base.query.AdminQueryFacade;
 import com.basoft.eorder.application.base.query.CategoryDTO;
 import com.basoft.eorder.application.framework.CommandHandleEngine;
 import com.basoft.eorder.application.framework.QueryHandler;
-import com.basoft.eorder.batch.job.EOrderSendEmailJob;
+//import com.basoft.eorder.batch.job.EOrderSendEmailJob;
 import com.basoft.eorder.domain.StoreOptionRepository;
 import com.basoft.eorder.domain.UserRepository;
 import com.basoft.eorder.domain.model.User;
@@ -368,14 +368,14 @@ public class SpringManagerController extends CQRSAbstractController {
 		String account = jsonObject.get("account").toString();
 		int lastYear = Integer.valueOf(DateUtil.getFormatStr(LocalDateTime.now().minus(1, ChronoUnit.MONTHS), "yyyy"));
 		int lastMonth = Integer.valueOf(DateUtil.getFormatStr(LocalDateTime.now().minus(1, ChronoUnit.MONTHS), "MM"));
-		Map<String, Object> param = EOrderSendEmailJob.getQueryParam();
-		param.put("storeId", us.getStoreId());
-		List<SettleDTO> settleList = sq.getAdminSettleList(param);
-		String emailTile = lastYear + "-" + lastMonth + " BA Place 플랫폼 사용내역";
+//		Map<String, Object> param = EOrderSendEmailJob.getQueryParam();
+//		param.put("storeId", us.getStoreId());
+//		List<SettleDTO> settleList = sq.getAdminSettleList(param);
+//		String emailTile = lastYear + "-" + lastMonth + " BA Place 플랫폼 사용내역";
 
-		MailUtil util = new MailUtil();
-		if (settleList.size() > 0)
-			util.sendMail(account, emailTile, util.storeSettlehtml(settleList.get(0)), appConfigure);
+//		MailUtil util = new MailUtil();
+//		if (settleList.size() > 0)
+//			util.sendMail(account, emailTile, util.storeSettlehtml(settleList.get(0)), appConfigure);
 	}
 
 

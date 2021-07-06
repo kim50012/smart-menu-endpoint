@@ -18,9 +18,9 @@ import com.basoft.eorder.application.wx.model.WxPayJsResp;
 import com.basoft.eorder.application.wx.model.WxPayRefundResult;
 import com.basoft.eorder.application.wx.model.WxPayResult;
 import com.basoft.eorder.batch.job.model.retail.RetailToDoRecoverTempOrder;
-import com.basoft.eorder.batch.job.threads.HotelOrderRecoverThread;
-import com.basoft.eorder.batch.job.threads.retail.RetailOrderRecoverThread;
-import com.basoft.eorder.batch.lock.RedissonUtil;
+//import com.basoft.eorder.batch.job.threads.HotelOrderRecoverThread;
+//import com.basoft.eorder.batch.job.threads.retail.RetailOrderRecoverThread;
+//import com.basoft.eorder.batch.lock.RedissonUtil;
 import com.basoft.eorder.common.CommonConstants;
 import com.basoft.eorder.domain.InventoryHotelRepository;
 import com.basoft.eorder.domain.OrderRepository;
@@ -96,8 +96,8 @@ public class OrderCmmandHandler {
     // 折扣详情列表-用于二次价格核查
     private DiscountQuery discountQuery;
 
-    @Autowired
-    private RedissonUtil redissonUtil;
+//    @Autowired
+//    private RedissonUtil redissonUtil;
 
     @Autowired
     private InventoryHotelQuery inventoryHotelQuery;
@@ -392,10 +392,10 @@ public class OrderCmmandHandler {
                         // 具体到酒店商户锁
                         StringBuilder hotelLockKey = new StringBuilder(CommonConstants.HOTEL_INVENTORY_LOCK).append(store.id());
                         // RLock lock = redissonUtil.getRLock(hotelLockKey.toString());
-                        RLock lock = redissonUtil.getFairLock(hotelLockKey.toString());
+//                        RLock lock = redissonUtil.getFairLock(hotelLockKey.toString());
 
                         // 获取锁，并且防止死锁。60秒后自动释放。
-                        lock.lock(60, TimeUnit.SECONDS);
+//                        lock.lock(60, TimeUnit.SECONDS);
 
                         try {
                             logger.info("<><><><><><><><><>><><><><>【酒店下单】获取到酒店下单验证削减锁<><><><><><><><><>><><><><>");
@@ -440,10 +440,10 @@ public class OrderCmmandHandler {
                             }
                         } finally {
                             // lock.unlock();
-                            if (lock != null && lock.isLocked() && lock.isHeldByCurrentThread()) {
-                                lock.unlock();
-                                logger.info("【酒店下单】酒店下单核心逻辑已处理，库存锁释放，进入支付......");
-                            }
+//                            if (lock != null && lock.isLocked() && lock.isHeldByCurrentThread()) {
+//                                lock.unlock();
+//                                logger.info("【酒店下单】酒店下单核心逻辑已处理，库存锁释放，进入支付......");
+//                            }
                         }
                     }
                     // 非酒店业务和酒店业务押金产品
@@ -1230,8 +1230,8 @@ public class OrderCmmandHandler {
                     orderInfo.put("reseveDtFrom", order.getReseveDtfrom());
                     orderInfo.put("reseveDtTo", order.getReseveDtto());
 
-                    Thread thread = new Thread(new HotelOrderRecoverThread(inventoryHotelRepository, orderInfo, CommonConstants.HOTEL_INVENTORY_RECOVER_REFUND, null));
-                    thread.start();
+//                    Thread thread = new Thread(new HotelOrderRecoverThread(inventoryHotelRepository, orderInfo, CommonConstants.HOTEL_INVENTORY_RECOVER_REFUND, null));
+//                    thread.start();
                     logger.info("【酒店退款库存恢复】库存回复线程启动Over..........................................");
                 }
                 // 20190905 酒店库存恢复-end
@@ -1244,8 +1244,8 @@ public class OrderCmmandHandler {
                         // nothing to do
                     } else {
                         logger.info("【零售商户产品库存恢复】库存回复线程启动Start..........................................");
-                        Thread thread = new Thread(new RetailOrderRecoverThread(inventoryRetailRepository, tempOrderList, CommonConstants.RETAIL_INVENTORY_RECOVER_REFUND));
-                        thread.start();
+//                        Thread thread = new Thread(new RetailOrderRecoverThread(inventoryRetailRepository, tempOrderList, CommonConstants.RETAIL_INVENTORY_RECOVER_REFUND));
+//                        thread.start();
                         logger.info("【零售商户产品库存恢复】库存回复线程启动Over..........................................");
                     }
                 }

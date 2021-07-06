@@ -4,7 +4,7 @@ package com.basoft.eorder.interfaces.command.inventory.hotel;
 import com.basoft.eorder.application.*;
 import com.basoft.eorder.application.framework.CommandHandler;
 import com.basoft.eorder.application.framework.CommandHandlerContext;
-import com.basoft.eorder.batch.job.threads.HotelPriceThread;
+//import com.basoft.eorder.batch.job.threads.HotelPriceThread;
 import com.basoft.eorder.domain.InventoryHotelRepository;
 import com.basoft.eorder.domain.StoreRepository;
 import com.basoft.eorder.domain.model.inventory.hotel.InventoryHotel;
@@ -232,8 +232,8 @@ public class InventoryHotelCommandHandler {
             int insertNum = inventoryHotelRepository.saveInventoryHotels(addList);
             logger.info("酒店库存新增条数->" + insertNum);
         }
-        Thread thread = new Thread(new HotelPriceThread(us, storeRepository, inventoryHotelQuery));
-        thread.start();
+//        Thread thread = new Thread(new HotelPriceThread(us, storeRepository, inventoryHotelQuery));
+//        thread.start();
     }
 
     /**

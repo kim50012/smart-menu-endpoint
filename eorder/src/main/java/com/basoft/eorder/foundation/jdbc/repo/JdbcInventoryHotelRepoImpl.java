@@ -2,7 +2,7 @@ package com.basoft.eorder.foundation.jdbc.repo;
 
 import com.basoft.eorder.application.AppConfigure;
 import com.basoft.eorder.application.wx.model.WxPayCloseResp;
-import com.basoft.eorder.batch.lock.RedissonUtil;
+//import com.basoft.eorder.batch.lock.RedissonUtil;
 import com.basoft.eorder.common.CommonConstants;
 import com.basoft.eorder.domain.InventoryHotelRepository;
 import com.basoft.eorder.domain.StoreRepository;
@@ -28,8 +28,8 @@ import java.util.concurrent.TimeUnit;
 @Slf4j
 @Repository
 public class JdbcInventoryHotelRepoImpl extends BaseRepository implements InventoryHotelRepository {
-    @Autowired
-    private RedissonUtil redissonUtil;
+//    @Autowired
+//    private RedissonUtil redissonUtil;
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
@@ -304,7 +304,7 @@ public class JdbcInventoryHotelRepoImpl extends BaseRepository implements Invent
                 if (resp != null) {
                     if ("SUCCESS".equals(resp.getReturn_code())) {
                         if ("SUCCESS".equals(resp.getResult_code())) {
-                            log.info("【酒店库存恢复】订单{}关闭订单成功", transId);
+//                            log.info("【酒店库存恢复】订单{}关闭订单成功", transId);
                         } else {
                             // 退款异常，直接返回，不恢复库存
                             return;
@@ -336,11 +336,11 @@ public class JdbcInventoryHotelRepoImpl extends BaseRepository implements Invent
 
 
             if (dateList == null || dateList.size() == 0) {
-                log.info("【酒店库存恢复】【{}】无库存恢复的日期##############################@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@", transId);
+//                log.info("【酒店库存恢复】【{}】无库存恢复的日期##############################@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@", transId);
             } else {
                 // 库存削减不恢复最后一天toDate的。
                 dateList.remove(dateList.size() - 1);
-                log.info("【酒店库存恢复】【{}】需要恢复库存的日期>>> " + "【" + dateList.size() + "】" + dateList, transId);
+//                log.info("【酒店库存恢复】【{}】需要恢复库存的日期>>> " + "【" + dateList.size() + "】" + dateList, transId);
 
 
 
@@ -359,8 +359,8 @@ public class JdbcInventoryHotelRepoImpl extends BaseRepository implements Invent
                 // 库存恢复---------------------------------------------------------------------start
                 StringBuilder hotelLockKey = new StringBuilder(CommonConstants.HOTEL_INVENTORY_LOCK).append(storeId);
                 // 获取库存恢复锁，并且防止死锁。60秒后自动释放。
-                RLock lock = redissonUtil.getFairLock(hotelLockKey.toString());
-                lock.lock(60, TimeUnit.SECONDS);
+//                RLock lock = redissonUtil.getFairLock(hotelLockKey.toString());
+//                lock.lock(60, TimeUnit.SECONDS);
 
                 try {
                     // 批量更新庫存
@@ -386,15 +386,15 @@ public class JdbcInventoryHotelRepoImpl extends BaseRepository implements Invent
                     }
                 } finally {
                     // lock.unlock();
-                    if (lock != null && lock.isLocked() && lock.isHeldByCurrentThread()) {
-                        lock.unlock();
-                        log.info("【酒店库存恢复】【{}】恢复库存的锁释放完毕", transId);
-                    }
+//                    if (lock != null && lock.isLocked() && lock.isHeldByCurrentThread()) {
+//                        lock.unlock();
+//                        log.info("【酒店库存恢复】【{}】恢复库存的锁释放完毕", transId);
+//                    }
                 }
                 // 库存恢复---------------------------------------------------------------------end
             }
         } catch (ParseException e) {
-            log.error("【酒店库存恢复】库存恢复时对日期转换异常>>> " + e.getMessage(), e);
+//            log.error("【酒店库存恢复】库存恢复时对日期转换异常>>> " + e.getMessage(), e);
         }
     }
 }
