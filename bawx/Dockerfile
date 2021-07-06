@@ -1,8 +1,8 @@
-FROM  base-env:0.0.7
+FROM  base-env-0.0.7:latest
 MAINTAINER Orderking
 
 ## charset
-RUN apt-get install -y locales
+#RUN apt-get install -y locales
 #RUN locale-gen zh_CN.UTF-8
 #ENV LANG zh_CN.UTF-8
 #ENV LANGUAGE zh_CN:zh
