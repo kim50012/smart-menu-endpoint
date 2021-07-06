@@ -40,13 +40,13 @@ public class RedissonConfig {
 
     @Bean("redissonClient")
     public RedissonClient getRedisson() {
-        log.info("开始配置Redisson客户端......");
+//        log.info("开始配置Redisson客户端......");
         Config config = new Config();
         config.useSingleServer().setAddress("redis://" + host + ":" + port).setPassword(password);
 //        config.useSingleServer().setAddress("redis://" + host + ":" + port).setPassword(instanceId + ":" + password);
         //添加主从配置
         // config.useMasterSlaveServers().setMasterAddress("").setPassword("").addSlaveAddress(new String[]{"",""});
-        log.info("配置Redisson客户端结束......");
+//        log.info("配置Redisson客户端结束......");
         return Redisson.create(config);
     }
 

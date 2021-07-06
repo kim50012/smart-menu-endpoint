@@ -298,8 +298,8 @@ public class SpringEOrderApplicationBoot {
 //        config.setMaxWaitMillis(maxWait);
 
         JedisConnectionFactory jcf = new JedisConnectionFactory(jsi);
-//        jcf.setPoolConfig(config);
-//        jcf.setPort(port);
+        jcf.setPoolConfig(config);
+        jcf.setPort(port);
         
         return jcf;
     }
