@@ -68,14 +68,14 @@ public class MassServiceImpl implements MassService {
         String token = wechatService.getAccessToken(appInfo);
 
         ////////////
-        log.info("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
+//        log.info("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
         /////////////
 
         NewsData newsData = new NewsData();
         List<Article> list = new ArrayList<Article>();
         for (int i = 0; i < newsList.size(); i++) {
             Map<String, Object> item = newsList.get(i);
-            log.info("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
+//            log.info("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
             String mediaId = (String) item.get("MEDIA_ID");
             Long fileId = (Long) item.get("MFILE_ID");
             String fileUrl = (String) item.get("FILE_URL");
@@ -86,12 +86,12 @@ public class MassServiceImpl implements MassService {
             // String content = (String)item.get("MCONTENT");
             String mdigest = (String) item.get("MDIGEST");
             Integer mshowCoverPic = (Integer) item.get("MSHOW_COVER_PIC");
-            log.info("old media id = " + mediaId);
+//            log.info("old media id = " + mediaId);
             //mediaId失效，重新上传
             if (StringUtils.isEmpty(mediaId)) {
-                log.info("webUploadPath=" + webUploadPath);
-                log.info("fileUrl=" + fileUrl);
-                log.info("token=" + token);
+//                log.info("webUploadPath=" + webUploadPath);
+//                log.info("fileUrl=" + fileUrl);
+//                log.info("token=" + token);
                 // 转换访问路径为物理路径 - start
                 String prefix = staticUnionPath.substring(0, staticUnionPath.lastIndexOf("/"));// "/res"
                 int index = fileUrl.lastIndexOf(prefix) + prefix.length();
@@ -108,7 +108,7 @@ public class MassServiceImpl implements MassService {
                 shopFile.setMediaId(mediaId);
                 shopFile.setMediaUpDt(new Date());
                 shopFileMapper.updateByPrimaryKeySelective(shopFile);
-                log.info("new media id = " + mediaId);
+//                log.info("new media id = " + mediaId);
                 /*****将文件表的mediaId赋值**end****/
             }
 
@@ -130,7 +130,7 @@ public class MassServiceImpl implements MassService {
             // 图文素材上传后的mediaid
             String tuwenMediaId = mediaReturn.getMedia_id();
             Long msgId = WeixinMassMessageUtils.previewMassMessage(token, openid, "mpnews", tuwenMediaId);
-            log.info("msgId = " + msgId);
+//            log.info("msgId = " + msgId);
         }
     }
 
@@ -143,7 +143,8 @@ public class MassServiceImpl implements MassService {
      * @return
      */
     public String previewForeverMassMessageWithMediaId(Long shopId, String openid, List<Map<String, Object>> newsList) {
-        AppInfoWithBLOBs appInfo = shopService.getAppInfoByShopId(shopId);
+        /*
+    	AppInfoWithBLOBs appInfo = shopService.getAppInfoByShopId(shopId);
         String token = wechatService.getAccessToken(appInfo);
         log.info("<<<<<<<<<<<<<<<<<<预览永久素材开始<<<<<<<<<<<<<<<<<<<<<<<");
 
@@ -162,6 +163,7 @@ public class MassServiceImpl implements MassService {
             }
             return mediaId;
         }
+        */
         return "";
     }
 
@@ -175,7 +177,8 @@ public class MassServiceImpl implements MassService {
      * @return
      */
     public String previewMassMessageWithMediaId(Long shopId, String openid, List<Map<String, Object>> newsList) {
-        AppInfoWithBLOBs appInfo = shopService.getAppInfoByShopId(shopId);
+        /*
+    	AppInfoWithBLOBs appInfo = shopService.getAppInfoByShopId(shopId);
         String token = wechatService.getAccessToken(appInfo);
 
         ////////////
@@ -200,6 +203,7 @@ public class MassServiceImpl implements MassService {
             }
             return tuwenMediaId;
         }
+        */
         return "";
     }
 
@@ -217,7 +221,7 @@ public class MassServiceImpl implements MassService {
         List<Article> list = new ArrayList<Article>();
         for (int i = 0; i < newsList.size(); i++) {
             Map<String, Object> item = newsList.get(i);
-            log.info("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
+//            log.info("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
             String mediaId = (String) item.get("MEDIA_ID");
             Long fileId = (Long) item.get("MFILE_ID");
             String fileUrl = (String) item.get("FILE_URL");
@@ -228,12 +232,12 @@ public class MassServiceImpl implements MassService {
             //String content = (String)item.get("MCONTENT");
             String mdigest = (String) item.get("MDIGEST");
             Integer mshowCoverPic = (Integer) item.get("MSHOW_COVER_PIC");
-            log.info("old media id = " + mediaId);
+//            log.info("old media id = " + mediaId);
             //条目的缩略图mediaId失效，则重新上传
             if (StringUtils.isEmpty(mediaId)) {
-                log.info("webUploadPath=" + webUploadPath);
-                log.info("fileUrl=" + fileUrl);
-                log.info("token=" + token);
+//                log.info("webUploadPath=" + webUploadPath);
+//                log.info("fileUrl=" + fileUrl);
+//                log.info("token=" + token);
                 // 转换访问路径为物理路径 - start
                 String prefix = staticUnionPath.substring(0, staticUnionPath.lastIndexOf("/"));// "/res"
                 int index = fileUrl.lastIndexOf(prefix) + prefix.length();
@@ -254,7 +258,7 @@ public class MassServiceImpl implements MassService {
                 shopFile.setMediaId(mediaId);
                 shopFile.setMediaUpDt(new Date());
                 shopFileMapper.updateByPrimaryKeySelective(shopFile);//赋值文件mediaId
-                log.info("new media id = " + mediaId);
+//                log.info("new media id = " + mediaId);
                 /*****将文件表的mediaId赋值**end****/
             }
 
@@ -285,11 +289,11 @@ public class MassServiceImpl implements MassService {
         Map<String, Object> sendResultMap = new HashMap<String, Object>();
         String token = wechatService.getAccessToken(shopId);
 
-        log.info("<<<<<<<<<<<<<<<<<<获取该图文消息在微信公众平台端的WX_MSG_ID<<<<<<<<<<<<<<<<<<<<<<<");
+//        log.info("<<<<<<<<<<<<<<<<<<获取该图文消息在微信公众平台端的WX_MSG_ID<<<<<<<<<<<<<<<<<<<<<<<");
         // 获取当前图文素材上传到微信端wxMsgId，列表中肯定存在item，取第一条获得wxMsgId
         Map<String, Object> item0 = newsList.get(0);
         String wxMsgId = (String) item0.get("WX_MSG_ID");
-        log.info("<<<<<<<<<<<<<<<<<<该图文消息在微信公众平台端的WX_MSG_ID为<<<<<<<<<<<<<<<<<<<<<<<<" + wxMsgId);
+//        log.info("<<<<<<<<<<<<<<<<<<该图文消息在微信公众平台端的WX_MSG_ID为<<<<<<<<<<<<<<<<<<<<<<<<" + wxMsgId);
 
         // wxMsgId不存在说明该图文没有上传过微信公众平台，则上传发送
         if (StringUtils.isEmpty(wxMsgId)) {
@@ -297,7 +301,7 @@ public class MassServiceImpl implements MassService {
             List<Article> list = new ArrayList<Article>();
             for (int i = 0; i < newsList.size(); i++) {
                 Map<String, Object> item = newsList.get(i);
-                log.info("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
+//                log.info("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
                 String mediaId = (String) item.get("MEDIA_ID");
                 Long fileId = (Long) item.get("MFILE_ID");
                 String fileUrl = (String) item.get("FILE_URL");
@@ -308,12 +312,12 @@ public class MassServiceImpl implements MassService {
                 //String content = (String)item.get("MCONTENT");
                 String mdigest = (String) item.get("MDIGEST");
                 Integer mshowCoverPic = (Integer) item.get("MSHOW_COVER_PIC");
-                log.info("old media id = " + mediaId);
+//                log.info("old media id = " + mediaId);
                 //条目的缩略图mediaId失效，则重新上传
                 if (StringUtils.isEmpty(mediaId)) {
-                    log.info("webUploadPath=" + webUploadPath);
-                    log.info("fileUrl=" + fileUrl);
-                    log.info("token=" + token);
+//                    log.info("webUploadPath=" + webUploadPath);
+//                    log.info("fileUrl=" + fileUrl);
+//                    log.info("token=" + token);
                     // 转换访问路径为物理路径 - start
                     String prefix = staticUnionPath.substring(0, staticUnionPath.lastIndexOf("/"));// "/res"
                     int index = fileUrl.lastIndexOf(prefix) + prefix.length();
@@ -330,7 +334,7 @@ public class MassServiceImpl implements MassService {
                     shopFile.setMediaId(mediaId);
                     shopFile.setMediaUpDt(new Date());
                     shopFileMapper.updateByPrimaryKeySelective(shopFile);
-                    log.info("new media id = " + mediaId);
+//                    log.info("new media id = " + mediaId);
                     /*****将文件表的mediaId赋值**end****/
                 }
 
@@ -358,10 +362,10 @@ public class MassServiceImpl implements MassService {
 
                 MassReturn massRetuen = null;
                 if (is_to_all) {// 给全部关注用户（客户）全部发送
-                    log.info("WeixinMassMessageUtils.sendMpnewsAll=============");
+//                    log.info("WeixinMassMessageUtils.sendMpnewsAll=============");
                     massRetuen = WeixinMassMessageUtils.sendMpnewsAll(token, true, null, mediaReturn.getMedia_id());
                 } else {// 选择关注用户（客户）发送
-                    log.info("WeixinMassMessageUtils.sendMass=============");
+//                    log.info("WeixinMassMessageUtils.sendMass=============");
                     massRetuen = WeixinMassMessageUtils.sendMass(token, news);
                 }
                 sendResultMap.put("MassReturn", massRetuen);
@@ -374,10 +378,10 @@ public class MassServiceImpl implements MassService {
             news.setTouser(touser);
             MassReturn massRetuen = null;
             if (is_to_all) {// 给全部关注用户（客户）全部发送
-                log.info("WeixinMassMessageUtils.sendMpnewsAll=============");
+//                log.info("WeixinMassMessageUtils.sendMpnewsAll=============");
                 massRetuen = WeixinMassMessageUtils.sendMpnewsAll(token, true, null, wxMsgId);
             } else {// 选择关注用户（客户）发送
-                log.info("WeixinMassMessageUtils.sendMass=============");
+//                log.info("WeixinMassMessageUtils.sendMass=============");
                 massRetuen = WeixinMassMessageUtils.sendMass(token, news);
             }
             sendResultMap.put("MassReturn", massRetuen);
@@ -429,7 +433,7 @@ public class MassServiceImpl implements MassService {
                 media.setMedia_id(form.getSendMediaId());
                 imageMass.setImage(media);
                 imageMass.setTouser(touser);
-                log.info("Mass send IMAGE:::massSend:::WeixinMassMessageUtils.sendMass:::form.getSendMediaId():::=============" + form.getSendMediaId());
+//                log.info("Mass send IMAGE:::massSend:::WeixinMassMessageUtils.sendMass:::form.getSendMediaId():::=============" + form.getSendMediaId());
                 massRetuen = WeixinMassMessageUtils.sendMass(token, imageMass);
             }
         } else if (sendFileType == BizConstants.MSG_TYPE_TEXT) {
@@ -441,7 +445,7 @@ public class MassServiceImpl implements MassService {
                 Text text = new Text(form.getSendText());
                 textMass.setText(text);
                 textMass.setTouser(touser);
-                log.info("Mass send TEXT:::massSend:::WeixinMassMessageUtils.sendMass:::form.getSendText():::=============" + form.getSendText());
+//                log.info("Mass send TEXT:::massSend:::WeixinMassMessageUtils.sendMass:::form.getSendText():::=============" + form.getSendText());
                 massRetuen = WeixinMassMessageUtils.sendMass(token, textMass);
             }
         } else if (sendFileType == BizConstants.MSG_TYPE_VOICE) {
@@ -454,7 +458,7 @@ public class MassServiceImpl implements MassService {
                 media.setMedia_id(form.getSendMediaId());
                 voiceMass.setVoice(media);
                 voiceMass.setTouser(touser);
-                log.info("Mass send VOICE:::massSend:::WeixinMassMessageUtils.sendMass:::form.getSendMediaId():::=============" + form.getSendMediaId());
+//                log.info("Mass send VOICE:::massSend:::WeixinMassMessageUtils.sendMass:::form.getSendMediaId():::=============" + form.getSendMediaId());
                 massRetuen = WeixinMassMessageUtils.sendMass(token, voiceMass);
             }
         } else if (sendFileType == BizConstants.MSG_TYPE_VIDEO) {
@@ -467,7 +471,7 @@ public class MassServiceImpl implements MassService {
                 media.setMedia_id(form.getSendMediaId());
                 videoMass.setVideo(media);
                 videoMass.setTouser(touser);
-                log.info("Mass send VOICE:::massSend:::WeixinMassMessageUtils.sendMass:::form.getSendMediaId():::=============" + form.getSendMediaId());
+//                log.info("Mass send VOICE:::massSend:::WeixinMassMessageUtils.sendMass:::form.getSendMediaId():::=============" + form.getSendMediaId());
                 massRetuen = WeixinMassMessageUtils.sendMass(token, videoMass);
             }
         }
