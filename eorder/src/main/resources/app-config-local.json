@@ -1,8 +1,8 @@
 {
   "uploadFileRemoteServer":"http://file.orderking.best/file/api/v1/upload",
-  "wechatRootUrl":"http://res.orderking.best/public/res/#/",
+  "wechatRootUrl":"http://res.orderking.best/#/",
   "wechatNotifyUrl":"http://res.orderking.best/eorder/res/api/v1/order_pay",
-  "menuRedirectRoot":"/public/res/#",
+  "menuRedirectRoot":"/#",
   "wechatCertPath":"LOCAL",
   "jpushConfig":{
     "appKey":"af7c15f02f8a0afc9d2135c2",
