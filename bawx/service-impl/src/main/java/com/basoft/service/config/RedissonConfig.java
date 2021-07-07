@@ -42,11 +42,15 @@ public class RedissonConfig {
     public RedissonClient getRedisson() {
 //        log.info("开始配置Redisson客户端......");
         Config config = new Config();
-        config.useSingleServer().setAddress("redis://" + host + ":" + port).setPassword(password);
+        //원 소스
+//        config.useSingleServer().setAddress("redis://" + host + ":" + port).setPassword(password);
 //        config.useSingleServer().setAddress("redis://" + host + ":" + port).setPassword(instanceId + ":" + password);
         //添加主从配置
         // config.useMasterSlaveServers().setMasterAddress("").setPassword("").addSlaveAddress(new String[]{"",""});
 //        log.info("配置Redisson客户端结束......");
+        
+        // aws
+        config.useSingleServer().setAddress("redis://" + host + ":" + port);
         return Redisson.create(config);
     }
 
