@@ -101,7 +101,7 @@ public final class AwsS3FileSerivce extends FileTransferAdapter implements FileT
 
     @Override
     public byte[] fetch(String fileFullPath) {
-        log.info("AwsS3FileSerivce[fetch]根据AWS File Key Get Object from AWS Storage!!!");
+//        log.info("AwsS3FileSerivce[fetch]根据AWS File Key Get Object from AWS Storage!!!");
         // this.s3Client.listObjects();
         String fileKey = buildFilePath(this.rootKey, fileFullPath);
         S3Object object = this.s3Client.getObject(new GetObjectRequest(bucketName, fileKey));
@@ -112,7 +112,7 @@ public final class AwsS3FileSerivce extends FileTransferAdapter implements FileT
 
         InputStream input = object.getObjectContent();
         try {
-            log.info("AwsS3FileSerivce[fetch]根据AWS File Key Get Object from AWS Storage FINISH!!!");
+//            log.info("AwsS3FileSerivce[fetch]根据AWS File Key Get Object from AWS Storage FINISH!!!");
             return org.apache.commons.io.IOUtils.toByteArray(input);
         } catch (IOException e) {
             throw new IllegalStateException("io error");

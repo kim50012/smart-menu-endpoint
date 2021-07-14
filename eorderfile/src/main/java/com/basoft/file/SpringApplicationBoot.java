@@ -4,6 +4,7 @@ import com.basoft.file.application.AppConfigure;
 import com.basoft.file.application.DefaultFileService;
 import com.basoft.file.application.FileService;
 import com.basoft.file.application.FileTransfer;
+import com.basoft.file.application.impl.AwsS3FileSerivce;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
@@ -44,9 +45,9 @@ public class SpringApplicationBoot {
 
     public static void main(String...args){
         //通过假如此部分来可以接受到 GraphQuery 的参数 {Store(id:1232123){id,name,created}} 格式
-        log.info("=================================================== Start on ===========================================================");
-        log.info(Paths.get("./").toAbsolutePath().toString());
-        log.info("RootPath:"+Paths.get("./").toAbsolutePath());
+//        log.info("=================================================== Start on ===========================================================");
+//        log.info(Paths.get("./").toAbsolutePath().toString());
+//        log.info("RootPath:"+Paths.get("./").toAbsolutePath());
         System.setProperty("tomcat.util.http.parser.HttpParser.requestTargetAllow","|{}");
         new SpringApplicationBoot().run(args);
     }
@@ -115,7 +116,7 @@ public class SpringApplicationBoot {
     /********************************个性化配置项加载AppConfigure-Start**************************************/
     @Bean
     public AppConfigure getAppConfigure(Environment env) {
-        log.info("Run Environment Detail Info>>>" +  env.toString());
+//        log.info("Run Environment Detail Info>>>" +  env.toString());
         Map<String, Object> configMap = new HashMap<>();
         configMap.put(AppConfigure.TOKEN_KEY_PREFIX_PROP, "token-");
         configMap.put(AppConfigure.BASOFT_BROWSER_TOKEN_HEADER_PROP, "auth");
@@ -169,10 +170,10 @@ public class SpringApplicationBoot {
     protected String getConfigFileName(Environment env) {
         String configFilePath = env.getProperty("config");
         if (!org.apache.commons.lang3.StringUtils.isEmpty(configFilePath)) {
-            log.info("<><><><><><><><><><><>配置文件存在，其名称为：<><><><><><><><><><><>" + configFilePath);
+//            log.info("<><><><><><><><><><><>配置文件存在，其名称为：<><><><><><><><><><><>" + configFilePath);
             return configFilePath;
         }
-        log.info("<><><><><><><><><><><>配置文件不存在，使用默认路径conf/app-config-prod.json<><><><><><><><><><><>");
+//        log.info("<><><><><><><><><><><>配置文件不存在，使用默认路径conf/app-config-prod.json<><><><><><><><><><><>");
         return "conf/app-config-prod.json";
     }
     /********************************个性化配置项加载AppConfigure-End**************************************/
@@ -235,21 +236,27 @@ public class SpringApplicationBoot {
         final Map<String,Object> factoryConfig = (Map<String, Object>) appConfigure.getObject(FILE_TRANSER_FACTORY_PROP).orElseThrow(() -> new IllegalStateException("error"));
         String clazz = (String) factoryConfig.get("clazz");
         try {
-            final Class<?> aClass = ClassUtils.forName(clazz, Thread.currentThread().getContextClassLoader());
-            final FileTransfer.FileTransferFactory instance = (FileTransfer.FileTransferFactory) aClass.newInstance();
+//            final Class<?> aClass = ClassUtils.forName(clazz, Thread.currentThread().getContextClassLoader());
+//            final FileTransfer.FileTransferFactory instance = (FileTransfer.FileTransferFactory) aClass.newInstance();
+//            final FileTransfer transfer = instance.of((Map<String, Object>) factoryConfig.get("props"));
+//            return new DefaultFileService(ds,transfer);
+//        } catch (ClassNotFoundException e) {
+//            e.printStackTrace();
+//            throw new IllegalArgumentException(e);
+//        } catch (InstantiationException e) {
+//            e.printStackTrace();
+//            throw new IllegalArgumentException(e);
+//        } catch (IllegalAccessException e) {
+//            e.printStackTrace();
+//            throw new IllegalArgumentException(e);
+//        }
+        
+            final Map<String,Object> aws_s3_config = (Map<String, Object>) appConfigure.getObject(AwsS3FileSerivce.CONFIG_PROP).get();
+            AwsS3FileSerivce fileTransfer = (AwsS3FileSerivce)AwsS3FileSerivce.of(aws_s3_config);
 
-            /*final Map<String,Object> aws_s3_config = (Map<String, Object>) appConfigure.getObject(AwsS3FileSerivce.CONFIG_PROP).get();
-            AwsS3FileSerivce fileTransfer = (AwsS3FileSerivce)AwsS3FileSerivce.of(aws_s3_config);*/
-
-            final FileTransfer transfer = instance.of((Map<String, Object>) factoryConfig.get("props"));
+            final FileTransfer transfer = fileTransfer.of((Map<String, Object>) factoryConfig.get("props"));
             return new DefaultFileService(ds,transfer);
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-            throw new IllegalArgumentException(e);
-        } catch (InstantiationException e) {
-            e.printStackTrace();
-            throw new IllegalArgumentException(e);
-        } catch (IllegalAccessException e) {
+        } catch (Error e) {
             e.printStackTrace();
             throw new IllegalArgumentException(e);
         }

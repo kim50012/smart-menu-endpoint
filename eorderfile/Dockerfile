@@ -1,14 +1,12 @@
-#FROM 366101287582.dkr.ecr.ap-northeast-2.amazonaws.com/basoft-eorder:maven-3.6
-FROM base-env:0.0.2
-MAINTAINER kim50012@naver.com
+FROM  base-env-0.0.7:latest
+MAINTAINER Orderking
 
 # charset
-RUN apt-get install -y locales
-
-RUN locale-gen zh_CN.UTF-8
-ENV LANG zh_CN.UTF-8
-ENV LANGUAGE zh_CN:zh
-ENV LC_ALL zh_CN.UTF-8
+#RUN apt-get install -y locales
+#RUN locale-gen zh_CN.UTF-8
+#ENV LANG zh_CN.UTF-8
+#ENV LANGUAGE zh_CN:zh
+#ENV LC_ALL zh_CN.UTF-8
 
 
 RUN echo $JAVA_HOME
