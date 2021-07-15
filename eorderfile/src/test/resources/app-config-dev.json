@@ -22,5 +22,15 @@
     "user":"root",
     "password":"dimy5006",
     "useSsl":"true"
+  },
+  
+  "aws_s3_config":{
+	"awsFullPath":"https://s3orderbucket.s3.ap-southeast-1.amazonaws.com",
+	"visitAwsFullPath":"https://s3orderbucket.s3.ap-southeast-1.amazonaws.com",
+	"bucket":"s3orderbucket",
+	"client_region":"ap-southeast-1",
+	"appKey":"AKIAYZXO2WEU7RIBSFML",
+	"secretAccessKey":"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",
+	"rootKey":"orderking-images"
   }
 }
