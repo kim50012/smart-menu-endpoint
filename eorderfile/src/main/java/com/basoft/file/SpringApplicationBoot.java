@@ -19,6 +19,7 @@ import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
@@ -145,9 +146,9 @@ public class SpringApplicationBoot {
     protected Map<String,Object> getConfigMap(Environment configure){
         String fname = getConfigFileName(configure);
         try {
-            //  ClassPathResource cpr = new ClassPathResource(fname);
-            // File file = cpr.getFile();
-            File file = ResourceUtils.getFile(fname);
+            ClassPathResource cpr = new ClassPathResource(fname);
+            File file = cpr.getFile();
+//            File file = ResourceUtils.getFile(fname);
             if(!file.exists()){
                 throw new RuntimeException("not found config file on: classpath:templates");
             }
@@ -231,7 +232,8 @@ public class SpringApplicationBoot {
      * @param appConfigure
      * @return
      */
-    @Bean("FileService") //20190724停止使用AWS云存储
+    @SuppressWarnings({ "unchecked", "static-access" })
+	@Bean("FileService") //20190724停止使用AWS云存储
     public FileService newFileService(DataSource ds, AppConfigure appConfigure){
         final Map<String,Object> factoryConfig = (Map<String, Object>) appConfigure.getObject(FILE_TRANSER_FACTORY_PROP).orElseThrow(() -> new IllegalStateException("error"));
         String clazz = (String) factoryConfig.get("clazz");

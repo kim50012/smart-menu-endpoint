@@ -1,0 +1,39 @@
+{
+  "threadPool":{
+    "multipleOfCore":1,
+    "maxPoolOfCore":2,
+    "keepAliveSeconds":5,
+    "queueCapacity":20
+  },
+
+  "fileTransferFactory":{
+    "clazz":"com.basoft.file.application.impl.AwsS3FileSerivce$AwsS3FileServiceFactory",
+    "props":{
+      "awsFullPath":"https://s3orderbucket.s3.ap-southeast-1.amazonaws.com",
+      "visitAwsFullPath":"https://s3orderbucket.s3.ap-southeast-1.amazonaws.com",
+      "bucket":"s3orderbucket",
+      "client_region":"ap-southeast-1",
+      "appKey":"AKIAYZXO2WEU7RIBSFML",
+      "secretAccessKey":"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",
+      "rootKey":"orderking-images"
+    }
+  },
+
+  "tencentCloudStorageService":{
+    "props":{
+      "accessKey":"AKID2urZ2F9wPcrrgGun58vXx97qLjtoQAUZ",
+      "secretKey":"zjKgqnVzFGGDwTm38yawABxTlpfVEwVs",
+      "region":"ap-seoul",
+      "bucketName":"wechatplace-stg-1259663537",
+      "rootKey":"jeju-images",
+      "visitFullURL":"https://{bucketName}.cos.{region}.myqcloud.com"
+    }
+  },
+
+  "mysqlDataSource-config":{
+    "url":"jdbc:mysql://prod-db.csptpnylhznw.ap-southeast-1.rds.amazonaws.com:3306/eorder?useUnicode=true&characterEncoding=utf-8&allowMultiQueries=true&useSSL=false",
+    "user":"root",
+    "password":"dimy5006",
+    "useSsl":"true"
+  }
+}

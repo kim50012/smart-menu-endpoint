@@ -11,7 +11,7 @@ public class TestEnvAppBootstrap {
 
 
 
-        System.out.println(DevAppBootstrap.class.getResource("/"));
+//        System.out.println(DevAppBootstrap.class.getResource("/"));
         Path file = Paths.get("./images");
         if(!file.toFile().exists()){
             file.toFile().mkdir();
